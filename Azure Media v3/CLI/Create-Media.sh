@@ -1,9 +1,9 @@
 #!/bin/bash
 
 resourceGroup=johndeu_BUILD2018
-storageName=johndeu_build_storage
-amsAccountName=johndeu_build_2018
-amsSPName=johndeu_build_2018_demo
+storageName=johndeubuildstorage
+amsAccountName=johndeubuild2018
+amsSPName=johndeubuild2018demo
 amsSPPassword=build2018demo
 
 # Create a resource resourceGroupName
@@ -32,4 +32,7 @@ az ams account sp create \
   --name $amsSPName \
   --resource-group $resourceGroup \
   --password $amsSPPassword \
-  --role Owner
+  --role Owner \
+
+echo "press  [ENTER]  to continue deleting line"
+read continue
