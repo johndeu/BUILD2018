@@ -1,0 +1,5003 @@
+{
+	"info": {
+		"_postman_id": "95a44a30-4f70-6966-4865-e426837451a2",
+		"name": "Media Services v3 (2018-03-30-preview)",
+		"description": "Azure Media Services v3 API Collection",
+		"schema": "https://schema.getpostman.com/json/collection/v2.1.0/collection.json"
+	},
+	"item": [
+		{
+			"name": "Step 1:  Get AAD Auth Token",
+			"description": "To get started making calls to Azure Media Services you have to first get an AAD auth JWT token\n",
+			"item": [
+				{
+					"name": "Get Azure AD Token for Service Principal Authentication",
+					"event": [
+						{
+							"listen": "test",
+							"script": {
+								"type": "text/javascript",
+								"exec": [
+									"var json = JSON.parse(responseBody);",
+									"postman.setEnvironmentVariable(\"AccessToken\", json.access_token);"
+								]
+							}
+						}
+					],
+					"request": {
+						"auth": {
+							"type": "noauth"
+						},
+						"method": "POST",
+						"header": [
+							{
+								"key": "Content-Type",
+								"value": "application/x-www-form-urlencoded"
+							},
+							{
+								"key": "Keep-Alive",
+								"value": "true"
+							}
+						],
+						"body": {
+							"mode": "urlencoded",
+							"urlencoded": [
+								{
+									"key": "grant_type",
+									"value": "client_credentials",
+									"description": "This is always set to client_credentials",
+									"type": "text"
+								},
+								{
+									"key": "client_id",
+									"value": "{{clientId}}",
+									"description": "The Client ID for your AAD application",
+									"type": "text"
+								},
+								{
+									"key": "client_secret",
+									"value": "{{clientSecret}}",
+									"description": "The Client Secret (key) for your AAD application Service principal. This is URL Encoded on the wire.",
+									"type": "text"
+								},
+								{
+									"key": "resource",
+									"value": "https://management.core.windows.net/",
+									"description": "Normally this is https://management.core.windows.net/ \nIt can vary based on the specific Azure Cloud you are using. \nFor Gov Cloud, China, Germany or other soverign cloud, please check the appropriate Azure management API endpoint URL settings in the documentation. ",
+									"type": "text"
+								}
+							]
+						},
+						"url": {
+							"raw": "https://login.microsoftonline.com/:tenantId/oauth2/token",
+							"protocol": "https",
+							"host": [
+								"login",
+								"microsoftonline",
+								"com"
+							],
+							"path": [
+								":tenantId",
+								"oauth2",
+								"token"
+							],
+							"variable": [
+								{
+									"key": "tenantId",
+									"value": "{{tenantid}}"
+								}
+							]
+						}
+					},
+					"response": []
+				}
+			],
+			"event": [
+				{
+					"listen": "prerequest",
+					"script": {
+						"id": "ced91c7c-1679-4077-9277-d2c0bbbae43f",
+						"type": "text/javascript",
+						"exec": [
+							""
+						]
+					}
+				},
+				{
+					"listen": "test",
+					"script": {
+						"id": "fd712bf7-f4d4-4827-aa1b-714ce1651ab1",
+						"type": "text/javascript",
+						"exec": [
+							""
+						]
+					}
+				}
+			]
+		},
+		{
+			"name": "Encoding",
+			"description": "Encoding Swagger",
+			"item": [
+				{
+					"name": "Example Transforms",
+					"description": "Various sample transforms showing off features",
+					"item": [],
+					"auth": {
+						"type": "bearer",
+						"bearer": [
+							{
+								"key": "token",
+								"value": "{{AccessToken}}",
+								"type": "string"
+							}
+						]
+					},
+					"_postman_isSubFolder": true
+				},
+				{
+					"name": "List Transforms",
+					"request": {
+						"method": "GET",
+						"header": [
+							{
+								"key": "Authorization",
+								"value": "Bearer {{AccessToken}}",
+								"description": "Use the JWT Access Token from \"Step 1- Get AAD Auth Token\""
+							},
+							{
+								"key": "Accept",
+								"value": "application/json"
+							},
+							{
+								"key": "Content-Type",
+								"value": "application/json"
+							}
+						],
+						"body": {},
+						"url": {
+							"raw": "https://management.azure.com/subscriptions/:subscriptionId/resourceGroups/:resourceGroupName/providers/Microsoft.Media/mediaServices/:accountName/transforms?api-version={{api-version}}",
+							"protocol": "https",
+							"host": [
+								"management",
+								"azure",
+								"com"
+							],
+							"path": [
+								"subscriptions",
+								":subscriptionId",
+								"resourceGroups",
+								":resourceGroupName",
+								"providers",
+								"Microsoft.Media",
+								"mediaServices",
+								":accountName",
+								"transforms"
+							],
+							"query": [
+								{
+									"key": "api-version",
+									"value": "{{api-version}}"
+								},
+								{
+									"key": "$filter",
+									"value": "{{$filter}}",
+									"disabled": true
+								},
+								{
+									"key": "$top",
+									"value": "{{$top}}",
+									"disabled": true
+								},
+								{
+									"key": "$skip",
+									"value": "{{$skip}}",
+									"disabled": true
+								}
+							],
+							"variable": [
+								{
+									"key": "subscriptionId",
+									"value": "{{subscriptionId}}"
+								},
+								{
+									"key": "resourceGroupName",
+									"value": "{{resourceGroupName}}"
+								},
+								{
+									"key": "accountName",
+									"value": "{{accountName}}"
+								}
+							]
+						},
+						"description": "Lists the Transforms in the account."
+					},
+					"response": []
+				},
+				{
+					"name": "Get Available Presets",
+					"request": {
+						"method": "GET",
+						"header": [
+							{
+								"key": "Authorization",
+								"value": "Bearer {{AccessToken}}",
+								"description": "Use the JWT Access Token from \"Step 1- Get AAD Auth Token\""
+							},
+							{
+								"key": "Accept",
+								"value": "application/json"
+							},
+							{
+								"key": "Content-Type",
+								"value": "application/json"
+							}
+						],
+						"body": {},
+						"url": {
+							"raw": "https://management.azure.com/subscriptions/:subscriptionId/resourceGroups/:resourceGroupName/providers/Microsoft.Media/mediaServices/:accountName/transforms/getAvailablePresets?api-version={{api-version}}",
+							"protocol": "https",
+							"host": [
+								"management",
+								"azure",
+								"com"
+							],
+							"path": [
+								"subscriptions",
+								":subscriptionId",
+								"resourceGroups",
+								":resourceGroupName",
+								"providers",
+								"Microsoft.Media",
+								"mediaServices",
+								":accountName",
+								"transforms",
+								"getAvailablePresets"
+							],
+							"query": [
+								{
+									"key": "api-version",
+									"value": "{{api-version}}"
+								}
+							],
+							"variable": [
+								{
+									"key": "subscriptionId",
+									"value": "{{subscriptionId}}"
+								},
+								{
+									"key": "resourceGroupName",
+									"value": "{{resourceGroupName}}"
+								},
+								{
+									"key": "accountName",
+									"value": "{{accountName}}"
+								}
+							]
+						},
+						"description": "Gets the presets available which may vary by region."
+					},
+					"response": []
+				},
+				{
+					"name": "Get Transform",
+					"request": {
+						"method": "GET",
+						"header": [
+							{
+								"key": "Authorization",
+								"value": "Bearer {{AccessToken}}",
+								"description": "Use the JWT Access Token from \"Step 1- Get AAD Auth Token\""
+							},
+							{
+								"key": "Accept",
+								"value": "application/json"
+							},
+							{
+								"key": "Content-Type",
+								"value": "application/json"
+							}
+						],
+						"body": {},
+						"url": {
+							"raw": "https://management.azure.com/subscriptions/:subscriptionId/resourceGroups/:resourceGroupName/providers/Microsoft.Media/mediaServices/:accountName/transforms/:transformName?api-version={{api-version}}",
+							"protocol": "https",
+							"host": [
+								"management",
+								"azure",
+								"com"
+							],
+							"path": [
+								"subscriptions",
+								":subscriptionId",
+								"resourceGroups",
+								":resourceGroupName",
+								"providers",
+								"Microsoft.Media",
+								"mediaServices",
+								":accountName",
+								"transforms",
+								":transformName"
+							],
+							"query": [
+								{
+									"key": "api-version",
+									"value": "{{api-version}}"
+								}
+							],
+							"variable": [
+								{
+									"key": "subscriptionId",
+									"value": "{{subscriptionId}}"
+								},
+								{
+									"key": "resourceGroupName",
+									"value": "{{resourceGroupName}}"
+								},
+								{
+									"key": "accountName",
+									"value": "{{accountName}}"
+								},
+								{
+									"key": "transformName",
+									"value": "{{transformName}}"
+								}
+							]
+						},
+						"description": "Gets a Transform."
+					},
+					"response": []
+				},
+				{
+					"name": "Create Transform",
+					"request": {
+						"method": "PUT",
+						"header": [
+							{
+								"key": "Authorization",
+								"value": "Bearer {{AccessToken}}",
+								"description": "Use the JWT Access Token from \"Step 1- Get AAD Auth Token\""
+							},
+							{
+								"key": "Accept",
+								"value": "application/json"
+							},
+							{
+								"key": "Content-Type",
+								"value": "application/json"
+							}
+						],
+						"body": {
+							"mode": "raw",
+							"raw": "{\n  \"properties\": {\n    \"description\": \"Basic Transform using an Adaptive Streaming encoding preset from the libray of built-in Standard Encoder presets\",\n      \"outputs\": [\n        {\n          \"onError\": \"StopProcessingJob\",\n      \"relativePriority\": \"Normal\",\n          \"preset\": {\n            \"@odata.type\": \"#Microsoft.Media.BuiltInStandardEncoderPreset\",\n            \"presetName\": \"H264MultipleBitrate720p\"\n          }\n        }\n      ]\n  }\n}"
+						},
+						"url": {
+							"raw": "https://management.azure.com/subscriptions/:subscriptionId/resourceGroups/:resourceGroupName/providers/Microsoft.Media/mediaServices/:accountName/transforms/:transformName?api-version={{api-version}}",
+							"protocol": "https",
+							"host": [
+								"management",
+								"azure",
+								"com"
+							],
+							"path": [
+								"subscriptions",
+								":subscriptionId",
+								"resourceGroups",
+								":resourceGroupName",
+								"providers",
+								"Microsoft.Media",
+								"mediaServices",
+								":accountName",
+								"transforms",
+								":transformName"
+							],
+							"query": [
+								{
+									"key": "api-version",
+									"value": "{{api-version}}"
+								}
+							],
+							"variable": [
+								{
+									"key": "subscriptionId",
+									"value": "{{subscriptionId}}"
+								},
+								{
+									"key": "resourceGroupName",
+									"value": "{{resourceGroupName}}"
+								},
+								{
+									"key": "accountName",
+									"value": "{{accountName}}"
+								},
+								{
+									"key": "transformName",
+									"value": "{{transformName}}"
+								}
+							]
+						},
+						"description": "Creates a new Transform."
+					},
+					"response": []
+				},
+				{
+					"name": "Update Transform",
+					"request": {
+						"method": "PATCH",
+						"header": [
+							{
+								"key": "Authorization",
+								"value": "Bearer <YOUR JWT TOKEN - THIS IS POPULATED AT RUNTIME>"
+							},
+							{
+								"key": "Accept",
+								"value": "application/json"
+							},
+							{
+								"key": "Content-Type",
+								"value": "application/json"
+							},
+							{
+								"key": "Authorization",
+								"value": "Bearer {{AccessToken}}",
+								"description": "Use the JWT Access Token from \"Step 1- Get AAD Auth Token\""
+							}
+						],
+						"body": {
+							"mode": "raw",
+							"raw": "{\n  \"properties\": {\n    \"description\": \"Basic Transform using an Adaptive Streaming encoding preset from the libray of built-in Standard Encoder presets\",\n      \"outputs\": [\n        {\n          \"onError\": \"StopProcessingJob\",\n      \"relativePriority\": \"High\",\n          \"preset\": {\n            \"@odata.type\": \"#Microsoft.Media.BuiltInStandardEncoderPreset\",\n            \"presetName\": \"H264MultipleBitrate720p\"\n          }\n        }\n      ]\n  }\n}"
+						},
+						"url": {
+							"raw": "https://management.azure.com/subscriptions/:subscriptionId/resourceGroups/:resourceGroupName/providers/Microsoft.Media/mediaServices/:accountName/transforms/:transformName?api-version={{api-version}}",
+							"protocol": "https",
+							"host": [
+								"management",
+								"azure",
+								"com"
+							],
+							"path": [
+								"subscriptions",
+								":subscriptionId",
+								"resourceGroups",
+								":resourceGroupName",
+								"providers",
+								"Microsoft.Media",
+								"mediaServices",
+								":accountName",
+								"transforms",
+								":transformName"
+							],
+							"query": [
+								{
+									"key": "api-version",
+									"value": "{{api-version}}"
+								}
+							],
+							"variable": [
+								{
+									"key": "subscriptionId",
+									"value": "{{subscriptionId}}"
+								},
+								{
+									"key": "resourceGroupName",
+									"value": "{{resourceGroupName}}"
+								},
+								{
+									"key": "accountName",
+									"value": "{{accountName}}"
+								},
+								{
+									"key": "transformName",
+									"value": "{{transformName}}"
+								}
+							]
+						},
+						"description": "Updates a Transform."
+					},
+					"response": []
+				},
+				{
+					"name": "Delete Transform",
+					"request": {
+						"method": "DELETE",
+						"header": [
+							{
+								"key": "Authorization",
+								"value": "Bearer {{AccessToken}}",
+								"description": "Use the JWT Access Token from \"Step 1- Get AAD Auth Token\""
+							},
+							{
+								"key": "Accept",
+								"value": "application/json"
+							},
+							{
+								"key": "Content-Type",
+								"value": "application/json"
+							}
+						],
+						"body": {},
+						"url": {
+							"raw": "https://management.azure.com/subscriptions/:subscriptionId/resourceGroups/:resourceGroupName/providers/Microsoft.Media/mediaServices/:accountName/transforms/:transformName?api-version={{api-version}}",
+							"protocol": "https",
+							"host": [
+								"management",
+								"azure",
+								"com"
+							],
+							"path": [
+								"subscriptions",
+								":subscriptionId",
+								"resourceGroups",
+								":resourceGroupName",
+								"providers",
+								"Microsoft.Media",
+								"mediaServices",
+								":accountName",
+								"transforms",
+								":transformName"
+							],
+							"query": [
+								{
+									"key": "api-version",
+									"value": "{{api-version}}"
+								}
+							],
+							"variable": [
+								{
+									"key": "subscriptionId",
+									"value": "{{subscriptionId}}"
+								},
+								{
+									"key": "resourceGroupName",
+									"value": "{{resourceGroupName}}"
+								},
+								{
+									"key": "accountName",
+									"value": "{{accountName}}"
+								},
+								{
+									"key": "transformName",
+									"value": "{{transformName}}"
+								}
+							]
+						},
+						"description": "Deletes a Transform."
+					},
+					"response": []
+				},
+				{
+					"name": "Get Transform Statistics",
+					"request": {
+						"method": "POST",
+						"header": [
+							{
+								"key": "Authorization",
+								"value": "Bearer {{AccessToken}}",
+								"description": "Use the JWT Access Token from \"Step 1- Get AAD Auth Token\""
+							},
+							{
+								"key": "Accept",
+								"value": "application/json"
+							},
+							{
+								"key": "Content-Type",
+								"value": "application/json"
+							}
+						],
+						"body": {
+							"mode": "raw",
+							"raw": ""
+						},
+						"url": {
+							"raw": "https://management.azure.com/subscriptions/:subscriptionId/resourceGroups/:resourceGroupName/providers/Microsoft.Media/mediaServices/:accountName/transforms/:transformName/getStatistics?api-version={{api-version}}",
+							"protocol": "https",
+							"host": [
+								"management",
+								"azure",
+								"com"
+							],
+							"path": [
+								"subscriptions",
+								":subscriptionId",
+								"resourceGroups",
+								":resourceGroupName",
+								"providers",
+								"Microsoft.Media",
+								"mediaServices",
+								":accountName",
+								"transforms",
+								":transformName",
+								"getStatistics"
+							],
+							"query": [
+								{
+									"key": "api-version",
+									"value": "{{api-version}}"
+								}
+							],
+							"variable": [
+								{
+									"key": "subscriptionId",
+									"value": "{{subscriptionId}}"
+								},
+								{
+									"key": "resourceGroupName",
+									"value": "{{resourceGroupName}}"
+								},
+								{
+									"key": "accountName",
+									"value": "{{accountName}}"
+								},
+								{
+									"key": "transformName",
+									"value": "{{transformName}}"
+								}
+							]
+						},
+						"description": "Gets the Job Statistics of a Transform."
+					},
+					"response": []
+				},
+				{
+					"name": "List Jobs",
+					"request": {
+						"method": "GET",
+						"header": [
+							{
+								"key": "Authorization",
+								"value": "Bearer {{AccessToken}}",
+								"description": "Use the JWT Access Token from \"Step 1- Get AAD Auth Token\""
+							},
+							{
+								"key": "Accept",
+								"value": "application/json"
+							},
+							{
+								"key": "Content-Type",
+								"value": "application/json"
+							}
+						],
+						"body": {},
+						"url": {
+							"raw": "https://management.azure.com/subscriptions/:subscriptionId/resourceGroups/:resourceGroupName/providers/Microsoft.Media/mediaServices/:accountName/transforms/:transformName/jobs?api-version={{api-version}}",
+							"protocol": "https",
+							"host": [
+								"management",
+								"azure",
+								"com"
+							],
+							"path": [
+								"subscriptions",
+								":subscriptionId",
+								"resourceGroups",
+								":resourceGroupName",
+								"providers",
+								"Microsoft.Media",
+								"mediaServices",
+								":accountName",
+								"transforms",
+								":transformName",
+								"jobs"
+							],
+							"query": [
+								{
+									"key": "api-version",
+									"value": "{{api-version}}"
+								},
+								{
+									"key": "$filter",
+									"value": "{{$filter}}",
+									"disabled": true
+								},
+								{
+									"key": "$top",
+									"value": "{{$top}}",
+									"disabled": true
+								},
+								{
+									"key": "$skip",
+									"value": "{{$skip}}",
+									"disabled": true
+								}
+							],
+							"variable": [
+								{
+									"key": "subscriptionId",
+									"value": "{{subscriptionId}}"
+								},
+								{
+									"key": "resourceGroupName",
+									"value": "{{resourceGroupName}}"
+								},
+								{
+									"key": "accountName",
+									"value": "{{accountName}}"
+								},
+								{
+									"key": "transformName",
+									"value": "{{transformName}}"
+								}
+							]
+						},
+						"description": "Lists all of the Jobs for the Transform."
+					},
+					"response": []
+				},
+				{
+					"name": "Get Job",
+					"request": {
+						"method": "GET",
+						"header": [
+							{
+								"key": "Authorization",
+								"value": "Bearer {{AccessToken}}",
+								"description": "Use the JWT Access Token from \"Step 1- Get AAD Auth Token\""
+							},
+							{
+								"key": "Accept",
+								"value": "application/json"
+							},
+							{
+								"key": "Content-Type",
+								"value": "application/json"
+							}
+						],
+						"body": {},
+						"url": {
+							"raw": "https://management.azure.com/subscriptions/:subscriptionId/resourceGroups/:resourceGroupName/providers/Microsoft.Media/mediaServices/:accountName/transforms/:transformName/jobs/:jobName?api-version={{api-version}}",
+							"protocol": "https",
+							"host": [
+								"management",
+								"azure",
+								"com"
+							],
+							"path": [
+								"subscriptions",
+								":subscriptionId",
+								"resourceGroups",
+								":resourceGroupName",
+								"providers",
+								"Microsoft.Media",
+								"mediaServices",
+								":accountName",
+								"transforms",
+								":transformName",
+								"jobs",
+								":jobName"
+							],
+							"query": [
+								{
+									"key": "api-version",
+									"value": "{{api-version}}"
+								}
+							],
+							"variable": [
+								{
+									"key": "subscriptionId",
+									"value": "{{subscriptionId}}"
+								},
+								{
+									"key": "resourceGroupName",
+									"value": "{{resourceGroupName}}"
+								},
+								{
+									"key": "accountName",
+									"value": "{{accountName}}"
+								},
+								{
+									"key": "transformName",
+									"value": "{{transformName}}"
+								},
+								{
+									"key": "jobName",
+									"value": "{{jobName}}"
+								}
+							]
+						},
+						"description": "Gets a Job."
+					},
+					"response": []
+				},
+				{
+					"name": "Create or Update Job",
+					"request": {
+						"method": "PUT",
+						"header": [
+							{
+								"key": "Authorization",
+								"value": "Bearer {{AccessToken}}",
+								"description": "Use the JWT Access Token from \"Step 1- Get AAD Auth Token\""
+							},
+							{
+								"key": "Accept",
+								"value": "application/json"
+							},
+							{
+								"key": "Content-Type",
+								"value": "application/json"
+							}
+						],
+						"body": {
+							"mode": "raw",
+							"raw": "{\r\n \"properties\": {\r\n    \"input\": {\r\n      \"@odata.type\": \"#Microsoft.Media.JobInputHttp\",\r\n      \"baseUri\": \"https://nimbuscdn-nimbuspm.streaming.mediaservices.windows.net/2b533311-b215-4409-80af-529c3e853622/\",\r\n      \"files\": [\r\n      \t\t\"Ignite-short.mp4\"\r\n      \t]\r\n    },\r\n    \"outputs\": [\r\n      {\r\n        \"@odata.type\": \"#Microsoft.Media.JobOutputAsset\",\r\n        \"assetName\": \"job1-OutputAsset\"\r\n      }\r\n    ]\r\n }\r\n}"
+						},
+						"url": {
+							"raw": "https://management.azure.com/subscriptions/:subscriptionId/resourceGroups/:resourceGroupName/providers/Microsoft.Media/mediaServices/:accountName/transforms/:transformName/jobs/:jobName?api-version={{api-version}}",
+							"protocol": "https",
+							"host": [
+								"management",
+								"azure",
+								"com"
+							],
+							"path": [
+								"subscriptions",
+								":subscriptionId",
+								"resourceGroups",
+								":resourceGroupName",
+								"providers",
+								"Microsoft.Media",
+								"mediaServices",
+								":accountName",
+								"transforms",
+								":transformName",
+								"jobs",
+								":jobName"
+							],
+							"query": [
+								{
+									"key": "api-version",
+									"value": "{{api-version}}"
+								}
+							],
+							"variable": [
+								{
+									"key": "subscriptionId",
+									"value": "{{subscriptionId}}"
+								},
+								{
+									"key": "resourceGroupName",
+									"value": "{{resourceGroupName}}"
+								},
+								{
+									"key": "accountName",
+									"value": "{{accountName}}"
+								},
+								{
+									"key": "transformName",
+									"value": "{{transformName}}"
+								},
+								{
+									"key": "jobName",
+									"value": "{{jobName}}"
+								}
+							]
+						},
+						"description": "Creates or updates a Job."
+					},
+					"response": []
+				},
+				{
+					"name": "Update Job",
+					"request": {
+						"method": "PATCH",
+						"header": [
+							{
+								"key": "Authorization",
+								"value": "Bearer {{AccessToken}}",
+								"description": "Use the JWT Access Token from \"Step 1- Get AAD Auth Token\""
+							},
+							{
+								"key": "Accept",
+								"value": "application/json"
+							},
+							{
+								"key": "Content-Type",
+								"value": "application/json"
+							}
+						],
+						"body": {
+							"mode": "raw",
+							"raw": "{\r\n    \"input\": {\r\n      \"@odata.type\": \"#Microsoft.Media.JobInputAsset\",\r\n      \"assetName\": \"job1-InputAsset\"\r\n    },\r\n    \"outputs\": [\r\n      {\r\n        \"@odata.type\": \"#Microsoft.Media.JobOutputAsset\",\r\n        \"assetName\": \"job1-OutputAsset\"\r\n      }\r\n    ]\r\n}"
+						},
+						"url": {
+							"raw": "https://management.azure.com/subscriptions/:subscriptionId/resourceGroups/:resourceGroupName/providers/Microsoft.Media/mediaServices/:accountName/transforms/:transformName/jobs/:jobName?api-version={{api-version}}",
+							"protocol": "https",
+							"host": [
+								"management",
+								"azure",
+								"com"
+							],
+							"path": [
+								"subscriptions",
+								":subscriptionId",
+								"resourceGroups",
+								":resourceGroupName",
+								"providers",
+								"Microsoft.Media",
+								"mediaServices",
+								":accountName",
+								"transforms",
+								":transformName",
+								"jobs",
+								":jobName"
+							],
+							"query": [
+								{
+									"key": "api-version",
+									"value": "{{api-version}}"
+								}
+							],
+							"variable": [
+								{
+									"key": "subscriptionId",
+									"value": "{{subscriptionId}}"
+								},
+								{
+									"key": "resourceGroupName",
+									"value": "{{resourceGroupName}}"
+								},
+								{
+									"key": "accountName",
+									"value": "{{accountName}}"
+								},
+								{
+									"key": "transformName",
+									"value": "{{transformName}}"
+								},
+								{
+									"key": "jobName",
+									"value": "{{jobName}}"
+								}
+							]
+						},
+						"description": "Updates a Job."
+					},
+					"response": []
+				},
+				{
+					"name": "Delete Job",
+					"request": {
+						"method": "DELETE",
+						"header": [
+							{
+								"key": "Authorization",
+								"value": "Bearer {{AccessToken}}",
+								"description": "Use the JWT Access Token from \"Step 1- Get AAD Auth Token\""
+							},
+							{
+								"key": "Accept",
+								"value": "application/json"
+							},
+							{
+								"key": "Content-Type",
+								"value": "application/json"
+							}
+						],
+						"body": {},
+						"url": {
+							"raw": "https://management.azure.com/subscriptions/:subscriptionId/resourceGroups/:resourceGroupName/providers/Microsoft.Media/mediaServices/:accountName/transforms/:transformName/jobs/:jobName?api-version={{api-version}}",
+							"protocol": "https",
+							"host": [
+								"management",
+								"azure",
+								"com"
+							],
+							"path": [
+								"subscriptions",
+								":subscriptionId",
+								"resourceGroups",
+								":resourceGroupName",
+								"providers",
+								"Microsoft.Media",
+								"mediaServices",
+								":accountName",
+								"transforms",
+								":transformName",
+								"jobs",
+								":jobName"
+							],
+							"query": [
+								{
+									"key": "api-version",
+									"value": "{{api-version}}"
+								}
+							],
+							"variable": [
+								{
+									"key": "subscriptionId",
+									"value": "{{subscriptionId}}"
+								},
+								{
+									"key": "resourceGroupName",
+									"value": "{{resourceGroupName}}"
+								},
+								{
+									"key": "accountName",
+									"value": "{{accountName}}"
+								},
+								{
+									"key": "transformName",
+									"value": "{{transformName}}"
+								},
+								{
+									"key": "jobName",
+									"value": "{{jobName}}"
+								}
+							]
+						},
+						"description": "Deletes a Job."
+					},
+					"response": []
+				},
+				{
+					"name": "Cancel Job",
+					"request": {
+						"method": "POST",
+						"header": [
+							{
+								"key": "Authorization",
+								"value": "Bearer {{AccessToken}}",
+								"description": "Use the JWT Access Token from \"Step 1- Get AAD Auth Token\""
+							},
+							{
+								"key": "Accept",
+								"value": "application/json"
+							},
+							{
+								"key": "Content-Type",
+								"value": "application/json"
+							}
+						],
+						"body": {},
+						"url": {
+							"raw": "https://management.azure.com/subscriptions/:subscriptionId/resourceGroups/:resourceGroupName/providers/Microsoft.Media/mediaServices/:accountName/transforms/:transformName/jobs/:jobName/cancelJob?api-version={{api-version}}",
+							"protocol": "https",
+							"host": [
+								"management",
+								"azure",
+								"com"
+							],
+							"path": [
+								"",
+								"subscriptions",
+								":subscriptionId",
+								"resourceGroups",
+								":resourceGroupName",
+								"providers",
+								"Microsoft.Media",
+								"mediaServices",
+								":accountName",
+								"transforms",
+								":transformName",
+								"jobs",
+								":jobName",
+								"cancelJob"
+							],
+							"query": [
+								{
+									"key": "api-version",
+									"value": "{{api-version}}"
+								}
+							],
+							"variable": [
+								{
+									"key": "subscriptionId",
+									"value": "{{subscriptionId}}"
+								},
+								{
+									"key": "resourceGroupName",
+									"value": "{{resourceGroupName}}"
+								},
+								{
+									"key": "accountName",
+									"value": "{{accountName}}"
+								},
+								{
+									"key": "transformName",
+									"value": "{{transformName}}"
+								},
+								{
+									"key": "jobName",
+									"value": "{{jobName}}"
+								}
+							]
+						},
+						"description": "Cancel a Job."
+					},
+					"response": []
+				}
+			],
+			"auth": {
+				"type": "bearer",
+				"bearer": [
+					{
+						"key": "token",
+						"value": "{{AccessToken}}",
+						"type": "string"
+					}
+				]
+			},
+			"event": [
+				{
+					"listen": "prerequest",
+					"script": {
+						"id": "39731a23-432b-489d-8f23-43fb63d6b025",
+						"type": "text/javascript",
+						"exec": [
+							""
+						]
+					}
+				},
+				{
+					"listen": "test",
+					"script": {
+						"id": "0e8d33dd-521a-441e-8e9c-70cb99b6940d",
+						"type": "text/javascript",
+						"exec": [
+							""
+						]
+					}
+				}
+			]
+		},
+		{
+			"name": "Assets",
+			"description": "Folder for Assets Management",
+			"item": [
+				{
+					"name": "List Assets",
+					"request": {
+						"method": "GET",
+						"header": [
+							{
+								"key": "Authorization",
+								"value": "Bearer {{AccessToken}}",
+								"description": "Use the JWT Access Token from \"Step 1- Get AAD Auth Token\""
+							},
+							{
+								"key": "Accept",
+								"value": "application/json"
+							},
+							{
+								"key": "Content-Type",
+								"value": "application/json"
+							}
+						],
+						"body": {},
+						"url": {
+							"raw": "https://management.azure.com/subscriptions/:subscriptionId/resourceGroups/:resourceGroupName/providers/Microsoft.Media/mediaServices/:accountName/assets?api-version={{api-version}}",
+							"protocol": "https",
+							"host": [
+								"management",
+								"azure",
+								"com"
+							],
+							"path": [
+								"subscriptions",
+								":subscriptionId",
+								"resourceGroups",
+								":resourceGroupName",
+								"providers",
+								"Microsoft.Media",
+								"mediaServices",
+								":accountName",
+								"assets"
+							],
+							"query": [
+								{
+									"key": "api-version",
+									"value": "{{api-version}}"
+								},
+								{
+									"key": "$filter",
+									"value": "{{$filter}}",
+									"disabled": true
+								},
+								{
+									"key": "$top",
+									"value": "{{$top}}",
+									"disabled": true
+								},
+								{
+									"key": "$orderby",
+									"value": "{{$orderby}}",
+									"disabled": true
+								}
+							],
+							"variable": [
+								{
+									"key": "subscriptionId",
+									"value": "{{subscriptionId}}"
+								},
+								{
+									"key": "resourceGroupName",
+									"value": "{{resourceGroupName}}"
+								},
+								{
+									"key": "accountName",
+									"value": "{{accountName}}"
+								}
+							]
+						},
+						"description": "List Assets in the Media Services account with optional filtering and ordering"
+					},
+					"response": []
+				},
+				{
+					"name": "Get an Asset",
+					"request": {
+						"method": "GET",
+						"header": [
+							{
+								"key": "Accept",
+								"value": "application/json"
+							},
+							{
+								"key": "Content-Type",
+								"value": "application/json"
+							},
+							{
+								"key": "Authorization",
+								"value": "Bearer {{AccessToken}}",
+								"description": "Use the JWT Access Token from \"Step 1- Get AAD Auth Token\""
+							}
+						],
+						"body": {},
+						"url": {
+							"raw": "https://management.azure.com/subscriptions/:subscriptionId/resourceGroups/:resourceGroupName/providers/Microsoft.Media/mediaServices/:accountName/assets/:assetName?api-version={{api-version}}",
+							"protocol": "https",
+							"host": [
+								"management",
+								"azure",
+								"com"
+							],
+							"path": [
+								"subscriptions",
+								":subscriptionId",
+								"resourceGroups",
+								":resourceGroupName",
+								"providers",
+								"Microsoft.Media",
+								"mediaServices",
+								":accountName",
+								"assets",
+								":assetName"
+							],
+							"query": [
+								{
+									"key": "api-version",
+									"value": "{{api-version}}"
+								}
+							],
+							"variable": [
+								{
+									"key": "subscriptionId",
+									"value": "{{subscriptionId}}"
+								},
+								{
+									"key": "resourceGroupName",
+									"value": "{{resourceGroupName}}"
+								},
+								{
+									"key": "accountName",
+									"value": "{{accountName}}"
+								},
+								{
+									"key": "assetName",
+									"value": "{{assetName}}"
+								}
+							]
+						},
+						"description": "Get the details of an Asset in the Media Services account"
+					},
+					"response": []
+				},
+				{
+					"name": "Create or update an Asset",
+					"request": {
+						"method": "PUT",
+						"header": [
+							{
+								"key": "Accept",
+								"value": "application/json"
+							},
+							{
+								"key": "Content-Type",
+								"value": "application/json"
+							},
+							{
+								"key": "Authorization",
+								"value": "Bearer {{AccessToken}}",
+								"description": "Use the JWT Access Token from \"Step 1- Get AAD Auth Token\""
+							}
+						],
+						"body": {
+							"mode": "raw",
+							"raw": " {\r\n   \"properties\": {\r\n     \"description\": \"My Asset\",\r\n     \"alternateId\" : \"some GUID\"\r\n  }\r\n }"
+						},
+						"url": {
+							"raw": "https://management.azure.com/subscriptions/:subscriptionId/resourceGroups/:resourceGroupName/providers/Microsoft.Media/mediaServices/:accountName/assets/:assetName?api-version={{api-version}}",
+							"protocol": "https",
+							"host": [
+								"management",
+								"azure",
+								"com"
+							],
+							"path": [
+								"subscriptions",
+								":subscriptionId",
+								"resourceGroups",
+								":resourceGroupName",
+								"providers",
+								"Microsoft.Media",
+								"mediaServices",
+								":accountName",
+								"assets",
+								":assetName"
+							],
+							"query": [
+								{
+									"key": "api-version",
+									"value": "{{api-version}}"
+								}
+							],
+							"variable": [
+								{
+									"key": "subscriptionId",
+									"value": "{{subscriptionId}}"
+								},
+								{
+									"key": "resourceGroupName",
+									"value": "{{resourceGroupName}}"
+								},
+								{
+									"key": "accountName",
+									"value": "{{accountName}}"
+								},
+								{
+									"key": "assetName",
+									"value": "{{assetName}}"
+								}
+							]
+						},
+						"description": "Creates or updates an Asset in the Media Services account"
+					},
+					"response": []
+				},
+				{
+					"name": "Update an Asset",
+					"request": {
+						"method": "PATCH",
+						"header": [
+							{
+								"key": "Accept",
+								"value": "application/json"
+							},
+							{
+								"key": "Content-Type",
+								"value": "application/json"
+							},
+							{
+								"key": "Authorization",
+								"value": "Bearer {{AccessToken}}",
+								"description": "Use the JWT Access Token from \"Step 1- Get AAD Auth Token\""
+							}
+						],
+						"body": {
+							"mode": "raw",
+							"raw": " {\r\n   \"properties\": {\r\n     \"description\": \"My Asset descriptions 2\",\r\n     \"alternateId\" : \"some GUID\"\r\n  }\r\n }"
+						},
+						"url": {
+							"raw": "https://management.azure.com/subscriptions/:subscriptionId/resourceGroups/:resourceGroupName/providers/Microsoft.Media/mediaServices/:accountName/assets/:assetName?api-version={{api-version}}",
+							"protocol": "https",
+							"host": [
+								"management",
+								"azure",
+								"com"
+							],
+							"path": [
+								"subscriptions",
+								":subscriptionId",
+								"resourceGroups",
+								":resourceGroupName",
+								"providers",
+								"Microsoft.Media",
+								"mediaServices",
+								":accountName",
+								"assets",
+								":assetName"
+							],
+							"query": [
+								{
+									"key": "api-version",
+									"value": "{{api-version}}"
+								}
+							],
+							"variable": [
+								{
+									"key": "subscriptionId",
+									"value": "{{subscriptionId}}"
+								},
+								{
+									"key": "resourceGroupName",
+									"value": "{{resourceGroupName}}"
+								},
+								{
+									"key": "accountName",
+									"value": "{{accountName}}"
+								},
+								{
+									"key": "assetName",
+									"value": "{{assetName}}"
+								}
+							]
+						},
+						"description": "Updates an existing Asset in the Media Services account"
+					},
+					"response": []
+				},
+				{
+					"name": "Delete an Asset.",
+					"request": {
+						"method": "DELETE",
+						"header": [
+							{
+								"key": "Accept",
+								"value": "application/json"
+							},
+							{
+								"key": "Content-Type",
+								"value": "application/json"
+							},
+							{
+								"key": "Authorization",
+								"value": "Bearer {{AccessToken}}",
+								"description": "Use the JWT Access Token from \"Step 1- Get AAD Auth Token\""
+							}
+						],
+						"body": {},
+						"url": {
+							"raw": "https://management.azure.com/subscriptions/:subscriptionId/resourceGroups/:resourceGroupName/providers/Microsoft.Media/mediaServices/:accountName/assets/:assetName?api-version={{api-version}}",
+							"protocol": "https",
+							"host": [
+								"management",
+								"azure",
+								"com"
+							],
+							"path": [
+								"subscriptions",
+								":subscriptionId",
+								"resourceGroups",
+								":resourceGroupName",
+								"providers",
+								"Microsoft.Media",
+								"mediaServices",
+								":accountName",
+								"assets",
+								":assetName"
+							],
+							"query": [
+								{
+									"key": "api-version",
+									"value": "{{api-version}}"
+								}
+							],
+							"variable": [
+								{
+									"key": "subscriptionId",
+									"value": "{{subscriptionId}}"
+								},
+								{
+									"key": "resourceGroupName",
+									"value": "{{resourceGroupName}}"
+								},
+								{
+									"key": "accountName",
+									"value": "{{accountName}}"
+								},
+								{
+									"key": "assetName",
+									"value": "{{assetName}}"
+								}
+							]
+						},
+						"description": "Deletes an Asset in the Media Services account"
+					},
+					"response": []
+				},
+				{
+					"name": "List the Asset SAS URLs",
+					"request": {
+						"method": "POST",
+						"header": [
+							{
+								"key": "Authorization",
+								"value": "Bearer {{AccessToken}}",
+								"description": "Use the JWT Access Token from \"Step 1- Get AAD Auth Token\""
+							},
+							{
+								"key": "Accept",
+								"value": "application/json"
+							},
+							{
+								"key": "Content-Type",
+								"value": "application/json"
+							}
+						],
+						"body": {
+							"mode": "raw",
+							"raw": "{\r\n  \"permissions\": \"ReadWrite\",\r\n  \"expiryTime\": \"2018-04-4T10:00Z\"\r\n}\r\n"
+						},
+						"url": {
+							"raw": "https://management.azure.com/subscriptions/:subscriptionId/resourceGroups/:resourceGroupName/providers/Microsoft.Media/mediaServices/:accountName/assets/:assetName/listContainerSas?api-version={{api-version}}",
+							"protocol": "https",
+							"host": [
+								"management",
+								"azure",
+								"com"
+							],
+							"path": [
+								"subscriptions",
+								":subscriptionId",
+								"resourceGroups",
+								":resourceGroupName",
+								"providers",
+								"Microsoft.Media",
+								"mediaServices",
+								":accountName",
+								"assets",
+								":assetName",
+								"listContainerSas"
+							],
+							"query": [
+								{
+									"key": "api-version",
+									"value": "{{api-version}}"
+								}
+							],
+							"variable": [
+								{
+									"key": "subscriptionId",
+									"value": "{{subscriptionId}}"
+								},
+								{
+									"key": "resourceGroupName",
+									"value": "{{resourceGroupName}}"
+								},
+								{
+									"key": "accountName",
+									"value": "{{accountName}}"
+								},
+								{
+									"key": "assetName",
+									"value": "{{assetName}}"
+								}
+							]
+						},
+						"description": "Lists the Asset SAS URLs used for uploading and downloading Asset content\n\nThe expiryTime should be less than 24 hours from the current UTC timestamp."
+					},
+					"response": []
+				},
+				{
+					"name": "List the Asset keys",
+					"request": {
+						"method": "POST",
+						"header": [
+							{
+								"key": "Accept",
+								"value": "application/json"
+							},
+							{
+								"key": "Content-Type",
+								"value": "application/json"
+							},
+							{
+								"key": "Authorization",
+								"value": "Bearer {{AccessToken}}",
+								"description": "Use the JWT Access Token from \"Step 1- Get AAD Auth Token\""
+							}
+						],
+						"body": {
+							"mode": "raw",
+							"raw": ""
+						},
+						"url": {
+							"raw": "https://management.azure.com/subscriptions/:subscriptionId/resourceGroups/:resourceGroupName/providers/Microsoft.Media/mediaServices/:accountName/assets/:assetName/listEncryptionKey?api-version={{api-version}}",
+							"protocol": "https",
+							"host": [
+								"management",
+								"azure",
+								"com"
+							],
+							"path": [
+								"subscriptions",
+								":subscriptionId",
+								"resourceGroups",
+								":resourceGroupName",
+								"providers",
+								"Microsoft.Media",
+								"mediaServices",
+								":accountName",
+								"assets",
+								":assetName",
+								"listEncryptionKey"
+							],
+							"query": [
+								{
+									"key": "api-version",
+									"value": "{{api-version}}"
+								}
+							],
+							"variable": [
+								{
+									"key": "subscriptionId",
+									"value": "{{subscriptionId}}"
+								},
+								{
+									"key": "resourceGroupName",
+									"value": "{{resourceGroupName}}"
+								},
+								{
+									"key": "accountName",
+									"value": "{{accountName}}"
+								},
+								{
+									"key": "assetName",
+									"value": "{{assetName}}"
+								}
+							]
+						},
+						"description": "Lists the Asset storage encryption keys used to decrypt content created by version 2 of the Media Services API"
+					},
+					"response": []
+				}
+			],
+			"auth": {
+				"type": "bearer",
+				"bearer": [
+					{
+						"key": "token",
+						"value": "{{AccessToken}}",
+						"type": "string"
+					}
+				]
+			},
+			"event": [
+				{
+					"listen": "prerequest",
+					"script": {
+						"id": "76362b5c-7fbb-4f3f-a47d-c546514b741d",
+						"type": "text/javascript",
+						"exec": [
+							""
+						]
+					}
+				},
+				{
+					"listen": "test",
+					"script": {
+						"id": "2f3163fb-6466-4151-abb9-0c6bee9da6a8",
+						"type": "text/javascript",
+						"exec": [
+							""
+						]
+					}
+				}
+			]
+		},
+		{
+			"name": "Content Key Policies",
+			"description": "Folder for subscriptions",
+			"item": [
+				{
+					"name": "Example Content Key Polices",
+					"description": "Example Content Key policies demonstrating various features. ",
+					"item": [],
+					"auth": {
+						"type": "bearer",
+						"bearer": [
+							{
+								"key": "token",
+								"value": "{{AccessToken}}",
+								"type": "string"
+							}
+						]
+					},
+					"_postman_isSubFolder": true
+				},
+				{
+					"name": "List Content Key Policies",
+					"request": {
+						"method": "GET",
+						"header": [
+							{
+								"key": "Accept",
+								"value": "application/json"
+							},
+							{
+								"key": "Content-Type",
+								"value": "application/json"
+							},
+							{
+								"key": "Authorization",
+								"value": "Bearer {{AccessToken}}",
+								"description": "Use the JWT Access Token from \"Step 1- Get AAD Auth Token\""
+							}
+						],
+						"body": {},
+						"url": {
+							"raw": "https://management.azure.com/subscriptions/:subscriptionId/resourceGroups/:resourceGroupName/providers/Microsoft.Media/mediaServices/:accountName/contentKeyPolicies?api-version={{api-version}}",
+							"protocol": "https",
+							"host": [
+								"management",
+								"azure",
+								"com"
+							],
+							"path": [
+								"subscriptions",
+								":subscriptionId",
+								"resourceGroups",
+								":resourceGroupName",
+								"providers",
+								"Microsoft.Media",
+								"mediaServices",
+								":accountName",
+								"contentKeyPolicies"
+							],
+							"query": [
+								{
+									"key": "api-version",
+									"value": "{{api-version}}"
+								}
+							],
+							"variable": [
+								{
+									"key": "subscriptionId",
+									"value": "{{subscriptionId}}"
+								},
+								{
+									"key": "resourceGroupName",
+									"value": "{{resourceGroupName}}"
+								},
+								{
+									"key": "accountName",
+									"value": "{{accountName}}"
+								}
+							]
+						},
+						"description": "Lists the Content Key Policies in the account"
+					},
+					"response": []
+				},
+				{
+					"name": "Get a Content Key Policy",
+					"request": {
+						"method": "GET",
+						"header": [
+							{
+								"key": "Accept",
+								"value": "application/json"
+							},
+							{
+								"key": "Content-Type",
+								"value": "application/json"
+							},
+							{
+								"key": "Authorization",
+								"value": "Bearer {{AccessToken}}",
+								"description": "Use the JWT Access Token from \"Step 1- Get AAD Auth Token\""
+							}
+						],
+						"body": {},
+						"url": {
+							"raw": "https://management.azure.com/subscriptions/:subscriptionId/resourceGroups/:resourceGroupName/providers/Microsoft.Media/mediaServices/:accountName/contentKeyPolicies/:contentKeyPolicyName?api-version={{api-version}}",
+							"protocol": "https",
+							"host": [
+								"management",
+								"azure",
+								"com"
+							],
+							"path": [
+								"subscriptions",
+								":subscriptionId",
+								"resourceGroups",
+								":resourceGroupName",
+								"providers",
+								"Microsoft.Media",
+								"mediaServices",
+								":accountName",
+								"contentKeyPolicies",
+								":contentKeyPolicyName"
+							],
+							"query": [
+								{
+									"key": "api-version",
+									"value": "{{api-version}}"
+								}
+							],
+							"variable": [
+								{
+									"key": "subscriptionId",
+									"value": "{{subscriptionId}}"
+								},
+								{
+									"key": "resourceGroupName",
+									"value": "{{resourceGroupName}}"
+								},
+								{
+									"key": "accountName",
+									"value": "{{accountName}}"
+								},
+								{
+									"key": "contentKeyPolicyName",
+									"value": "{{contentKeyPolicyName}}"
+								}
+							]
+						},
+						"description": "Get the details of a Content Key Policy in the Media Services account"
+					},
+					"response": []
+				},
+				{
+					"name": "Create or update an Content Key Policy",
+					"request": {
+						"method": "PUT",
+						"header": [
+							{
+								"key": "Accept",
+								"value": "application/json"
+							},
+							{
+								"key": "Content-Type",
+								"value": "application/json"
+							},
+							{
+								"key": "Authorization",
+								"value": "Bearer {{AccessToken}}",
+								"description": "Use the JWT Access Token from \"Step 1- Get AAD Auth Token\""
+							}
+						],
+						"body": {
+							"mode": "raw",
+							"raw": "{\r\n    \"description\": \"PolicyDescription\",\r\n    \"options\": [\r\n      {\r\n        \"name\": \"ClearKeyOption\",\r\n        \"configuration\": {\r\n          \"@odata.type\": \"#Microsoft.Media.ContentKeyPolicyClearKeyConfiguration\"\r\n        },\r\n        \"restriction\": {\r\n          \"@odata.type\": \"#Microsoft.Media.ContentKeyPolicyTokenRestriction\",\r\n          \"issuer\": \"urn:issuer\",\r\n          \"audience\": \"urn:audience\",\r\n          \"primaryVerificationKey\": {\r\n            \"@odata.type\": \"#Microsoft.Media.ContentKeyPolicySymmetricTokenKey\",\r\n            \"keyValue\": \"AAAAAAAAAAAAAAAAAAAAAA==\"\r\n          },\r\n          \"restrictionTokenType\": \"Swt\"\r\n        }\r\n      },\r\n      {\r\n        \"name\": \"widevineoption\",\r\n        \"configuration\": {\r\n          \"@odata.type\": \"#Microsoft.Media.ContentKeyPolicyWidevineConfiguration\",\r\n          \"widevineTemplate\": \"{\\\"allowed_track_types\\\":\\\"SD_HD\\\",\\\"content_key_specs\\\":[{\\\"track_type\\\":\\\"SD\\\",\\\"security_level\\\":1,\\\"required_output_protection\\\":{\\\"hdcp\\\":\\\"HDCP_V2\\\"}}],\\\"policy_overrides\\\":{\\\"can_play\\\":true,\\\"can_persist\\\":true,\\\"can_renew\\\":false}}\"\r\n        },\r\n        \"restriction\": {\r\n          \"@odata.type\": \"#Microsoft.Media.ContentKeyPolicyOpenRestriction\"\r\n        }\r\n      }\r\n  ]\r\n}"
+						},
+						"url": {
+							"raw": "https://management.azure.com/subscriptions/:subscriptionId/resourceGroups/:resourceGroupName/providers/Microsoft.Media/mediaServices/:accountName/contentKeyPolicies/:contentKeyPolicyName?api-version={{api-version}}",
+							"protocol": "https",
+							"host": [
+								"management",
+								"azure",
+								"com"
+							],
+							"path": [
+								"subscriptions",
+								":subscriptionId",
+								"resourceGroups",
+								":resourceGroupName",
+								"providers",
+								"Microsoft.Media",
+								"mediaServices",
+								":accountName",
+								"contentKeyPolicies",
+								":contentKeyPolicyName"
+							],
+							"query": [
+								{
+									"key": "api-version",
+									"value": "{{api-version}}"
+								}
+							],
+							"variable": [
+								{
+									"key": "subscriptionId",
+									"value": "{{subscriptionId}}"
+								},
+								{
+									"key": "resourceGroupName",
+									"value": "{{resourceGroupName}}"
+								},
+								{
+									"key": "accountName",
+									"value": "{{accountName}}"
+								},
+								{
+									"key": "contentKeyPolicyName",
+									"value": "{{contentKeyPolicyName}}"
+								}
+							]
+						},
+						"description": "Create or update a Content Key Policy in the Media Services account"
+					},
+					"response": []
+				},
+				{
+					"name": "Update a Content Key Policy",
+					"request": {
+						"method": "PATCH",
+						"header": [
+							{
+								"key": "Accept",
+								"value": "application/json"
+							},
+							{
+								"key": "Content-Type",
+								"value": "application/json"
+							},
+							{
+								"key": "Authorization",
+								"value": "Bearer {{AccessToken}}",
+								"description": "Use the JWT Access Token from \"Step 1- Get AAD Auth Token\""
+							}
+						],
+						"body": {
+							"mode": "raw",
+							"raw": ""
+						},
+						"url": {
+							"raw": "https://management.azure.com/subscriptions/:subscriptionId/resourceGroups/:resourceGroupName/providers/Microsoft.Media/mediaServices/:accountName/contentKeyPolicies/:contentKeyPolicyName?api-version={{api-version}}",
+							"protocol": "https",
+							"host": [
+								"management",
+								"azure",
+								"com"
+							],
+							"path": [
+								"subscriptions",
+								":subscriptionId",
+								"resourceGroups",
+								":resourceGroupName",
+								"providers",
+								"Microsoft.Media",
+								"mediaServices",
+								":accountName",
+								"contentKeyPolicies",
+								":contentKeyPolicyName"
+							],
+							"query": [
+								{
+									"key": "api-version",
+									"value": "{{api-version}}"
+								}
+							],
+							"variable": [
+								{
+									"key": "subscriptionId",
+									"value": "{{subscriptionId}}"
+								},
+								{
+									"key": "resourceGroupName",
+									"value": "{{resourceGroupName}}"
+								},
+								{
+									"key": "accountName",
+									"value": "{{accountName}}"
+								},
+								{
+									"key": "contentKeyPolicyName",
+									"value": "{{contentKeyPolicyName}}"
+								}
+							]
+						},
+						"description": "Updates an existing Content Key Policy in the Media Services account"
+					},
+					"response": []
+				},
+				{
+					"name": "Delete a Content Key Policy",
+					"request": {
+						"method": "DELETE",
+						"header": [
+							{
+								"key": "Accept",
+								"value": "application/json"
+							},
+							{
+								"key": "Content-Type",
+								"value": "application/json"
+							},
+							{
+								"key": "Authorization",
+								"value": "Bearer {{AccessToken}}",
+								"description": "Use the JWT Access Token from \"Step 1- Get AAD Auth Token\""
+							}
+						],
+						"body": {},
+						"url": {
+							"raw": "https://management.azure.com/subscriptions/:subscriptionId/resourceGroups/:resourceGroupName/providers/Microsoft.Media/mediaServices/:accountName/contentKeyPolicies/:contentKeyPolicyName?api-version={{api-version}}",
+							"protocol": "https",
+							"host": [
+								"management",
+								"azure",
+								"com"
+							],
+							"path": [
+								"subscriptions",
+								":subscriptionId",
+								"resourceGroups",
+								":resourceGroupName",
+								"providers",
+								"Microsoft.Media",
+								"mediaServices",
+								":accountName",
+								"contentKeyPolicies",
+								":contentKeyPolicyName"
+							],
+							"query": [
+								{
+									"key": "api-version",
+									"value": "{{api-version}}"
+								}
+							],
+							"variable": [
+								{
+									"key": "subscriptionId",
+									"value": "{{subscriptionId}}"
+								},
+								{
+									"key": "resourceGroupName",
+									"value": "{{resourceGroupName}}"
+								},
+								{
+									"key": "accountName",
+									"value": "{{accountName}}"
+								},
+								{
+									"key": "contentKeyPolicyName",
+									"value": "{{contentKeyPolicyName}}"
+								}
+							]
+						},
+						"description": "Deletes a Content Key Policy in the Media Services account"
+					},
+					"response": []
+				},
+				{
+					"name": "Get a Content Key Policy with secrets",
+					"request": {
+						"method": "POST",
+						"header": [
+							{
+								"key": "Accept",
+								"value": "application/json"
+							},
+							{
+								"key": "Content-Type",
+								"value": "application/json"
+							},
+							{
+								"key": "Authorization",
+								"value": "Bearer {{AccessToken}}",
+								"description": "Use the JWT Access Token from \"Step 1- Get AAD Auth Token\""
+							}
+						],
+						"body": {},
+						"url": {
+							"raw": "https://management.azure.com/subscriptions/:subscriptionId/resourceGroups/:resourceGroupName/providers/Microsoft.Media/mediaServices/:accountName/contentKeyPolicies/:contentKeyPolicyName/getPolicyPropertiesWithSecrets?api-version={{api-version}}",
+							"protocol": "https",
+							"host": [
+								"management",
+								"azure",
+								"com"
+							],
+							"path": [
+								"subscriptions",
+								":subscriptionId",
+								"resourceGroups",
+								":resourceGroupName",
+								"providers",
+								"Microsoft.Media",
+								"mediaServices",
+								":accountName",
+								"contentKeyPolicies",
+								":contentKeyPolicyName",
+								"getPolicyPropertiesWithSecrets"
+							],
+							"query": [
+								{
+									"key": "api-version",
+									"value": "{{api-version}}"
+								}
+							],
+							"variable": [
+								{
+									"key": "subscriptionId",
+									"value": "{{subscriptionId}}"
+								},
+								{
+									"key": "resourceGroupName",
+									"value": "{{resourceGroupName}}"
+								},
+								{
+									"key": "accountName",
+									"value": "{{accountName}}"
+								},
+								{
+									"key": "contentKeyPolicyName",
+									"value": "{{contentKeyPolicyName}}"
+								}
+							]
+						},
+						"description": "Get a Content Key Policy including secret values"
+					},
+					"response": []
+				}
+			],
+			"auth": {
+				"type": "bearer",
+				"bearer": [
+					{
+						"key": "token",
+						"value": "{{AccessToken}}",
+						"type": "string"
+					}
+				]
+			},
+			"event": [
+				{
+					"listen": "prerequest",
+					"script": {
+						"id": "b1ed61e2-fba4-4e46-a20a-39695d2be2b1",
+						"type": "text/javascript",
+						"exec": [
+							""
+						]
+					}
+				},
+				{
+					"listen": "test",
+					"script": {
+						"id": "944ac73f-10bc-4e27-87cf-19ce5fe1d805",
+						"type": "text/javascript",
+						"exec": [
+							""
+						]
+					}
+				}
+			]
+		},
+		{
+			"name": "Operations",
+			"description": "Folder for providers",
+			"item": [
+				{
+					"name": "List Operations",
+					"request": {
+						"method": "GET",
+						"header": [
+							{
+								"key": "Accept",
+								"value": "application/json"
+							},
+							{
+								"key": "Content-Type",
+								"value": "application/json"
+							},
+							{
+								"key": "Authorization",
+								"value": "Bearer {{AccessToken}}",
+								"description": "Use the JWT Access Token from \"Step 1- Get AAD Auth Token\""
+							}
+						],
+						"body": {},
+						"url": {
+							"raw": "https://management.azure.com/providers/Microsoft.Media/operations?api-version={{api-version}}",
+							"protocol": "https",
+							"host": [
+								"management",
+								"azure",
+								"com"
+							],
+							"path": [
+								"providers",
+								"Microsoft.Media",
+								"operations"
+							],
+							"query": [
+								{
+									"key": "api-version",
+									"value": "{{api-version}}"
+								}
+							]
+						},
+						"description": "Lists all of the available Media Services REST API operations."
+					},
+					"response": []
+				}
+			],
+			"auth": {
+				"type": "bearer",
+				"bearer": [
+					{
+						"key": "token",
+						"value": "{{AccessToken}}",
+						"type": "string"
+					}
+				]
+			},
+			"event": [
+				{
+					"listen": "prerequest",
+					"script": {
+						"id": "130d92de-a1e1-4a55-88c1-963b5c213924",
+						"type": "text/javascript",
+						"exec": [
+							""
+						]
+					}
+				},
+				{
+					"listen": "test",
+					"script": {
+						"id": "e0b68a19-0073-4554-9cc1-9a18cdcf47c0",
+						"type": "text/javascript",
+						"exec": [
+							""
+						]
+					}
+				}
+			]
+		},
+		{
+			"name": "Accounts",
+			"description": "Folder for subscriptions",
+			"item": [
+				{
+					"name": "Check Name Availability for Account",
+					"request": {
+						"method": "POST",
+						"header": [
+							{
+								"key": "Accept",
+								"value": "application/json"
+							},
+							{
+								"key": "Content-Type",
+								"value": "application/json"
+							},
+							{
+								"key": "Authorization",
+								"value": "Bearer {{AccessToken}}",
+								"description": "Use the JWT Access Token from \"Step 1- Get AAD Auth Token\""
+							}
+						],
+						"body": {
+							"mode": "raw",
+							"raw": "{\n\t\"name\":\"brianbl\",\n\t\"type\":\"Microsoft.Media/mediaservices\"\n}\n"
+						},
+						"url": {
+							"raw": "https://management.azure.com/subscriptions/:subscriptionId/resourceGroups/:resourceGroupName/providers/Microsoft.Media/locations/{{location}}/CheckNameAvailability?api-version={{api-version}}",
+							"protocol": "https",
+							"host": [
+								"management",
+								"azure",
+								"com"
+							],
+							"path": [
+								"subscriptions",
+								":subscriptionId",
+								"resourceGroups",
+								":resourceGroupName",
+								"providers",
+								"Microsoft.Media",
+								"locations",
+								"{{location}}",
+								"CheckNameAvailability"
+							],
+							"query": [
+								{
+									"key": "api-version",
+									"value": "{{api-version}}"
+								}
+							],
+							"variable": [
+								{
+									"key": "subscriptionId",
+									"value": "{{subscriptionId}}"
+								},
+								{
+									"key": "resourceGroupName",
+									"value": "{{resourceGroupName}}"
+								}
+							]
+						},
+						"description": "Checks whether the Media Service resource name is available. The name must be globally unique."
+					},
+					"response": []
+				},
+				{
+					"name": "List Media Services Accounts",
+					"request": {
+						"method": "GET",
+						"header": [
+							{
+								"key": "Accept",
+								"value": "application/json"
+							},
+							{
+								"key": "Content-Type",
+								"value": "application/json"
+							},
+							{
+								"key": "Authorization",
+								"value": "Bearer {{AccessToken}}",
+								"description": "Use the JWT Access Token from \"Step 1- Get AAD Auth Token\""
+							}
+						],
+						"body": {},
+						"url": {
+							"raw": "https://management.azure.com/subscriptions/:subscriptionId/resourceGroups/:resourceGroupName/providers/Microsoft.Media/mediaservices?api-version={{api-version}}",
+							"protocol": "https",
+							"host": [
+								"management",
+								"azure",
+								"com"
+							],
+							"path": [
+								"subscriptions",
+								":subscriptionId",
+								"resourceGroups",
+								":resourceGroupName",
+								"providers",
+								"Microsoft.Media",
+								"mediaservices"
+							],
+							"query": [
+								{
+									"key": "api-version",
+									"value": "{{api-version}}"
+								}
+							],
+							"variable": [
+								{
+									"key": "subscriptionId",
+									"value": "{{subscriptionId}}"
+								},
+								{
+									"key": "resourceGroupName",
+									"value": "{{resourceGroupName}}"
+								}
+							]
+						},
+						"description": "Lists all of the Media Services in a resource group."
+					},
+					"response": []
+				},
+				{
+					"name": "Get Media Services Account",
+					"request": {
+						"method": "GET",
+						"header": [
+							{
+								"key": "Accept",
+								"value": "application/json"
+							},
+							{
+								"key": "Content-Type",
+								"value": "application/json"
+							},
+							{
+								"key": "Authorization",
+								"value": "Bearer {{AccessToken}}",
+								"description": "Use the JWT Access Token from \"Step 1- Get AAD Auth Token\""
+							}
+						],
+						"body": {},
+						"url": {
+							"raw": "https://management.azure.com/subscriptions/:subscriptionId/resourceGroups/:resourceGroupName/providers/Microsoft.Media/mediaservices/:mediaServiceName?api-version={{api-version}}",
+							"protocol": "https",
+							"host": [
+								"management",
+								"azure",
+								"com"
+							],
+							"path": [
+								"subscriptions",
+								":subscriptionId",
+								"resourceGroups",
+								":resourceGroupName",
+								"providers",
+								"Microsoft.Media",
+								"mediaservices",
+								":mediaServiceName"
+							],
+							"query": [
+								{
+									"key": "api-version",
+									"value": "{{api-version}}"
+								}
+							],
+							"variable": [
+								{
+									"key": "subscriptionId",
+									"value": "{{subscriptionId}}"
+								},
+								{
+									"key": "resourceGroupName",
+									"value": "{{resourceGroupName}}"
+								},
+								{
+									"key": "mediaServiceName",
+									"value": "{{accountName}}"
+								}
+							]
+						},
+						"description": "Gets a Media Service."
+					},
+					"response": []
+				},
+				{
+					"name": "Create Media Services Account",
+					"request": {
+						"method": "PUT",
+						"header": [
+							{
+								"key": "Accept",
+								"value": "application/json"
+							},
+							{
+								"key": "Content-Type",
+								"value": "application/json"
+							},
+							{
+								"key": "Authorization",
+								"value": "Bearer {{AccessToken}}",
+								"description": "Use the JWT Access Token from \"Step 1- Get AAD Auth Token\""
+							}
+						],
+						"body": {
+							"mode": "raw",
+							"raw": " {\r\n   \"location\": \"West US 2\",\r\n      \"tags\": {\r\n        \"createdBy\": \"user name\",\r\n        \"key2\": \"value2\"\r\n      },\r\n      \"properties\": {\r\n        \"storageAccounts\": [\r\n          {\r\n            \"id\": \"/subscriptions/00000000-0000-0000-0000-000000000000/resourceGroups/contoso/providers/Microsoft.Storage/storageAccounts/contososportsstore\",\r\n            \"type\": \"Primary\"\r\n          }\r\n        ]\r\n      }\r\n}"
+						},
+						"url": {
+							"raw": "https://management.azure.com/subscriptions/:subscriptionId/resourceGroups/:resourceGroupName/providers/Microsoft.Media/mediaservices/:mediaServiceName?api-version={{api-version}}",
+							"protocol": "https",
+							"host": [
+								"management",
+								"azure",
+								"com"
+							],
+							"path": [
+								"subscriptions",
+								":subscriptionId",
+								"resourceGroups",
+								":resourceGroupName",
+								"providers",
+								"Microsoft.Media",
+								"mediaservices",
+								":mediaServiceName"
+							],
+							"query": [
+								{
+									"key": "api-version",
+									"value": "{{api-version}}"
+								}
+							],
+							"variable": [
+								{
+									"key": "subscriptionId",
+									"value": "{{subscriptionId}}"
+								},
+								{
+									"key": "resourceGroupName",
+									"value": "{{resourceGroupName}}"
+								},
+								{
+									"key": "mediaServiceName",
+									"value": "{{accountName}}"
+								}
+							]
+						},
+						"description": "Creates a Media Service."
+					},
+					"response": []
+				},
+				{
+					"name": "Update Media Services Account",
+					"request": {
+						"method": "PATCH",
+						"header": [
+							{
+								"key": "Accept",
+								"value": "application/json"
+							},
+							{
+								"key": "Content-Type",
+								"value": "application/json"
+							},
+							{
+								"key": "Authorization",
+								"value": "Bearer {{AccessToken}}",
+								"description": "Use the JWT Access Token from \"Step 1- Get AAD Auth Token\""
+							}
+						],
+						"body": {
+							"mode": "raw",
+							"raw": "{\r\n      \"tags\": {\r\n        \"key1\": \"value3\"\r\n      }\r\n}"
+						},
+						"url": {
+							"raw": "https://management.azure.com/subscriptions/:subscriptionId/resourceGroups/:resourceGroupName/providers/Microsoft.Media/mediaservices/:mediaServiceName?api-version={{api-version}}",
+							"protocol": "https",
+							"host": [
+								"management",
+								"azure",
+								"com"
+							],
+							"path": [
+								"subscriptions",
+								":subscriptionId",
+								"resourceGroups",
+								":resourceGroupName",
+								"providers",
+								"Microsoft.Media",
+								"mediaservices",
+								":mediaServiceName"
+							],
+							"query": [
+								{
+									"key": "api-version",
+									"value": "{{api-version}}"
+								}
+							],
+							"variable": [
+								{
+									"key": "subscriptionId",
+									"value": "{{subscriptionId}}"
+								},
+								{
+									"key": "resourceGroupName",
+									"value": "{{resourceGroupName}}"
+								},
+								{
+									"key": "mediaServiceName",
+									"value": "{{accountName}}"
+								}
+							]
+						},
+						"description": "Updates a Media Service."
+					},
+					"response": []
+				},
+				{
+					"name": "Delete Media Services Account",
+					"request": {
+						"method": "DELETE",
+						"header": [
+							{
+								"key": "Accept",
+								"value": "application/json"
+							},
+							{
+								"key": "Content-Type",
+								"value": "application/json"
+							},
+							{
+								"key": "Authorization",
+								"value": "Bearer {{AccessToken}}",
+								"description": "Use the JWT Access Token from \"Step 1- Get AAD Auth Token\""
+							}
+						],
+						"body": {},
+						"url": {
+							"raw": "https://management.azure.com/subscriptions/:subscriptionId/resourceGroups/:resourceGroupName/providers/Microsoft.Media/mediaservices/:mediaServiceName?api-version={{api-version}}",
+							"protocol": "https",
+							"host": [
+								"management",
+								"azure",
+								"com"
+							],
+							"path": [
+								"subscriptions",
+								":subscriptionId",
+								"resourceGroups",
+								":resourceGroupName",
+								"providers",
+								"Microsoft.Media",
+								"mediaservices",
+								":mediaServiceName"
+							],
+							"query": [
+								{
+									"key": "api-version",
+									"value": "{{api-version}}"
+								}
+							],
+							"variable": [
+								{
+									"key": "subscriptionId",
+									"value": "{{subscriptionId}}"
+								},
+								{
+									"key": "resourceGroupName",
+									"value": "{{resourceGroupName}}"
+								},
+								{
+									"key": "mediaServiceName",
+									"value": "{{accountName}}"
+								}
+							]
+						},
+						"description": "Deletes a Media Service."
+					},
+					"response": []
+				}
+			],
+			"auth": {
+				"type": "bearer",
+				"bearer": [
+					{
+						"key": "token",
+						"value": "{{AccessToken}}",
+						"type": "string"
+					}
+				]
+			},
+			"event": [
+				{
+					"listen": "prerequest",
+					"script": {
+						"id": "45cc32ee-7c32-4135-8c0f-b167e1b56d61",
+						"type": "text/javascript",
+						"exec": [
+							""
+						]
+					}
+				},
+				{
+					"listen": "test",
+					"script": {
+						"id": "f758a950-7fc3-4792-9e94-ce91c2bc5d64",
+						"type": "text/javascript",
+						"exec": [
+							""
+						]
+					}
+				}
+			]
+		},
+		{
+			"name": "Streaming Policies",
+			"description": "Folder for subscriptions",
+			"item": [
+				{
+					"name": "Example Streaming Policies",
+					"description": "Example Streaming Policies demonstrating various features available",
+					"item": [],
+					"auth": {
+						"type": "bearer",
+						"bearer": [
+							{
+								"key": "token",
+								"value": "{{AccessToken}}",
+								"type": "string"
+							}
+						]
+					},
+					"_postman_isSubFolder": true
+				},
+				{
+					"name": "List Streaming Policies",
+					"request": {
+						"method": "GET",
+						"header": [
+							{
+								"key": "Accept",
+								"value": "application/json"
+							},
+							{
+								"key": "Content-Type",
+								"value": "application/json"
+							},
+							{
+								"key": "Authorization",
+								"value": "Bearer {{AccessToken}}",
+								"description": "Use the JWT Access Token from \"Step 1- Get AAD Auth Token\""
+							}
+						],
+						"body": {},
+						"url": {
+							"raw": "https://management.azure.com/subscriptions/:subscriptionId/resourceGroups/:resourceGroupName/providers/Microsoft.Media/mediaServices/:accountName/streamingPolicies?api-version={{api-version}}",
+							"protocol": "https",
+							"host": [
+								"management",
+								"azure",
+								"com"
+							],
+							"path": [
+								"subscriptions",
+								":subscriptionId",
+								"resourceGroups",
+								":resourceGroupName",
+								"providers",
+								"Microsoft.Media",
+								"mediaServices",
+								":accountName",
+								"streamingPolicies"
+							],
+							"query": [
+								{
+									"key": "api-version",
+									"value": "{{api-version}}"
+								},
+								{
+									"key": "$filter",
+									"value": "",
+									"disabled": true
+								},
+								{
+									"key": "$top",
+									"value": "",
+									"disabled": true
+								},
+								{
+									"key": "$orderby",
+									"value": "",
+									"disabled": true
+								}
+							],
+							"variable": [
+								{
+									"key": "subscriptionId",
+									"value": "{{subscriptionId}}"
+								},
+								{
+									"key": "resourceGroupName",
+									"value": "{{resourceGroupName}}"
+								},
+								{
+									"key": "accountName",
+									"value": "{{accountName}}"
+								}
+							]
+						},
+						"description": "Lists the Streaming Policies in the account"
+					},
+					"response": []
+				},
+				{
+					"name": "Get a Streaming Policy",
+					"request": {
+						"method": "GET",
+						"header": [
+							{
+								"key": "Accept",
+								"value": "application/json"
+							},
+							{
+								"key": "Content-Type",
+								"value": "application/json"
+							},
+							{
+								"key": "Authorization",
+								"value": "Bearer {{AccessToken}}",
+								"description": "Use the JWT Access Token from \"Step 1- Get AAD Auth Token\""
+							}
+						],
+						"body": {},
+						"url": {
+							"raw": "https://management.azure.com/subscriptions/:subscriptionId/resourceGroups/:resourceGroupName/providers/Microsoft.Media/mediaServices/:accountName/streamingPolicies/:streamingPolicyName?api-version={{api-version}}",
+							"protocol": "https",
+							"host": [
+								"management",
+								"azure",
+								"com"
+							],
+							"path": [
+								"subscriptions",
+								":subscriptionId",
+								"resourceGroups",
+								":resourceGroupName",
+								"providers",
+								"Microsoft.Media",
+								"mediaServices",
+								":accountName",
+								"streamingPolicies",
+								":streamingPolicyName"
+							],
+							"query": [
+								{
+									"key": "api-version",
+									"value": "{{api-version}}"
+								}
+							],
+							"variable": [
+								{
+									"key": "subscriptionId",
+									"value": "{{subscriptionId}}"
+								},
+								{
+									"key": "resourceGroupName",
+									"value": "{{resourceGroupName}}"
+								},
+								{
+									"key": "accountName",
+									"value": "{{accountName}}"
+								},
+								{
+									"key": "streamingPolicyName",
+									"value": "{{streamingPolicyName}}"
+								}
+							]
+						},
+						"description": "Get the details of a Streaming Policy in the Media Services account"
+					},
+					"response": []
+				},
+				{
+					"name": "Create a Streaming Policy",
+					"request": {
+						"method": "PUT",
+						"header": [
+							{
+								"key": "Accept",
+								"value": "application/json"
+							},
+							{
+								"key": "Content-Type",
+								"value": "application/json"
+							},
+							{
+								"key": "Authorization",
+								"value": "Bearer {{AccessToken}}",
+								"description": "Use the JWT Access Token from \"Step 1- Get AAD Auth Token\""
+							}
+						],
+						"body": {
+							"mode": "raw",
+							"raw": "{\r\n \"properties\": {\r\n        \"noEncryption\": {\r\n          \"enabledProtocols\": {\r\n            \"download\": true,\r\n            \"dash\": true,\r\n            \"hls\": true,\r\n            \"smoothStreaming\": true\r\n          }\r\n        }\r\n }\r\n}"
+						},
+						"url": {
+							"raw": "https://management.azure.com/subscriptions/:subscriptionId/resourceGroups/:resourceGroupName/providers/Microsoft.Media/mediaServices/:accountName/streamingPolicies/:streamingPolicyName?api-version={{api-version}}",
+							"protocol": "https",
+							"host": [
+								"management",
+								"azure",
+								"com"
+							],
+							"path": [
+								"subscriptions",
+								":subscriptionId",
+								"resourceGroups",
+								":resourceGroupName",
+								"providers",
+								"Microsoft.Media",
+								"mediaServices",
+								":accountName",
+								"streamingPolicies",
+								":streamingPolicyName"
+							],
+							"query": [
+								{
+									"key": "api-version",
+									"value": "{{api-version}}"
+								}
+							],
+							"variable": [
+								{
+									"key": "subscriptionId",
+									"value": "{{subscriptionId}}"
+								},
+								{
+									"key": "resourceGroupName",
+									"value": "{{resourceGroupName}}"
+								},
+								{
+									"key": "accountName",
+									"value": "{{accountName}}"
+								},
+								{
+									"key": "streamingPolicyName",
+									"value": "{{streamingPolicyName}}"
+								}
+							]
+						},
+						"description": "Create a Streaming Policy in the Media Services account"
+					},
+					"response": []
+				},
+				{
+					"name": "Delete a Streaming Policy",
+					"request": {
+						"method": "DELETE",
+						"header": [
+							{
+								"key": "Accept",
+								"value": "application/json"
+							},
+							{
+								"key": "Content-Type",
+								"value": "application/json"
+							},
+							{
+								"key": "Authorization",
+								"value": "Bearer {{AccessToken}}",
+								"description": "Use the JWT Access Token from \"Step 1- Get AAD Auth Token\""
+							}
+						],
+						"body": {},
+						"url": {
+							"raw": "https://management.azure.com/subscriptions/:subscriptionId/resourceGroups/:resourceGroupName/providers/Microsoft.Media/mediaServices/:accountName/streamingPolicies/:streamingPolicyName?api-version={{api-version}}",
+							"protocol": "https",
+							"host": [
+								"management",
+								"azure",
+								"com"
+							],
+							"path": [
+								"subscriptions",
+								":subscriptionId",
+								"resourceGroups",
+								":resourceGroupName",
+								"providers",
+								"Microsoft.Media",
+								"mediaServices",
+								":accountName",
+								"streamingPolicies",
+								":streamingPolicyName"
+							],
+							"query": [
+								{
+									"key": "api-version",
+									"value": "{{api-version}}"
+								}
+							],
+							"variable": [
+								{
+									"key": "subscriptionId",
+									"value": "{{subscriptionId}}"
+								},
+								{
+									"key": "resourceGroupName",
+									"value": "{{resourceGroupName}}"
+								},
+								{
+									"key": "accountName",
+									"value": "{{accountName}}"
+								},
+								{
+									"key": "streamingPolicyName",
+									"value": "{{streamingPolicyName}}"
+								}
+							]
+						},
+						"description": "Deletes a Streaming Policy in the Media Services account"
+					},
+					"response": []
+				},
+				{
+					"name": "List Streaming Locators",
+					"request": {
+						"method": "GET",
+						"header": [
+							{
+								"key": "Accept",
+								"value": "application/json"
+							},
+							{
+								"key": "Content-Type",
+								"value": "application/json"
+							},
+							{
+								"key": "Authorization",
+								"value": "Bearer {{AccessToken}}",
+								"description": "Use the JWT Access Token from \"Step 1- Get AAD Auth Token\""
+							}
+						],
+						"body": {},
+						"url": {
+							"raw": "https://management.azure.com/subscriptions/:subscriptionId/resourceGroups/:resourceGroupName/providers/Microsoft.Media/mediaServices/:accountName/streamingLocators?api-version={{api-version}}",
+							"protocol": "https",
+							"host": [
+								"management",
+								"azure",
+								"com"
+							],
+							"path": [
+								"subscriptions",
+								":subscriptionId",
+								"resourceGroups",
+								":resourceGroupName",
+								"providers",
+								"Microsoft.Media",
+								"mediaServices",
+								":accountName",
+								"streamingLocators"
+							],
+							"query": [
+								{
+									"key": "api-version",
+									"value": "{{api-version}}"
+								},
+								{
+									"key": "$filter",
+									"value": "{{$filter}}",
+									"disabled": true
+								},
+								{
+									"key": "$top",
+									"value": "{{$top}}",
+									"disabled": true
+								},
+								{
+									"key": "$orderby",
+									"value": "{{$orderby}}",
+									"disabled": true
+								}
+							],
+							"variable": [
+								{
+									"key": "subscriptionId",
+									"value": "{{subscriptionId}}"
+								},
+								{
+									"key": "resourceGroupName",
+									"value": "{{resourceGroupName}}"
+								},
+								{
+									"key": "accountName",
+									"value": "{{accountName}}"
+								}
+							]
+						},
+						"description": "Lists the Streaming Locators in the account"
+					},
+					"response": []
+				},
+				{
+					"name": "Get a Streaming Locator",
+					"request": {
+						"method": "GET",
+						"header": [
+							{
+								"key": "Accept",
+								"value": "application/json"
+							},
+							{
+								"key": "Content-Type",
+								"value": "application/json"
+							},
+							{
+								"key": "Authorization",
+								"value": "Bearer {{AccessToken}}",
+								"description": "Use the JWT Access Token from \"Step 1- Get AAD Auth Token\""
+							}
+						],
+						"body": {},
+						"url": {
+							"raw": "https://management.azure.com/subscriptions/:subscriptionId/resourceGroups/:resourceGroupName/providers/Microsoft.Media/mediaServices/:accountName/streamingLocators/:streamingLocatorName?api-version={{api-version}}",
+							"protocol": "https",
+							"host": [
+								"management",
+								"azure",
+								"com"
+							],
+							"path": [
+								"subscriptions",
+								":subscriptionId",
+								"resourceGroups",
+								":resourceGroupName",
+								"providers",
+								"Microsoft.Media",
+								"mediaServices",
+								":accountName",
+								"streamingLocators",
+								":streamingLocatorName"
+							],
+							"query": [
+								{
+									"key": "api-version",
+									"value": "{{api-version}}"
+								}
+							],
+							"variable": [
+								{
+									"key": "subscriptionId",
+									"value": "{{subscriptionId}}"
+								},
+								{
+									"key": "resourceGroupName",
+									"value": "{{resourceGroupName}}"
+								},
+								{
+									"key": "accountName",
+									"value": "{{accountName}}"
+								},
+								{
+									"key": "streamingLocatorName",
+									"value": "{{streamingLocatorName}}"
+								}
+							]
+						},
+						"description": "Get the details of a Streaming Locator in the Media Services account"
+					},
+					"response": []
+				},
+				{
+					"name": "Create a Streaming Locator",
+					"request": {
+						"method": "PUT",
+						"header": [
+							{
+								"key": "Accept",
+								"value": "application/json"
+							},
+							{
+								"key": "Content-Type",
+								"value": "application/json"
+							},
+							{
+								"key": "Authorization",
+								"value": "Bearer {{AccessToken}}",
+								"description": "Use the JWT Access Token from \"Step 1- Get AAD Auth Token\""
+							}
+						],
+						"body": {
+							"mode": "raw",
+							"raw": "{\r\n\t\"properties\":{\r\n\t \"assetName\": \"{{assetName}}\",\r\n\t \"streamingPolicyName\": \"{{streamingPolicyName}}\"\r\n\t}\r\n   \r\n}"
+						},
+						"url": {
+							"raw": "https://management.azure.com/subscriptions/:subscriptionId/resourceGroups/:resourceGroupName/providers/Microsoft.Media/mediaServices/:accountName/streamingLocators/:streamingLocatorName?api-version={{api-version}}",
+							"protocol": "https",
+							"host": [
+								"management",
+								"azure",
+								"com"
+							],
+							"path": [
+								"subscriptions",
+								":subscriptionId",
+								"resourceGroups",
+								":resourceGroupName",
+								"providers",
+								"Microsoft.Media",
+								"mediaServices",
+								":accountName",
+								"streamingLocators",
+								":streamingLocatorName"
+							],
+							"query": [
+								{
+									"key": "api-version",
+									"value": "{{api-version}}"
+								}
+							],
+							"variable": [
+								{
+									"key": "subscriptionId",
+									"value": "{{subscriptionId}}"
+								},
+								{
+									"key": "resourceGroupName",
+									"value": "{{resourceGroupName}}"
+								},
+								{
+									"key": "accountName",
+									"value": "{{accountName}}"
+								},
+								{
+									"key": "streamingLocatorName",
+									"value": "{{streamingLocatorName}}"
+								}
+							]
+						},
+						"description": "Create a Streaming Locator in the Media Services account"
+					},
+					"response": []
+				},
+				{
+					"name": "Delete a Streaming Locator",
+					"request": {
+						"method": "DELETE",
+						"header": [
+							{
+								"key": "Accept",
+								"value": "application/json"
+							},
+							{
+								"key": "Content-Type",
+								"value": "application/json"
+							},
+							{
+								"key": "Authorization",
+								"value": "Bearer {{AccessToken}}",
+								"description": "Use the JWT Access Token from \"Step 1- Get AAD Auth Token\""
+							}
+						],
+						"body": {},
+						"url": {
+							"raw": "https://management.azure.com/subscriptions/:subscriptionId/resourceGroups/:resourceGroupName/providers/Microsoft.Media/mediaServices/:accountName/streamingLocators/:streamingLocatorName?api-version={{api-version}}",
+							"protocol": "https",
+							"host": [
+								"management",
+								"azure",
+								"com"
+							],
+							"path": [
+								"subscriptions",
+								":subscriptionId",
+								"resourceGroups",
+								":resourceGroupName",
+								"providers",
+								"Microsoft.Media",
+								"mediaServices",
+								":accountName",
+								"streamingLocators",
+								":streamingLocatorName"
+							],
+							"query": [
+								{
+									"key": "api-version",
+									"value": "{{api-version}}"
+								}
+							],
+							"variable": [
+								{
+									"key": "subscriptionId",
+									"value": "{{subscriptionId}}"
+								},
+								{
+									"key": "resourceGroupName",
+									"value": "{{resourceGroupName}}"
+								},
+								{
+									"key": "accountName",
+									"value": "{{accountName}}"
+								},
+								{
+									"key": "streamingLocatorName",
+									"value": "{{streamingLocatorName}}"
+								}
+							]
+						},
+						"description": "Deletes a Streaming Locator in the Media Services account"
+					},
+					"response": []
+				},
+				{
+					"name": "List Content Keys",
+					"request": {
+						"method": "POST",
+						"header": [
+							{
+								"key": "Accept",
+								"value": "application/json"
+							},
+							{
+								"key": "Content-Type",
+								"value": "application/json"
+							},
+							{
+								"key": "Authorization",
+								"value": "Bearer {{AccessToken}}",
+								"description": "Use the JWT Access Token from \"Step 1- Get AAD Auth Token\""
+							}
+						],
+						"body": {},
+						"url": {
+							"raw": "https://management.azure.com/subscriptions/:subscriptionId/resourceGroups/:resourceGroupName/providers/Microsoft.Media/mediaServices/:accountName/streamingLocators/:streamingLocatorName/listContentKeys?api-version={{api-version}}",
+							"protocol": "https",
+							"host": [
+								"management",
+								"azure",
+								"com"
+							],
+							"path": [
+								"subscriptions",
+								":subscriptionId",
+								"resourceGroups",
+								":resourceGroupName",
+								"providers",
+								"Microsoft.Media",
+								"mediaServices",
+								":accountName",
+								"streamingLocators",
+								":streamingLocatorName",
+								"listContentKeys"
+							],
+							"query": [
+								{
+									"key": "api-version",
+									"value": "{{api-version}}"
+								}
+							],
+							"variable": [
+								{
+									"key": "subscriptionId",
+									"value": "{{subscriptionId}}"
+								},
+								{
+									"key": "resourceGroupName",
+									"value": "{{resourceGroupName}}"
+								},
+								{
+									"key": "accountName",
+									"value": "{{accountName}}"
+								},
+								{
+									"key": "streamingLocatorName",
+									"value": "{{streamingLocatorName}}"
+								}
+							]
+						},
+						"description": "List Content Keys used by this Streaming Locator"
+					},
+					"response": []
+				},
+				{
+					"name": "List Paths",
+					"request": {
+						"method": "POST",
+						"header": [
+							{
+								"key": "Accept",
+								"value": "application/json"
+							},
+							{
+								"key": "Content-Type",
+								"value": "application/json"
+							},
+							{
+								"key": "Authorization",
+								"value": "Bearer {{AccessToken}}",
+								"description": "Use the JWT Access Token from \"Step 1- Get AAD Auth Token\""
+							}
+						],
+						"body": {},
+						"url": {
+							"raw": "https://management.azure.com/subscriptions/:subscriptionId/resourceGroups/:resourceGroupName/providers/Microsoft.Media/mediaServices/:accountName/streamingLocators/:streamingLocatorName/listPaths?api-version={{api-version}}",
+							"protocol": "https",
+							"host": [
+								"management",
+								"azure",
+								"com"
+							],
+							"path": [
+								"subscriptions",
+								":subscriptionId",
+								"resourceGroups",
+								":resourceGroupName",
+								"providers",
+								"Microsoft.Media",
+								"mediaServices",
+								":accountName",
+								"streamingLocators",
+								":streamingLocatorName",
+								"listPaths"
+							],
+							"query": [
+								{
+									"key": "api-version",
+									"value": "{{api-version}}"
+								}
+							],
+							"variable": [
+								{
+									"key": "subscriptionId",
+									"value": "{{subscriptionId}}"
+								},
+								{
+									"key": "resourceGroupName",
+									"value": "{{resourceGroupName}}"
+								},
+								{
+									"key": "accountName",
+									"value": "{{accountName}}"
+								},
+								{
+									"key": "streamingLocatorName",
+									"value": "{{streamingLocatorName}}"
+								}
+							]
+						},
+						"description": "List Paths supported by this Streaming Locator"
+					},
+					"response": []
+				}
+			],
+			"auth": {
+				"type": "bearer",
+				"bearer": [
+					{
+						"key": "token",
+						"value": "{{AccessToken}}",
+						"type": "string"
+					}
+				]
+			},
+			"event": [
+				{
+					"listen": "prerequest",
+					"script": {
+						"id": "97fb6088-d729-4d2c-b4bc-fa99718a5320",
+						"type": "text/javascript",
+						"exec": [
+							""
+						]
+					}
+				},
+				{
+					"listen": "test",
+					"script": {
+						"id": "680307de-e959-4f93-8621-4c746f069ff2",
+						"type": "text/javascript",
+						"exec": [
+							""
+						]
+					}
+				}
+			]
+		},
+		{
+			"name": "Streaming and Live",
+			"description": "Folder for subscriptions",
+			"item": [
+				{
+					"name": "Example Live Events",
+					"description": "Example Live Event configurations demonstrating various features of the platform",
+					"item": [],
+					"_postman_isSubFolder": true
+				},
+				{
+					"name": "List Live Events",
+					"request": {
+						"method": "GET",
+						"header": [
+							{
+								"key": "Accept",
+								"value": "application/json"
+							},
+							{
+								"key": "Content-Type",
+								"value": "application/json"
+							},
+							{
+								"key": "Authorization",
+								"value": "Bearer {{AccessToken}}",
+								"description": "Use the JWT Access Token from \"Step 1- Get AAD Auth Token\""
+							}
+						],
+						"body": {},
+						"url": {
+							"raw": "https://management.azure.com/subscriptions/:subscriptionId/resourceGroups/:resourceGroupName/providers/Microsoft.Media/mediaservices/:accountName/liveEvents?api-version={{api-version}}",
+							"protocol": "https",
+							"host": [
+								"management",
+								"azure",
+								"com"
+							],
+							"path": [
+								"subscriptions",
+								":subscriptionId",
+								"resourceGroups",
+								":resourceGroupName",
+								"providers",
+								"Microsoft.Media",
+								"mediaservices",
+								":accountName",
+								"liveEvents"
+							],
+							"query": [
+								{
+									"key": "api-version",
+									"value": "{{api-version}}"
+								}
+							],
+							"variable": [
+								{
+									"key": "subscriptionId",
+									"value": "{{subscriptionId}}"
+								},
+								{
+									"key": "resourceGroupName",
+									"value": "{{resourceGroupName}}"
+								},
+								{
+									"key": "accountName",
+									"value": "{{accountName}}"
+								}
+							]
+						},
+						"description": "Lists the Live Events in the account."
+					},
+					"response": []
+				},
+				{
+					"name": "Get Live Event",
+					"request": {
+						"method": "GET",
+						"header": [
+							{
+								"key": "Accept",
+								"value": "application/json"
+							},
+							{
+								"key": "Content-Type",
+								"value": "application/json"
+							},
+							{
+								"key": "Authorization",
+								"value": "Bearer {{AccessToken}}",
+								"description": "Use the JWT Access Token from \"Step 1- Get AAD Auth Token\""
+							}
+						],
+						"body": {},
+						"url": {
+							"raw": "https://management.azure.com/subscriptions/:subscriptionId/resourceGroups/:resourceGroupName/providers/Microsoft.Media/mediaservices/:accountName/liveEvents/:liveEventName?api-version={{api-version}}",
+							"protocol": "https",
+							"host": [
+								"management",
+								"azure",
+								"com"
+							],
+							"path": [
+								"subscriptions",
+								":subscriptionId",
+								"resourceGroups",
+								":resourceGroupName",
+								"providers",
+								"Microsoft.Media",
+								"mediaservices",
+								":accountName",
+								"liveEvents",
+								":liveEventName"
+							],
+							"query": [
+								{
+									"key": "api-version",
+									"value": "{{api-version}}"
+								}
+							],
+							"variable": [
+								{
+									"key": "subscriptionId",
+									"value": "{{subscriptionId}}"
+								},
+								{
+									"key": "resourceGroupName",
+									"value": "{{resourceGroupName}}"
+								},
+								{
+									"key": "accountName",
+									"value": "{{accountName}}"
+								},
+								{
+									"key": "liveEventName",
+									"value": "{{liveEventName}}"
+								}
+							]
+						},
+						"description": "Gets a Live Event."
+					},
+					"response": []
+				},
+				{
+					"name": "Create a Live Event",
+					"request": {
+						"method": "PUT",
+						"header": [
+							{
+								"key": "Accept",
+								"value": "application/json"
+							},
+							{
+								"key": "Content-Type",
+								"value": "application/json"
+							},
+							{
+								"key": "Authorization",
+								"value": "Bearer {{AccessToken}}",
+								"description": "Use the JWT Access Token from \"Step 1- Get AAD Auth Token\""
+							}
+						],
+						"body": {
+							"mode": "raw",
+							"raw": "{\r\n      \"location\": \"West US 2\",\r\n      \"tags\": {\r\n        \"createdBy\": \"user name\",\r\n        \"custom tag 1\": \"value 1\"\r\n      },\r\n      \"properties\": {\r\n        \"description\": \"Simple Live Event using RTMP with 2-second keyframe interval and no ip restriction\",\r\n        \"input\": {\r\n          \"streamingProtocol\": \"RTMP\",\r\n          \"keyFrameIntervalDuration\": \"PT2S\"\r\n        },\r\n        \"preview\": {\r\n          \"accessControl\": {\r\n            \"ip\": {\r\n              \"allow\": [\r\n                {\r\n                  \"name\": \"AllowAll\",\r\n                  \"address\": \"0.0.0.0\"\r\n                }\r\n              ]\r\n            }\r\n          }\r\n        },\r\n        \"encoding\": {\r\n          \"encodingType\": \"None\",\r\n          \"presetName\": null\r\n        },\r\n        \"streamOptions\": []\r\n      }\r\n    }"
+						},
+						"url": {
+							"raw": "https://management.azure.com/subscriptions/:subscriptionId/resourceGroups/:resourceGroupName/providers/Microsoft.Media/mediaservices/:accountName/liveEvents/:liveEventName?api-version={{api-version}}&autoStart=true",
+							"protocol": "https",
+							"host": [
+								"management",
+								"azure",
+								"com"
+							],
+							"path": [
+								"subscriptions",
+								":subscriptionId",
+								"resourceGroups",
+								":resourceGroupName",
+								"providers",
+								"Microsoft.Media",
+								"mediaservices",
+								":accountName",
+								"liveEvents",
+								":liveEventName"
+							],
+							"query": [
+								{
+									"key": "api-version",
+									"value": "{{api-version}}"
+								},
+								{
+									"key": "autoStart",
+									"value": "true"
+								}
+							],
+							"variable": [
+								{
+									"key": "subscriptionId",
+									"value": "{{subscriptionId}}"
+								},
+								{
+									"key": "resourceGroupName",
+									"value": "{{resourceGroupName}}"
+								},
+								{
+									"key": "accountName",
+									"value": "{{accountName}}"
+								},
+								{
+									"key": "liveEventName",
+									"value": "{{liveEventName}}"
+								}
+							]
+						},
+						"description": "Creates a Live Event."
+					},
+					"response": []
+				},
+				{
+					"name": "Update Live Event",
+					"request": {
+						"method": "PATCH",
+						"header": [
+							{
+								"key": "Accept",
+								"value": "application/json"
+							},
+							{
+								"key": "Content-Type",
+								"value": "application/json"
+							},
+							{
+								"key": "Authorization",
+								"value": "Bearer {{AccessToken}}",
+								"description": "Use the JWT Access Token from \"Step 1- Get AAD Auth Token\""
+							}
+						],
+						"body": {
+							"mode": "raw",
+							"raw": "{\r\n      \"tags\": {\r\n        \"createdBy\": \"user name\",\r\n        \"custom tag 1\": \"value 1\",\r\n        \"custom tag 2\": \"value 2\"\r\n      },\r\n      \"properties\": {\r\n        \"description\": \"test event description updated\",\r\n        \"input\": {\r\n          \"streamingProtocol\": \"RTMP\",\r\n          \"keyFrameIntervalDuration\": \"PT2S\"\r\n        },\r\n        \"preview\": {\r\n          \"accessControl\": {\r\n            \"ip\": {\r\n              \"allow\": [\r\n        {\r\n                  \"name\": \"AllowAll\",\r\n                  \"address\": \"0.0.0.0\"\r\n                }\r\n              ]\r\n            }\r\n          }\r\n        }\r\n      }\r\n    }"
+						},
+						"url": {
+							"raw": "https://management.azure.com/subscriptions/:subscriptionId/resourceGroups/:resourceGroupName/providers/Microsoft.Media/mediaservices/:accountName/liveEvents/:liveEventName?api-version={{api-version}}",
+							"protocol": "https",
+							"host": [
+								"management",
+								"azure",
+								"com"
+							],
+							"path": [
+								"subscriptions",
+								":subscriptionId",
+								"resourceGroups",
+								":resourceGroupName",
+								"providers",
+								"Microsoft.Media",
+								"mediaservices",
+								":accountName",
+								"liveEvents",
+								":liveEventName"
+							],
+							"query": [
+								{
+									"key": "api-version",
+									"value": "{{api-version}}"
+								}
+							],
+							"variable": [
+								{
+									"key": "subscriptionId",
+									"value": "{{subscriptionId}}"
+								},
+								{
+									"key": "resourceGroupName",
+									"value": "{{resourceGroupName}}"
+								},
+								{
+									"key": "accountName",
+									"value": "{{accountName}}"
+								},
+								{
+									"key": "liveEventName",
+									"value": "{{liveEventName}}"
+								}
+							]
+						},
+						"description": "Updates a existing Live Event."
+					},
+					"response": []
+				},
+				{
+					"name": "Delete Live Event",
+					"request": {
+						"method": "DELETE",
+						"header": [
+							{
+								"key": "Accept",
+								"value": "application/json"
+							},
+							{
+								"key": "Content-Type",
+								"value": "application/json"
+							},
+							{
+								"key": "Authorization",
+								"value": "Bearer {{AccessToken}}",
+								"description": "Use the JWT Access Token from \"Step 1- Get AAD Auth Token\""
+							}
+						],
+						"body": {},
+						"url": {
+							"raw": "https://management.azure.com/subscriptions/:subscriptionId/resourceGroups/:resourceGroupName/providers/Microsoft.Media/mediaservices/:accountName/liveEvents/:liveEventName?api-version={{api-version}}",
+							"protocol": "https",
+							"host": [
+								"management",
+								"azure",
+								"com"
+							],
+							"path": [
+								"subscriptions",
+								":subscriptionId",
+								"resourceGroups",
+								":resourceGroupName",
+								"providers",
+								"Microsoft.Media",
+								"mediaservices",
+								":accountName",
+								"liveEvents",
+								":liveEventName"
+							],
+							"query": [
+								{
+									"key": "api-version",
+									"value": "{{api-version}}"
+								}
+							],
+							"variable": [
+								{
+									"key": "subscriptionId",
+									"value": "{{subscriptionId}}"
+								},
+								{
+									"key": "resourceGroupName",
+									"value": "{{resourceGroupName}}"
+								},
+								{
+									"key": "accountName",
+									"value": "{{accountName}}"
+								},
+								{
+									"key": "liveEventName",
+									"value": "{{liveEventName}}"
+								}
+							]
+						},
+						"description": "Deletes a Live Event."
+					},
+					"response": []
+				},
+				{
+					"name": "Start Live Event",
+					"request": {
+						"method": "POST",
+						"header": [
+							{
+								"key": "Accept",
+								"value": "application/json"
+							},
+							{
+								"key": "Content-Type",
+								"value": "application/json"
+							},
+							{
+								"key": "Authorization",
+								"value": "Bearer {{AccessToken}}",
+								"description": "Use the JWT Access Token from \"Step 1- Get AAD Auth Token\""
+							}
+						],
+						"body": {},
+						"url": {
+							"raw": "https://management.azure.com/subscriptions/:subscriptionId/resourceGroups/:resourceGroupName/providers/Microsoft.Media/mediaservices/:accountName/liveEvents/:liveEventName/start?api-version={{api-version}}",
+							"protocol": "https",
+							"host": [
+								"management",
+								"azure",
+								"com"
+							],
+							"path": [
+								"subscriptions",
+								":subscriptionId",
+								"resourceGroups",
+								":resourceGroupName",
+								"providers",
+								"Microsoft.Media",
+								"mediaservices",
+								":accountName",
+								"liveEvents",
+								":liveEventName",
+								"start"
+							],
+							"query": [
+								{
+									"key": "api-version",
+									"value": "{{api-version}}"
+								}
+							],
+							"variable": [
+								{
+									"key": "subscriptionId",
+									"value": "{{subscriptionId}}"
+								},
+								{
+									"key": "resourceGroupName",
+									"value": "{{resourceGroupName}}"
+								},
+								{
+									"key": "accountName",
+									"value": "{{accountName}}"
+								},
+								{
+									"key": "liveEventName",
+									"value": "{{liveEventName}}"
+								}
+							]
+						},
+						"description": "Starts an existing Live Event."
+					},
+					"response": []
+				},
+				{
+					"name": "Stop Live Event",
+					"request": {
+						"method": "POST",
+						"header": [
+							{
+								"key": "Accept",
+								"value": "application/json"
+							},
+							{
+								"key": "Content-Type",
+								"value": "application/json"
+							},
+							{
+								"key": "Authorization",
+								"value": "Bearer {{AccessToken}}",
+								"description": "Use the JWT Access Token from \"Step 1- Get AAD Auth Token\""
+							}
+						],
+						"body": {
+							"mode": "raw",
+							"raw": "{\r\n  \"removeOutputsOnStop\": false\r\n}"
+						},
+						"url": {
+							"raw": "https://management.azure.com/subscriptions/:subscriptionId/resourceGroups/:resourceGroupName/providers/Microsoft.Media/mediaservices/:accountName/liveEvents/:liveEventName/stop?api-version={{api-version}}",
+							"protocol": "https",
+							"host": [
+								"management",
+								"azure",
+								"com"
+							],
+							"path": [
+								"subscriptions",
+								":subscriptionId",
+								"resourceGroups",
+								":resourceGroupName",
+								"providers",
+								"Microsoft.Media",
+								"mediaservices",
+								":accountName",
+								"liveEvents",
+								":liveEventName",
+								"stop"
+							],
+							"query": [
+								{
+									"key": "api-version",
+									"value": "{{api-version}}"
+								}
+							],
+							"variable": [
+								{
+									"key": "subscriptionId",
+									"value": "{{subscriptionId}}"
+								},
+								{
+									"key": "resourceGroupName",
+									"value": "{{resourceGroupName}}"
+								},
+								{
+									"key": "accountName",
+									"value": "{{accountName}}"
+								},
+								{
+									"key": "liveEventName",
+									"value": "{{liveEventName}}"
+								}
+							]
+						},
+						"description": "Stops an existing Live Event."
+					},
+					"response": []
+				},
+				{
+					"name": "Reset Live Event",
+					"request": {
+						"method": "POST",
+						"header": [
+							{
+								"key": "Accept",
+								"value": "application/json"
+							},
+							{
+								"key": "Content-Type",
+								"value": "application/json"
+							},
+							{
+								"key": "Authorization",
+								"value": "Bearer {{AccessToken}}",
+								"description": "Use the JWT Access Token from \"Step 1- Get AAD Auth Token\""
+							}
+						],
+						"body": {},
+						"url": {
+							"raw": "https://management.azure.com/subscriptions/:subscriptionId/resourceGroups/:resourceGroupName/providers/Microsoft.Media/mediaservices/:accountName/liveEvents/:liveEventName/reset?api-version={{api-version}}",
+							"protocol": "https",
+							"host": [
+								"management",
+								"azure",
+								"com"
+							],
+							"path": [
+								"subscriptions",
+								":subscriptionId",
+								"resourceGroups",
+								":resourceGroupName",
+								"providers",
+								"Microsoft.Media",
+								"mediaservices",
+								":accountName",
+								"liveEvents",
+								":liveEventName",
+								"reset"
+							],
+							"query": [
+								{
+									"key": "api-version",
+									"value": "{{api-version}}"
+								}
+							],
+							"variable": [
+								{
+									"key": "subscriptionId",
+									"value": "{{subscriptionId}}"
+								},
+								{
+									"key": "resourceGroupName",
+									"value": "{{resourceGroupName}}"
+								},
+								{
+									"key": "accountName",
+									"value": "{{accountName}}"
+								},
+								{
+									"key": "liveEventName",
+									"value": "{{liveEventName}}"
+								}
+							]
+						},
+						"description": "Resets an existing Live Event."
+					},
+					"response": []
+				},
+				{
+					"name": "List Live Outputs",
+					"request": {
+						"method": "GET",
+						"header": [
+							{
+								"key": "Accept",
+								"value": "application/json"
+							},
+							{
+								"key": "Content-Type",
+								"value": "application/json"
+							},
+							{
+								"key": "Authorization",
+								"value": "Bearer {{AccessToken}}",
+								"description": "Use the JWT Access Token from \"Step 1- Get AAD Auth Token\""
+							}
+						],
+						"body": {},
+						"url": {
+							"raw": "https://management.azure.com/subscriptions/:subscriptionId/resourceGroups/:resourceGroupName/providers/Microsoft.Media/mediaservices/:accountName/liveEvents/:liveEventName/liveOutputs?api-version={{api-version}}",
+							"protocol": "https",
+							"host": [
+								"management",
+								"azure",
+								"com"
+							],
+							"path": [
+								"subscriptions",
+								":subscriptionId",
+								"resourceGroups",
+								":resourceGroupName",
+								"providers",
+								"Microsoft.Media",
+								"mediaservices",
+								":accountName",
+								"liveEvents",
+								":liveEventName",
+								"liveOutputs"
+							],
+							"query": [
+								{
+									"key": "api-version",
+									"value": "{{api-version}}"
+								}
+							],
+							"variable": [
+								{
+									"key": "subscriptionId",
+									"value": "{{subscriptionId}}"
+								},
+								{
+									"key": "resourceGroupName",
+									"value": "{{resourceGroupName}}"
+								},
+								{
+									"key": "accountName",
+									"value": "{{accountName}}"
+								},
+								{
+									"key": "liveEventName",
+									"value": "{{liveEventName}}"
+								}
+							]
+						},
+						"description": "Lists the Live Outputs in the Live Event."
+					},
+					"response": []
+				},
+				{
+					"name": "Get Live Output",
+					"request": {
+						"method": "GET",
+						"header": [
+							{
+								"key": "Accept",
+								"value": "application/json"
+							},
+							{
+								"key": "Content-Type",
+								"value": "application/json"
+							},
+							{
+								"key": "Authorization",
+								"value": "Bearer {{AccessToken}}",
+								"description": "Use the JWT Access Token from \"Step 1- Get AAD Auth Token\""
+							}
+						],
+						"body": {},
+						"url": {
+							"raw": "https://management.azure.com/subscriptions/:subscriptionId/resourceGroups/:resourceGroupName/providers/Microsoft.Media/mediaservices/:accountName/liveEvents/:liveEventName/liveOutputs/:liveOutputName?api-version={{api-version}}",
+							"protocol": "https",
+							"host": [
+								"management",
+								"azure",
+								"com"
+							],
+							"path": [
+								"subscriptions",
+								":subscriptionId",
+								"resourceGroups",
+								":resourceGroupName",
+								"providers",
+								"Microsoft.Media",
+								"mediaservices",
+								":accountName",
+								"liveEvents",
+								":liveEventName",
+								"liveOutputs",
+								":liveOutputName"
+							],
+							"query": [
+								{
+									"key": "api-version",
+									"value": "{{api-version}}"
+								}
+							],
+							"variable": [
+								{
+									"key": "subscriptionId",
+									"value": "{{subscriptionId}}"
+								},
+								{
+									"key": "resourceGroupName",
+									"value": "{{resourceGroupName}}"
+								},
+								{
+									"key": "accountName",
+									"value": "{{accountName}}"
+								},
+								{
+									"key": "liveEventName",
+									"value": "{{liveEventName}}"
+								},
+								{
+									"key": "liveOutputName",
+									"value": "{{liveOutputName}}"
+								}
+							]
+						},
+						"description": "Gets a Live Output."
+					},
+					"response": []
+				},
+				{
+					"name": "Create Live Output",
+					"request": {
+						"method": "PUT",
+						"header": [
+							{
+								"key": "Accept",
+								"value": "application/json"
+							},
+							{
+								"key": "Content-Type",
+								"value": "application/json"
+							},
+							{
+								"key": "Authorization",
+								"value": "Bearer {{AccessToken}}",
+								"description": "Use the JWT Access Token from \"Step 1- Get AAD Auth Token\""
+							}
+						],
+						"body": {
+							"mode": "raw",
+							"raw": "{\r\n    \"description\": \"test live output with a 1 hour rolling DVR window and manifest default name set to testmanifest. HLS segemnts will be packaged to contain 5x the incoming GOP size (for example, 5 x 2s incoming GOP = 10s HLS TS Segments)\",\r\n    \"assetName\": \"6f3264f5-a189-48b4-a29a-a40f22575212\",\r\n    \"archiveWindowLength\": \"PT1H\",\r\n    \"manifestName\": \"testmanifest\",\r\n    \"hls\": {\r\n      \"fragmentsPerTsSegment\": 5\r\n    }\r\n}"
+						},
+						"url": {
+							"raw": "https://management.azure.com/subscriptions/:subscriptionId/resourceGroups/:resourceGroupName/providers/Microsoft.Media/mediaservices/:accountName/liveEvents/:liveEventName/liveOutputs/:liveOutputName?api-version={{api-version}}",
+							"protocol": "https",
+							"host": [
+								"management",
+								"azure",
+								"com"
+							],
+							"path": [
+								"subscriptions",
+								":subscriptionId",
+								"resourceGroups",
+								":resourceGroupName",
+								"providers",
+								"Microsoft.Media",
+								"mediaservices",
+								":accountName",
+								"liveEvents",
+								":liveEventName",
+								"liveOutputs",
+								":liveOutputName"
+							],
+							"query": [
+								{
+									"key": "api-version",
+									"value": "{{api-version}}"
+								}
+							],
+							"variable": [
+								{
+									"key": "subscriptionId",
+									"value": "{{subscriptionId}}"
+								},
+								{
+									"key": "resourceGroupName",
+									"value": "{{resourceGroupName}}"
+								},
+								{
+									"key": "accountName",
+									"value": "{{accountName}}"
+								},
+								{
+									"key": "liveEventName",
+									"value": "{{liveEventName}}"
+								},
+								{
+									"key": "liveOutputName",
+									"value": "{{liveOutputName}}"
+								}
+							]
+						},
+						"description": "Creates a Live Output."
+					},
+					"response": []
+				},
+				{
+					"name": "Delete Live Output",
+					"request": {
+						"method": "DELETE",
+						"header": [
+							{
+								"key": "Accept",
+								"value": "application/json"
+							},
+							{
+								"key": "Content-Type",
+								"value": "application/json"
+							},
+							{
+								"key": "Authorization",
+								"value": "Bearer {{AccessToken}}",
+								"description": "Use the JWT Access Token from \"Step 1- Get AAD Auth Token\""
+							}
+						],
+						"body": {},
+						"url": {
+							"raw": "https://management.azure.com/subscriptions/:subscriptionId/resourceGroups/:resourceGroupName/providers/Microsoft.Media/mediaservices/:accountName/liveEvents/:liveEventName/liveOutputs/:liveOutputName?api-version={{api-version}}",
+							"protocol": "https",
+							"host": [
+								"management",
+								"azure",
+								"com"
+							],
+							"path": [
+								"subscriptions",
+								":subscriptionId",
+								"resourceGroups",
+								":resourceGroupName",
+								"providers",
+								"Microsoft.Media",
+								"mediaservices",
+								":accountName",
+								"liveEvents",
+								":liveEventName",
+								"liveOutputs",
+								":liveOutputName"
+							],
+							"query": [
+								{
+									"key": "api-version",
+									"value": "{{api-version}}"
+								}
+							],
+							"variable": [
+								{
+									"key": "subscriptionId",
+									"value": "{{subscriptionId}}"
+								},
+								{
+									"key": "resourceGroupName",
+									"value": "{{resourceGroupName}}"
+								},
+								{
+									"key": "accountName",
+									"value": "{{accountName}}"
+								},
+								{
+									"key": "liveEventName",
+									"value": "{{liveEventName}}"
+								},
+								{
+									"key": "liveOutputName",
+									"value": "{{liveOutputName}}"
+								}
+							]
+						},
+						"description": "Deletes a Live Output."
+					},
+					"response": []
+				},
+				{
+					"name": "List StreamingEndpoints",
+					"request": {
+						"method": "GET",
+						"header": [
+							{
+								"key": "Accept",
+								"value": "application/json"
+							},
+							{
+								"key": "Content-Type",
+								"value": "application/json"
+							},
+							{
+								"key": "Authorization",
+								"value": "Bearer {{AccessToken}}",
+								"description": "Use the JWT Access Token from \"Step 1- Get AAD Auth Token\""
+							}
+						],
+						"body": {},
+						"url": {
+							"raw": "https://management.azure.com/subscriptions/:subscriptionId/resourceGroups/:resourceGroupName/providers/Microsoft.Media/mediaservices/:accountName/streamingEndpoints?api-version={{api-version}}",
+							"protocol": "https",
+							"host": [
+								"management",
+								"azure",
+								"com"
+							],
+							"path": [
+								"subscriptions",
+								":subscriptionId",
+								"resourceGroups",
+								":resourceGroupName",
+								"providers",
+								"Microsoft.Media",
+								"mediaservices",
+								":accountName",
+								"streamingEndpoints"
+							],
+							"query": [
+								{
+									"key": "api-version",
+									"value": "{{api-version}}"
+								}
+							],
+							"variable": [
+								{
+									"key": "subscriptionId",
+									"value": "{{subscriptionId}}"
+								},
+								{
+									"key": "resourceGroupName",
+									"value": "{{resourceGroupName}}"
+								},
+								{
+									"key": "accountName",
+									"value": "{{accountName}}"
+								}
+							]
+						},
+						"description": "Lists the StreamingEndpoints in the account."
+					},
+					"response": []
+				},
+				{
+					"name": "Get StreamingEndpoint",
+					"request": {
+						"method": "GET",
+						"header": [
+							{
+								"key": "Accept",
+								"value": "application/json"
+							},
+							{
+								"key": "Content-Type",
+								"value": "application/json"
+							},
+							{
+								"key": "Authorization",
+								"value": "Bearer {{AccessToken}}",
+								"description": "Use the JWT Access Token from \"Step 1- Get AAD Auth Token\""
+							}
+						],
+						"body": {},
+						"url": {
+							"raw": "https://management.azure.com/subscriptions/:subscriptionId/resourceGroups/:resourceGroupName/providers/Microsoft.Media/mediaservices/:accountName/streamingEndpoints/:streamingEndpointName?api-version={{api-version}}",
+							"protocol": "https",
+							"host": [
+								"management",
+								"azure",
+								"com"
+							],
+							"path": [
+								"subscriptions",
+								":subscriptionId",
+								"resourceGroups",
+								":resourceGroupName",
+								"providers",
+								"Microsoft.Media",
+								"mediaservices",
+								":accountName",
+								"streamingEndpoints",
+								":streamingEndpointName"
+							],
+							"query": [
+								{
+									"key": "api-version",
+									"value": "{{api-version}}"
+								}
+							],
+							"variable": [
+								{
+									"key": "subscriptionId",
+									"value": "{{subscriptionId}}"
+								},
+								{
+									"key": "resourceGroupName",
+									"value": "{{resourceGroupName}}"
+								},
+								{
+									"key": "accountName",
+									"value": "{{accountName}}"
+								},
+								{
+									"key": "streamingEndpointName",
+									"value": "{{streamingEndpointName}}"
+								}
+							]
+						},
+						"description": "Gets a StreamingEndpoint."
+					},
+					"response": []
+				},
+				{
+					"name": "Create StreamingEndpoint",
+					"request": {
+						"method": "PUT",
+						"header": [
+							{
+								"key": "Accept",
+								"value": "application/json"
+							},
+							{
+								"key": "Content-Type",
+								"value": "application/json"
+							},
+							{
+								"key": "Authorization",
+								"value": "Bearer {{AccessToken}}",
+								"description": "Use the JWT Access Token from \"Step 1- Get AAD Auth Token\""
+							}
+						],
+						"body": {
+							"mode": "raw",
+							"raw": "{\r\n  \"location\": \"West US 2\",\r\n  \"tags\": {\r\n    \"custom tag 1\": \"value 1\",\r\n    \"custom tag 2\": \"value 2\"\r\n  },\r\n  \"properties\": {\r\n    \"description\": \"test Streaming Endpoint\",\r\n    \"scaleUnits\": 1,\r\n    \"availabilitySetName\": \"availableset\",\r\n    \"accessControl\": {\r\n      \"akamai\": {\r\n        \"akamaiSignatureHeaderAuthenticationKeyList\": [\r\n          {\r\n            \"identifier\": \"id1\",\r\n            \"expiration\": \"2029-12-31T16:00:00-08:00\",\r\n            \"base64Key\": \"dGVzdGlkMQ==\"\r\n          },\r\n          {\r\n            \"identifier\": \"id2\",\r\n            \"expiration\": \"2030-12-31T16:00:00-08:00\",\r\n            \"base64Key\": \"dGVzdGlkMQ==\"\r\n          }\r\n        ]\r\n      },\r\n      \"ip\": {\r\n        \"allow\": [\r\n          {\r\n            \"name\": \"AllowedIp\",\r\n            \"address\": \"0.0.0.0\"\r\n          }\r\n        ]\r\n      }\r\n    },\r\n    \"cdnEnabled\": true\r\n  }\r\n}"
+						},
+						"url": {
+							"raw": "https://management.azure.com/subscriptions/:subscriptionId/resourceGroups/:resourceGroupName/providers/Microsoft.Media/mediaservices/:accountName/streamingEndpoints/:streamingEndpointName?api-version={{api-version}}&autoStart={{autoStart}}",
+							"protocol": "https",
+							"host": [
+								"management",
+								"azure",
+								"com"
+							],
+							"path": [
+								"subscriptions",
+								":subscriptionId",
+								"resourceGroups",
+								":resourceGroupName",
+								"providers",
+								"Microsoft.Media",
+								"mediaservices",
+								":accountName",
+								"streamingEndpoints",
+								":streamingEndpointName"
+							],
+							"query": [
+								{
+									"key": "api-version",
+									"value": "{{api-version}}"
+								},
+								{
+									"key": "autoStart",
+									"value": "{{autoStart}}"
+								}
+							],
+							"variable": [
+								{
+									"key": "subscriptionId",
+									"value": "{{subscriptionId}}"
+								},
+								{
+									"key": "resourceGroupName",
+									"value": "{{resourceGroupName}}"
+								},
+								{
+									"key": "accountName",
+									"value": "{{accountName}}"
+								},
+								{
+									"key": "streamingEndpointName",
+									"value": "{{streamingEndpointName}}"
+								}
+							]
+						},
+						"description": "Creates a StreamingEndpoint."
+					},
+					"response": []
+				},
+				{
+					"name": "Update StreamingEndpoint",
+					"request": {
+						"method": "PATCH",
+						"header": [
+							{
+								"key": "Accept",
+								"value": "application/json"
+							},
+							{
+								"key": "Content-Type",
+								"value": "application/json"
+							},
+							{
+								"key": "Authorization",
+								"value": "Bearer {{AccessToken}}",
+								"description": "Use the JWT Access Token from \"Step 1- Get AAD Auth Token\""
+							}
+						],
+						"body": {
+							"mode": "raw",
+							"raw": "{\r\n  \"id\": null,\r\n  \"name\": \"myStreamingEndpoint1\",\r\n  \"location\": \"North US\",\r\n  \"type\": \"/subscriptions/0a6ec948-5a62-437d-b9df-934dc7c1b722/resourcegroups/mediaresources/providers/Microsoft.Media/mediaservices/slitestmedia10/streamingendpoints\",\r\n  \"tags\": {\r\n    \"tag3\": \"value3\",\r\n    \"tag5\": \"value5\"\r\n  },\r\n  \"properties\": {\r\n    \"description\": \"test event 2\",\r\n    \"scaleUnits\": 5,\r\n    \"availabilitySetName\": \"availableset\"\r\n  }\r\n}"
+						},
+						"url": {
+							"raw": "https://management.azure.com/subscriptions/:subscriptionId/resourceGroups/:resourceGroupName/providers/Microsoft.Media/mediaservices/:accountName/streamingEndpoints/:streamingEndpointName?api-version={{api-version}}",
+							"protocol": "https",
+							"host": [
+								"management",
+								"azure",
+								"com"
+							],
+							"path": [
+								"subscriptions",
+								":subscriptionId",
+								"resourceGroups",
+								":resourceGroupName",
+								"providers",
+								"Microsoft.Media",
+								"mediaservices",
+								":accountName",
+								"streamingEndpoints",
+								":streamingEndpointName"
+							],
+							"query": [
+								{
+									"key": "api-version",
+									"value": "{{api-version}}"
+								}
+							],
+							"variable": [
+								{
+									"key": "subscriptionId",
+									"value": "{{subscriptionId}}"
+								},
+								{
+									"key": "resourceGroupName",
+									"value": "{{resourceGroupName}}"
+								},
+								{
+									"key": "accountName",
+									"value": "{{accountName}}"
+								},
+								{
+									"key": "streamingEndpointName",
+									"value": "{{streamingEndpointName}}"
+								}
+							]
+						},
+						"description": "Updates a existing StreamingEndpoint."
+					},
+					"response": []
+				},
+				{
+					"name": "Delete StreamingEndpoint",
+					"request": {
+						"method": "DELETE",
+						"header": [
+							{
+								"key": "Accept",
+								"value": "application/json"
+							},
+							{
+								"key": "Content-Type",
+								"value": "application/json"
+							},
+							{
+								"key": "Authorization",
+								"value": "Bearer {{AccessToken}}",
+								"description": "Use the JWT Access Token from \"Step 1- Get AAD Auth Token\""
+							}
+						],
+						"body": {},
+						"url": {
+							"raw": "https://management.azure.com/subscriptions/:subscriptionId/resourceGroups/:resourceGroupName/providers/Microsoft.Media/mediaservices/:accountName/streamingEndpoints/:streamingEndpointName?api-version={{api-version}}",
+							"protocol": "https",
+							"host": [
+								"management",
+								"azure",
+								"com"
+							],
+							"path": [
+								"subscriptions",
+								":subscriptionId",
+								"resourceGroups",
+								":resourceGroupName",
+								"providers",
+								"Microsoft.Media",
+								"mediaservices",
+								":accountName",
+								"streamingEndpoints",
+								":streamingEndpointName"
+							],
+							"query": [
+								{
+									"key": "api-version",
+									"value": "{{api-version}}"
+								}
+							],
+							"variable": [
+								{
+									"key": "subscriptionId",
+									"value": "{{subscriptionId}}"
+								},
+								{
+									"key": "resourceGroupName",
+									"value": "{{resourceGroupName}}"
+								},
+								{
+									"key": "accountName",
+									"value": "{{accountName}}"
+								},
+								{
+									"key": "streamingEndpointName",
+									"value": "{{streamingEndpointName}}"
+								}
+							]
+						},
+						"description": "Deletes a StreamingEndpoint."
+					},
+					"response": []
+				},
+				{
+					"name": "Start Streaming Endpoint",
+					"request": {
+						"method": "POST",
+						"header": [
+							{
+								"key": "Accept",
+								"value": "application/json"
+							},
+							{
+								"key": "Content-Type",
+								"value": "application/json"
+							},
+							{
+								"key": "Authorization",
+								"value": "Bearer {{AccessToken}}",
+								"description": "Use the JWT Access Token from \"Step 1- Get AAD Auth Token\""
+							}
+						],
+						"body": {},
+						"url": {
+							"raw": "https://management.azure.com/subscriptions/:subscriptionId/resourceGroups/:resourceGroupName/providers/Microsoft.Media/mediaservices/:accountName/streamingEndpoints/:streamingEndpointName/start?api-version={{api-version}}",
+							"protocol": "https",
+							"host": [
+								"management",
+								"azure",
+								"com"
+							],
+							"path": [
+								"subscriptions",
+								":subscriptionId",
+								"resourceGroups",
+								":resourceGroupName",
+								"providers",
+								"Microsoft.Media",
+								"mediaservices",
+								":accountName",
+								"streamingEndpoints",
+								":streamingEndpointName",
+								"start"
+							],
+							"query": [
+								{
+									"key": "api-version",
+									"value": "{{api-version}}"
+								}
+							],
+							"variable": [
+								{
+									"key": "subscriptionId",
+									"value": "{{subscriptionId}}"
+								},
+								{
+									"key": "resourceGroupName",
+									"value": "{{resourceGroupName}}"
+								},
+								{
+									"key": "accountName",
+									"value": "{{accountName}}"
+								},
+								{
+									"key": "streamingEndpointName",
+									"value": "{{streamingEndpointName}}"
+								}
+							]
+						},
+						"description": "Starts an existing StreamingEndpoint."
+					},
+					"response": []
+				},
+				{
+					"name": "Stop StreamingEndpoint",
+					"request": {
+						"method": "POST",
+						"header": [
+							{
+								"key": "Accept",
+								"value": "application/json"
+							},
+							{
+								"key": "Content-Type",
+								"value": "application/json"
+							},
+							{
+								"key": "Authorization",
+								"value": "Bearer {{AccessToken}}",
+								"description": "Use the JWT Access Token from \"Step 1- Get AAD Auth Token\""
+							}
+						],
+						"body": {},
+						"url": {
+							"raw": "https://management.azure.com/subscriptions/:subscriptionId/resourceGroups/:resourceGroupName/providers/Microsoft.Media/mediaservices/:accountName/streamingEndpoints/:streamingEndpointName/stop?api-version={{api-version}}",
+							"protocol": "https",
+							"host": [
+								"management",
+								"azure",
+								"com"
+							],
+							"path": [
+								"subscriptions",
+								":subscriptionId",
+								"resourceGroups",
+								":resourceGroupName",
+								"providers",
+								"Microsoft.Media",
+								"mediaservices",
+								":accountName",
+								"streamingEndpoints",
+								":streamingEndpointName",
+								"stop"
+							],
+							"query": [
+								{
+									"key": "api-version",
+									"value": "{{api-version}}"
+								}
+							],
+							"variable": [
+								{
+									"key": "subscriptionId",
+									"value": "{{subscriptionId}}"
+								},
+								{
+									"key": "resourceGroupName",
+									"value": "{{resourceGroupName}}"
+								},
+								{
+									"key": "accountName",
+									"value": "{{accountName}}"
+								},
+								{
+									"key": "streamingEndpointName",
+									"value": "{{streamingEndpointName}}"
+								}
+							]
+						},
+						"description": "Stops an existing StreamingEndpoint."
+					},
+					"response": []
+				},
+				{
+					"name": "Scale StreamingEndpoint",
+					"request": {
+						"method": "POST",
+						"header": [
+							{
+								"key": "Accept",
+								"value": "application/json"
+							},
+							{
+								"key": "Content-Type",
+								"value": "application/json"
+							},
+							{
+								"key": "Authorization",
+								"value": "Bearer {{AccessToken}}",
+								"description": "Use the JWT Access Token from \"Step 1- Get AAD Auth Token\""
+							}
+						],
+						"body": {
+							"mode": "raw",
+							"raw": "{\n   \"scaleUnits\": 0\n}"
+						},
+						"url": {
+							"raw": "https://management.azure.com/subscriptions/:subscriptionId/resourceGroups/:resourceGroupName/providers/Microsoft.Media/mediaservices/:accountName/streamingEndpoints/:streamingEndpointName/scale?api-version={{api-version}}",
+							"protocol": "https",
+							"host": [
+								"management",
+								"azure",
+								"com"
+							],
+							"path": [
+								"subscriptions",
+								":subscriptionId",
+								"resourceGroups",
+								":resourceGroupName",
+								"providers",
+								"Microsoft.Media",
+								"mediaservices",
+								":accountName",
+								"streamingEndpoints",
+								":streamingEndpointName",
+								"scale"
+							],
+							"query": [
+								{
+									"key": "api-version",
+									"value": "{{api-version}}"
+								}
+							],
+							"variable": [
+								{
+									"key": "subscriptionId",
+									"value": "{{subscriptionId}}"
+								},
+								{
+									"key": "resourceGroupName",
+									"value": "{{resourceGroupName}}"
+								},
+								{
+									"key": "accountName",
+									"value": "{{accountName}}"
+								},
+								{
+									"key": "streamingEndpointName",
+									"value": "{{streamingEndpointName}}"
+								}
+							]
+						},
+						"description": "Scales an existing StreamingEndpoint."
+					},
+					"response": []
+				},
+				{
+					"name": "List StreamingEndpoints Copy",
+					"request": {
+						"method": "GET",
+						"header": [
+							{
+								"key": "Accept",
+								"value": "application/json"
+							},
+							{
+								"key": "Content-Type",
+								"value": "application/json"
+							},
+							{
+								"key": "Authorization",
+								"value": "Bearer {{AccessToken}}",
+								"description": "Use the JWT Access Token from \"Step 1- Get AAD Auth Token\""
+							}
+						],
+						"body": {},
+						"url": {
+							"raw": "https://management.azure.com/subscriptions/:subscriptionId/resourceGroups/:resourceGroupName/providers/Microsoft.Media/mediaservices/:accountName/streamingEndpoints?api-version={{api-version}}",
+							"protocol": "https",
+							"host": [
+								"management",
+								"azure",
+								"com"
+							],
+							"path": [
+								"subscriptions",
+								":subscriptionId",
+								"resourceGroups",
+								":resourceGroupName",
+								"providers",
+								"Microsoft.Media",
+								"mediaservices",
+								":accountName",
+								"streamingEndpoints"
+							],
+							"query": [
+								{
+									"key": "api-version",
+									"value": "{{api-version}}"
+								}
+							],
+							"variable": [
+								{
+									"key": "subscriptionId",
+									"value": "{{subscriptionId}}"
+								},
+								{
+									"key": "resourceGroupName",
+									"value": "{{resourceGroupName}}"
+								},
+								{
+									"key": "accountName",
+									"value": "{{accountName}}"
+								}
+							]
+						},
+						"description": "Lists the StreamingEndpoints in the account."
+					},
+					"response": []
+				}
+			],
+			"auth": {
+				"type": "bearer",
+				"bearer": [
+					{
+						"key": "token",
+						"value": "{{AccessToken}}",
+						"type": "string"
+					}
+				]
+			},
+			"event": [
+				{
+					"listen": "prerequest",
+					"script": {
+						"id": "c19d0ee5-d8ea-4a5b-a178-2c081d66e338",
+						"type": "text/javascript",
+						"exec": [
+							""
+						]
+					}
+				},
+				{
+					"listen": "test",
+					"script": {
+						"id": "34932526-cc36-4614-8f74-967fb613ad79",
+						"type": "text/javascript",
+						"exec": [
+							""
+						]
+					}
+				}
+			]
+		}
+	],
+	"auth": {
+		"type": "bearer",
+		"bearer": [
+			{
+				"key": "token",
+				"value": "{{AccessToken}}",
+				"type": "string"
+			}
+		]
+	},
+	"event": [
+		{
+			"listen": "prerequest",
+			"script": {
+				"id": "e3d5821a-30a6-4b63-a17e-f36ab00e32c3",
+				"type": "text/javascript",
+				"exec": [
+					""
+				]
+			}
+		},
+		{
+			"listen": "test",
+			"script": {
+				"id": "f44802e3-1014-42f0-a8b3-817430095333",
+				"type": "text/javascript",
+				"exec": [
+					""
+				]
+			}
+		}
+	],
+	"variable": [
+		{
+			"id": "4ff1a148-b192-4c9b-8bcb-9e4fc72e0dd4",
+			"key": "ARM_API_ENDPOINT",
+			"value": "management.azure.com",
+			"type": "string",
+			"description": ""
+		}
+	]
+}
