@@ -1,8 +1,8 @@
 #!/bin/bash
 
-resourceGroup=johndeu_BUILD2018
+resourceGroup=build2018
 storageName=johndeubuildstorage
-amsAccountName=johndeubuild2018
+amsAccountName=build2018
 amsSPName=johndeubuild2018demo
 amsSPPassword=build2018demo
 

@@ -1,7 +1,7 @@
 #!/bin/bash
 
-resourceGroup=johndeu_BUILD2018
-amsAccountName=johndeubuild2018
+resourceGroup=build2018
+amsAccountName=build2018
 outputAssetName=myOutputAsset
 transformName=myFirstTransform
 

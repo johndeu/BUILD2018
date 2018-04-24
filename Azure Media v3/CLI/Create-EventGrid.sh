@@ -1,7 +1,7 @@
 #!/bin/bash
 
-resourceGroup=johndeu_BUILD2018
-amsAccountName=johndeubuild2018
+resourceGroup=build2018
+amsAccountName=build2018
 resourceId=/subscriptions/35c2594a-23da-4fce-b59c-f6fb9513eeeb/resourceGroups/johndeu_BUILD2018/providers/Microsoft.Media/mediaservices/johndeubuild2018
 webhookEndpoint=https://mywebhookurl
 
