@@ -2,7 +2,7 @@
 
 resourceGroup=build2018
 amsAccountName=build2018
-assetName = "myAsset-uniqueID"
+assetName="myAsset-uniqueID"
 
 # Create a Media Services Asset to upload content to.
 # In the v3 API, Asset names are unique ARM resource identifiers and must be unique to the account.
