@@ -31,8 +31,9 @@ az ams account sp create \
   --account-name $amsAccountName \
   --name $amsSPName \
   --resource-group $resourceGroup \
-  --password $amsSPPassword \
   --role Owner \
+  --xml \
+  --years 2 \
 
 echo "press  [ENTER]  to continue."
 read continue
