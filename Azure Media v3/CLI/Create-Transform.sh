@@ -1,5 +1,6 @@
 #!/bin/bash
 
+# Update the following variables for your own settings:
 resourceGroup=build2018
 amsAccountName=build2018
 
