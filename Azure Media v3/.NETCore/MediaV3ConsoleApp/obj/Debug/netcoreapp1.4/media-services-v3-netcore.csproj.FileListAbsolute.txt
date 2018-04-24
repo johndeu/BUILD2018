@@ -1,0 +1,13 @@
+C:\Users\johndeu\Source\media-services-v3-netcore\bin\Debug\netcoreapp1.4\media-services-v3-netcore.deps.json
+C:\Users\johndeu\Source\media-services-v3-netcore\bin\Debug\netcoreapp1.4\media-services-v3-netcore.runtimeconfig.json
+C:\Users\johndeu\Source\media-services-v3-netcore\bin\Debug\netcoreapp1.4\media-services-v3-netcore.runtimeconfig.dev.json
+C:\Users\johndeu\Source\media-services-v3-netcore\bin\Debug\netcoreapp1.4\media-services-v3-netcore.dll
+C:\Users\johndeu\Source\media-services-v3-netcore\bin\Debug\netcoreapp1.4\media-services-v3-netcore.pdb
+C:\Users\johndeu\Source\media-services-v3-netcore\bin\Debug\netcoreapp1.4\MediaServices.dll
+C:\Users\johndeu\Source\media-services-v3-netcore\bin\Debug\netcoreapp1.4\MediaServices.pdb
+C:\Users\johndeu\Source\media-services-v3-netcore\obj\Debug\netcoreapp1.4\media-services-v3-netcore.csproj.CoreCompileInputs.cache
+C:\Users\johndeu\Source\media-services-v3-netcore\obj\Debug\netcoreapp1.4\media-services-v3-netcore.AssemblyInfoInputs.cache
+C:\Users\johndeu\Source\media-services-v3-netcore\obj\Debug\netcoreapp1.4\media-services-v3-netcore.AssemblyInfo.cs
+C:\Users\johndeu\Source\media-services-v3-netcore\obj\Debug\netcoreapp1.4\media-services-v3-netcore.csproj.CopyComplete
+C:\Users\johndeu\Source\media-services-v3-netcore\obj\Debug\netcoreapp1.4\media-services-v3-netcore.dll
+C:\Users\johndeu\Source\media-services-v3-netcore\obj\Debug\netcoreapp1.4\media-services-v3-netcore.pdb
