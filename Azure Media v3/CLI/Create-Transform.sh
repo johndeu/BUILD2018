@@ -35,5 +35,5 @@ az ams transform create \
 # List all the Transforms in an account
 az ams transform list -a $amsAccountName -g $resourceGroup
 
-echo "press  [ENTER]  to continue deleting line"
+echo "press  [ENTER]  to continue."
 read continue

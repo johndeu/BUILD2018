@@ -34,5 +34,5 @@ az ams account sp create \
   --password $amsSPPassword \
   --role Owner \
 
-echo "press  [ENTER]  to continue deleting line"
+echo "press  [ENTER]  to continue."
 read continue
