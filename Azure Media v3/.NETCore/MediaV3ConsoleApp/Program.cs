@@ -60,7 +60,7 @@ namespace AnalyzeVideos
                 string code = ex.Body.Error.Code;
                 string message = ex.Body.Error.Message;
 
-                Console.WriteLine("Code: %s Message: %s", code, message);
+                Console.WriteLine("ERROR:API call failed with error code: %s and message: %s", code, message);
 
             }
 
