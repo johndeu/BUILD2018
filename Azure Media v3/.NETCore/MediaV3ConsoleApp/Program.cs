@@ -21,38 +21,51 @@ namespace AnalyzeVideos
         static void Main(string[] args)
         {
             ConfigWrapper config = new ConfigWrapper();
-
             IAzureMediaServicesClient client = CreateMediaServicesClient(config);
 
-            // Ensure that you have customized transforms for the VideoAnalyzer.  This is really a one time setup operation.
-            Transform videoAnalyzerTransform = EnsureTransformExists(client, config.Region, VideoAnalyzerTransformName, new VideoAnalyzerPreset());
-
-            String jobName = Guid.NewGuid().ToString() + "-job";
-
-            string inputAssetName = Guid.NewGuid().ToString() + "-input";
-            string outputAssetName = Guid.NewGuid().ToString() + "-output";
-
-            CreateInputAsset(client, inputAssetName, inputMP4FileName).Wait();
-
-            JobInput input = new JobInputAsset(assetName: inputAssetName);
-
-            CreateOutputAsset(client, outputAssetName);
-
-            Job job = SubmitJob(client, VideoAnalyzerTransformName, jobName, input, outputAssetName);
-
-            DateTime startedTime = DateTime.Now;
-
-            job = WaitForJobToFinish(client, VideoAnalyzerTransformName, jobName);
-
-            TimeSpan elapsed = DateTime.Now - startedTime;
-
-            if (job.State == JobState.Finished)
+            try
             {
-                Console.WriteLine("Job finished.");
-                if (!Directory.Exists(outputFolder))
-                    Directory.CreateDirectory(outputFolder);
-                DownloadResults(client, outputAssetName, outputFolder).Wait();
+                // Ensure that you have customized transforms for the VideoAnalyzer.  This is really a one time setup operation.
+                Transform videoAnalyzerTransform = EnsureTransformExists(client, config.Region, VideoAnalyzerTransformName, new VideoAnalyzerPreset());
+
+                String jobName = Guid.NewGuid().ToString() + "-job";
+
+                string inputAssetName = Guid.NewGuid().ToString() + "-input";
+                string outputAssetName = Guid.NewGuid().ToString() + "-output";
+
+                CreateInputAsset(client, inputAssetName, inputMP4FileName).Wait();
+
+                JobInput input = new JobInputAsset(assetName: inputAssetName);
+
+                CreateOutputAsset(client, outputAssetName);
+
+                Job job = SubmitJob(client, VideoAnalyzerTransformName, jobName, input, outputAssetName);
+
+                DateTime startedTime = DateTime.Now;
+
+                job = WaitForJobToFinish(client, VideoAnalyzerTransformName, jobName);
+
+                TimeSpan elapsed = DateTime.Now - startedTime;
+
+                if (job.State == JobState.Finished)
+                {
+                    Console.WriteLine("Job finished.");
+                    if (!Directory.Exists(outputFolder))
+                        Directory.CreateDirectory(outputFolder);
+                    DownloadResults(client, outputAssetName, outputFolder).Wait();
+                }
             }
+            catch(ApiErrorException ex)
+            {
+                string code = ex.Body.Error.Code;
+                string message = ex.Body.Error.Message;
+
+                Console.WriteLine("Code: %s Message: %s", code, message);
+
+            }
+
+
+           
         }
 
 
