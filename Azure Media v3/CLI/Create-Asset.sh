@@ -38,9 +38,6 @@ az ams asset get-sas-urls \
 #       --account-name mconverticlitest0003 \
 #       --sas-token "?sv=2015-07-08&sr=c&sig=BvMXDCOjR%2FOP2%2FYi6lVknC4Gcq7fIun5tst8jgED7zY%3D&se=2018-04-25T00:00:00Z&sp=rwl" \
 
-az storage blob upload -c asset-dbc7c02c-045b-4a0d-aa21-da8ba6a1d523 -f C:\users\johndeu
-\Source\BUILD2018\Media\Ignite-short.mp4 -n ignite-short.mp4 --account-name johndeubuildstorage --sas-token "?sv=2015-07-08&sr=c&sig=I4iTCh%2Bo%2FPguQy
-VLjvUJyg%2FD%2FglmjFT8nx%2F8X056XbI%3D&se=0001-01-01T00:00:00Z"
 
 
 echo "press  [ENTER]  to continue."
