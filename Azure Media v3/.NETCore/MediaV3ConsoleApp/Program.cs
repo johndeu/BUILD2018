@@ -60,7 +60,7 @@ namespace AnalyzeVideos
                 string code = ex.Body.Error.Code;
                 string message = ex.Body.Error.Message;
 
-                Console.WriteLine("ERROR:API call failed with error code: %s and message: %s", code, message);
+                Console.WriteLine("ERROR:API call failed with error code: {0} and message: {1}", code, message);
 
             }
 
@@ -92,7 +92,7 @@ namespace AnalyzeVideos
                     new TransformOutput(preset),
                 };
 
-                transform = new Transform(outputs, location: location);
+                transform = new Transform(outputs);
 
                 transform = client.Transforms.CreateOrUpdate(transformName, transform);
             }
@@ -101,6 +101,7 @@ namespace AnalyzeVideos
         }
         private static async Task<Asset> CreateInputAsset(IAzureMediaServicesClient client, string assetName, string fileToUpload)
         {
+            Console.WriteLine("Creating Input Asset");
             Asset asset = client.Assets.CreateOrUpdate(assetName, new Asset());
 
             ListContainerSasInput input = new ListContainerSasInput()
@@ -114,10 +115,13 @@ namespace AnalyzeVideos
             string uploadSasUrl = response.AssetContainerSasUrls.First();
 
             string filename = Path.GetFileName(fileToUpload);
+            Console.WriteLine("Uploading file: {0}", filename);
+
             var sasUri = new Uri(uploadSasUrl);
             CloudBlobContainer container = new CloudBlobContainer(sasUri);
             var blob = container.GetBlockBlobReference(filename);
             blob.Properties.ContentType = "video/mp4";
+            Console.WriteLine("Uploading File to container: {0}",container);
             await blob.UploadFromFileAsync(fileToUpload);
 
             return asset;
@@ -152,7 +156,7 @@ namespace AnalyzeVideos
 
         private static Job WaitForJobToFinish(IAzureMediaServicesClient client, string transformName, string jobName)
         {
-            const int SleepInterval = 60 * 1000;
+            const int SleepInterval = 10 * 1000;
 
             Job job = null;
             bool exit = false;
@@ -220,6 +224,9 @@ namespace AnalyzeVideos
             }
 
             Console.WriteLine("Download complete.");
+            
+            // Open the directory
+            System.Diagnostics.Process.Start(directory);
         }
 
     }
