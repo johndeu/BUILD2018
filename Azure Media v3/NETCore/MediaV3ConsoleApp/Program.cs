@@ -225,8 +225,6 @@ namespace AnalyzeVideos
 
             Console.WriteLine("Download complete.");
             
-            // Open the directory
-            System.Diagnostics.Process.Start(directory);
         }
 
     }
