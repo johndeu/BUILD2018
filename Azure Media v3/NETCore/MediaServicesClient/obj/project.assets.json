@@ -4631,11 +4631,11 @@
   "project": {
     "version": "1.0.0",
     "restore": {
-      "projectUniqueName": "C:\\Users\\johndeu\\Source\\BUILD2018\\Azure Media v3\\.NETCore\\MediaServicesClient\\MediaServices.csproj",
+      "projectUniqueName": "C:\\Users\\johndeu\\Source\\BUILD2018\\Azure Media v3\\NETCore\\MediaServicesClient\\MediaServices.csproj",
       "projectName": "MediaServices",
-      "projectPath": "C:\\Users\\johndeu\\Source\\BUILD2018\\Azure Media v3\\.NETCore\\MediaServicesClient\\MediaServices.csproj",
+      "projectPath": "C:\\Users\\johndeu\\Source\\BUILD2018\\Azure Media v3\\NETCore\\MediaServicesClient\\MediaServices.csproj",
       "packagesPath": "C:\\Users\\johndeu\\.nuget\\packages\\",
-      "outputPath": "C:\\Users\\johndeu\\Source\\BUILD2018\\Azure Media v3\\.NETCore\\MediaServicesClient\\obj\\",
+      "outputPath": "C:\\Users\\johndeu\\Source\\BUILD2018\\Azure Media v3\\NETCore\\MediaServicesClient\\obj\\",
       "projectStyle": "PackageReference",
       "fallbackFolders": [
         "C:\\Program Files (x86)\\Microsoft SDKs\\NuGetPackagesFallback\\",

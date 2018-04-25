@@ -32,3 +32,12 @@ C:\Users\johndeu\Source\BUILD2018\Azure Media v3\.NETCore\MediaServicesClient\ob
 C:\Users\johndeu\Source\BUILD2018\Azure Media v3\.NETCore\MediaServicesClient\obj\Debug\netstandard1.4\MediaServices.AssemblyInfo.cs
 C:\Users\johndeu\Source\BUILD2018\Azure Media v3\.NETCore\MediaServicesClient\obj\Debug\netstandard1.4\MediaServices.dll
 C:\Users\johndeu\Source\BUILD2018\Azure Media v3\.NETCore\MediaServicesClient\obj\Debug\netstandard1.4\MediaServices.pdb
+C:\Users\johndeu\Source\BUILD2018\Azure Media v3\NETCore\MediaServicesClient\bin\Debug\netstandard1.4\MediaServices.deps.json
+C:\Users\johndeu\Source\BUILD2018\Azure Media v3\NETCore\MediaServicesClient\bin\Debug\netstandard1.4\MediaServices.dll
+C:\Users\johndeu\Source\BUILD2018\Azure Media v3\NETCore\MediaServicesClient\bin\Debug\netstandard1.4\MediaServices.pdb
+C:\Users\johndeu\Source\BUILD2018\Azure Media v3\NETCore\MediaServicesClient\obj\Debug\netstandard1.4\MediaServices.csprojResolveAssemblyReference.cache
+C:\Users\johndeu\Source\BUILD2018\Azure Media v3\NETCore\MediaServicesClient\obj\Debug\netstandard1.4\MediaServices.csproj.CoreCompileInputs.cache
+C:\Users\johndeu\Source\BUILD2018\Azure Media v3\NETCore\MediaServicesClient\obj\Debug\netstandard1.4\MediaServices.AssemblyInfoInputs.cache
+C:\Users\johndeu\Source\BUILD2018\Azure Media v3\NETCore\MediaServicesClient\obj\Debug\netstandard1.4\MediaServices.AssemblyInfo.cs
+C:\Users\johndeu\Source\BUILD2018\Azure Media v3\NETCore\MediaServicesClient\obj\Debug\netstandard1.4\MediaServices.dll
+C:\Users\johndeu\Source\BUILD2018\Azure Media v3\NETCore\MediaServicesClient\obj\Debug\netstandard1.4\MediaServices.pdb
