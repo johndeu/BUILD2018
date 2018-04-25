@@ -24,7 +24,8 @@ az ams asset get-sas-urls \
     --expiry  $expiry\
     --permissions ReadWrite \
 
-# Use the az storage modules to upload a local file to the container using the SAS URL from previous step
+# Use the az storage modules to upload a local file to the container using the SAS URL from previous step.
+# If you are logged in already to the subscription with access to the storage account, you do not need to use the --sas-token at all. Just eliminate it below.
 # The container name is in the SAS URL path, and should be set with the -c option.
 # Use the -f option to point to a local file on your machine.
 # Use the -n option to name the blob in storage.
@@ -38,22 +39,6 @@ az ams asset get-sas-urls \
 #       -n ignite-short.mp4 \
 #       --account-name mconverticlitest0003 \
 #       --sas-token "?sv=2015-07-08&sr=c&sig=BvMXDCOjR%2FOP2%2FYi6lVknC4Gcq7fIun5tst8jgED7zY%3D&se=2018-04-25T00:00:00Z&sp=rwl" \
-
-
-az storage blob upload 
-    -c asset-997a686b-5244-4e3c-ba5e-1ca99fdea79e 
-    -f ..\..\Media\Ignite-short.mp4 
-    -n ignite-short.mp4 
-    --account-name johndeubuildstorage 
-    --sas-token "?sv=2015-07-08&sr=c&sig=sr0HWqm%2FRgaht1JhmRRV22oMk8W0yn5IXDMkiRtaCNg%3D&se=2018-04-25T11:00:00Z&sp=rwl"
-
-
-az storage blob upload 
-    -c asset-84045780-a71c-4511-801b-711b1a2e76b2 
-    -f C:\Users\v-maconv\Desktop\videos\bill2.mp4 
-    -n bill2.mp4 
-    --account-name mconverticlitest0003 
-    --sas-token "?sv=2015-07-08&sr=c&sig=BvMXDCOjR%2FOP2%2FYi6lVknC4Gcq7fIun5tst8jgED7zY%3D&se=2018-04-25T00:00:00Z&sp=rwl"
 
 echo "press  [ENTER]  to continue."
 read continue
