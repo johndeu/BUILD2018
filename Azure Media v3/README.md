@@ -10,10 +10,11 @@ The **/REST** folder contains a full Postman collection and Environment variable
 ## ARM Templates
 Example **/ARM Templates** show how to create a Media Services account, Transform for encoding and video analysis, and Live Events for streaming.
 
-## .NET Samples
-The .NET Samples folder contains a set of samples showing how to use Transforms, Jobs, Live Outputs, and Event Grid notifications.
+## .NET Core Sample
+The **/NETCore** folder contains a quickstart sample showing how to use Transforms, and Jobs.
 
 ## EventGrid
-The EventGrid folder contains several examples of working with Event Grid with Media Services
+The **/EventGrid** folder contains a basic C# Webhook Azure Function for use with Event Grid.
 
-
+## Node.js
+The **/Node** folder contains a quickstart sample demonstrating how to use the VideoAnalyzer preset.
