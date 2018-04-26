@@ -29,6 +29,15 @@ public static async Task<object> Run(HttpRequestMessage req, TraceWriter log)
 
     log.Info($"event: {eventData}");
 
+
+    // List the Assets in the account as a quick Test that everything is working.
+    var assets = client.Assets.List(resourceGroupName, accountName);
+    log.Info("Assets In account");
+    foreach(var a in assets){
+        log.Info($"Asset: {a.Name}");
+    }
+
+    // This is a one-time setup step when registering for Event Grid Subscriptions - see Event Grid documentation for details.
     if (eventGridValidation != String.Empty)
     {
 
@@ -44,12 +53,13 @@ public static async Task<object> Run(HttpRequestMessage req, TraceWriter log)
         }
     }
     
+    // Do some work with Media Events here...
 
-    log.Info(jsonContent);
 
+    // Return a response
     return req.CreateResponse(HttpStatusCode.OK, new
     {
-        greeting = $"Hello!"
+        greeting = $"Did some Media Services stuff!"
     });
 
 
