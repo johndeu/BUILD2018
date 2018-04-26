@@ -1,0 +1,10 @@
+{
+  "frameworks": {
+    "net46":{
+      "dependencies": {
+        "Microsoft.Azure.Management.Media": "1.0.0",
+        "Microsoft.IdentityModel.Clients.ActiveDirectory": "3.19.3"
+      }
+    }
+   }
+}
