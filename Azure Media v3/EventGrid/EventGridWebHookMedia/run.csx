@@ -59,7 +59,7 @@ public static async Task<object> Run(HttpRequestMessage req, TraceWriter log)
     // Return a response
     return req.CreateResponse(HttpStatusCode.OK, new
     {
-        greeting = $"Did some Media Services stuff!"
+        results = $"Did some Media Services stuff!"
     });
 
 
