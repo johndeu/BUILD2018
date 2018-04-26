@@ -54,7 +54,25 @@ public static async Task<object> Run(HttpRequestMessage req, TraceWriter log)
     }
     
     // Do some work with Media Events here...
+    string subject;
+    string transformName;
+    string jobName;
+    //Get the "subject" of the event, which contains the Media Services resource.
+    if (eventData[0].subject !=String.Empty){
+        subject = eventData[0].subject;
+        log.Info($"Subject : {subject}");
 
+        Regex r = new Regex(@"transforms\/(?<transformName>.*)\/jobs\/(?<jobName>.*)", RegexOptions.None, TimeSpan.FromMilliseconds(150));
+        Match m = r.Match(subject);
+
+        if (m.Success){
+            transformName = r.Match(subject).Result("${transformName}");
+            jobName = r.Match(subject).Result("${jobName}");
+            log.Info($"Job Name : {jobName}"); 
+            log.Info($"Transform Name : {jobName}"); 
+        }
+            
+    }
 
     // Return a response
     return req.CreateResponse(HttpStatusCode.OK, new
