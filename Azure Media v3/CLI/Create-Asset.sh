@@ -2,7 +2,7 @@
 
 # Update the following variables for your own settings:
 resourceGroup=build2018
-amsAccountName=build2018
+amsAccountName=build18
 assetName="myAsset-uniqueID"
 expiry="2018-04-25T05:00:00Z"
 

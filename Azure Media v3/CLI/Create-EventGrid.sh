@@ -2,7 +2,7 @@
 
 # Update the following variables for your own settings:
 resourceGroup=build2018
-amsAccountName=build2018
+amsAccountName=build18
 webhookEndpoint="https://johndeueventgrid.azurewebsites.net/api/GenericWebhookCSharp1?code=wZZbhwxtS///qsCHJAEv/SJMagaQDlAOCLKeBqnmC1axKipM0EayXw==&clientId=default"
 
 # Create an account level Event Grid subscription for Job State Changes.

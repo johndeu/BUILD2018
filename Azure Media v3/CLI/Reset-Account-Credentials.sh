@@ -2,8 +2,8 @@
 
 # Update the following variables for your own settings:
 resourceGroup=build2018
-amsAccountName=build2018
-amsSPName=johndeubuild2018demo
+amsAccountName=build18
+amsSPName=build2018demo
 
 # Reset your account credentials and get the app.config settings back
 az ams account sp reset-credentials \

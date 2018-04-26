@@ -2262,7 +2262,7 @@
 						],
 						"body": {
 							"mode": "raw",
-							"raw": "{\n\t\"name\":\"brianbl\",\n\t\"type\":\"Microsoft.Media/mediaservices\"\n}\n"
+							"raw": "{\n\t\"name\":\"johndeu\",\n\t\"type\":\"Microsoft.Media/mediaservices\"\n}\n"
 						},
 						"url": {
 							"raw": "https://management.azure.com/subscriptions/:subscriptionId/resourceGroups/:resourceGroupName/providers/Microsoft.Media/locations/{{location}}/CheckNameAvailability?api-version={{api-version}}",
@@ -2446,7 +2446,7 @@
 						],
 						"body": {
 							"mode": "raw",
-							"raw": " {\r\n   \"location\": \"West US 2\",\r\n      \"tags\": {\r\n        \"createdBy\": \"user name\",\r\n        \"key2\": \"value2\"\r\n      },\r\n      \"properties\": {\r\n        \"storageAccounts\": [\r\n          {\r\n            \"id\": \"/subscriptions/00000000-0000-0000-0000-000000000000/resourceGroups/contoso/providers/Microsoft.Storage/storageAccounts/contososportsstore\",\r\n            \"type\": \"Primary\"\r\n          }\r\n        ]\r\n      }\r\n}"
+							"raw": " {\r\n   \"location\": \"West Central US\",\r\n      \"tags\": {\r\n        \"createdBy\": \"user name\",\r\n        \"key2\": \"value2\"\r\n      },\r\n      \"properties\": {\r\n        \"storageAccounts\": [\r\n          {\r\n            \"id\": \"/subscriptions/00000000-0000-0000-0000-000000000000/resourceGroups/contoso/providers/Microsoft.Storage/storageAccounts/contososportsstore\",\r\n            \"type\": \"Primary\"\r\n          }\r\n        ]\r\n      }\r\n}"
 						},
 						"url": {
 							"raw": "https://management.azure.com/subscriptions/:subscriptionId/resourceGroups/:resourceGroupName/providers/Microsoft.Media/mediaservices/:mediaServiceName?api-version={{api-version}}",
@@ -3590,7 +3590,7 @@
 						],
 						"body": {
 							"mode": "raw",
-							"raw": "{\r\n      \"location\": \"West US 2\",\r\n      \"tags\": {\r\n        \"createdBy\": \"user name\",\r\n        \"custom tag 1\": \"value 1\"\r\n      },\r\n      \"properties\": {\r\n        \"description\": \"Simple Live Event using RTMP with 2-second keyframe interval and no ip restriction\",\r\n        \"input\": {\r\n          \"streamingProtocol\": \"RTMP\",\r\n          \"keyFrameIntervalDuration\": \"PT2S\"\r\n        },\r\n        \"preview\": {\r\n          \"accessControl\": {\r\n            \"ip\": {\r\n              \"allow\": [\r\n                {\r\n                  \"name\": \"AllowAll\",\r\n                  \"address\": \"0.0.0.0\"\r\n                }\r\n              ]\r\n            }\r\n          }\r\n        },\r\n        \"encoding\": {\r\n          \"encodingType\": \"None\",\r\n          \"presetName\": null\r\n        },\r\n        \"streamOptions\": []\r\n      }\r\n    }"
+							"raw": "{\r\n      \"location\":\"West Central US\",\r\n      \"tags\": {\r\n        \"createdBy\": \"user name\",\r\n        \"custom tag 1\": \"value 1\"\r\n      },\r\n      \"properties\": {\r\n        \"description\": \"Simple Live Event using RTMP with 2-second keyframe interval and no ip restriction\",\r\n        \"input\": {\r\n          \"streamingProtocol\": \"RTMP\",\r\n          \"keyFrameIntervalDuration\": \"PT2S\"\r\n        },\r\n        \"preview\": {\r\n          \"accessControl\": {\r\n            \"ip\": {\r\n              \"allow\": [\r\n                {\r\n                  \"name\": \"AllowAll\",\r\n                  \"address\": \"0.0.0.0\"\r\n                }\r\n              ]\r\n            }\r\n          }\r\n        },\r\n        \"encoding\": {\r\n          \"encodingType\": \"None\",\r\n          \"presetName\": null\r\n        },\r\n        \"streamOptions\": []\r\n      }\r\n    }"
 						},
 						"url": {
 							"raw": "https://management.azure.com/subscriptions/:subscriptionId/resourceGroups/:resourceGroupName/providers/Microsoft.Media/mediaservices/:accountName/liveEvents/:liveEventName?api-version={{api-version}}&autoStart=true",
@@ -4165,7 +4165,7 @@
 						],
 						"body": {
 							"mode": "raw",
-							"raw": "{\r\n    \"description\": \"test live output with a 1 hour rolling DVR window and manifest default name set to testmanifest. HLS segemnts will be packaged to contain 5x the incoming GOP size (for example, 5 x 2s incoming GOP = 10s HLS TS Segments)\",\r\n    \"assetName\": \"6f3264f5-a189-48b4-a29a-a40f22575212\",\r\n    \"archiveWindowLength\": \"PT1H\",\r\n    \"manifestName\": \"testmanifest\",\r\n    \"hls\": {\r\n      \"fragmentsPerTsSegment\": 5\r\n    }\r\n}"
+							"raw": "{\r\n    \"properties\": {\r\n        \"description\": \"myOutputAsset\",\r\n        \"assetName\": \"myOutputAsset\",\r\n        \"archiveWindowLength\": \"PT5M\",\r\n        \"manifestName\": \"testmanifest\",\r\n        \"hls\": {\r\n          \"fragmentsPerTsSegment\": 5\r\n        }\r\n    }\r\n}"
 						},
 						"url": {
 							"raw": "https://management.azure.com/subscriptions/:subscriptionId/resourceGroups/:resourceGroupName/providers/Microsoft.Media/mediaservices/:accountName/liveEvents/:liveEventName/liveOutputs/:liveOutputName?api-version={{api-version}}",
@@ -4451,7 +4451,7 @@
 						],
 						"body": {
 							"mode": "raw",
-							"raw": "{\r\n  \"location\": \"West US 2\",\r\n  \"tags\": {\r\n    \"custom tag 1\": \"value 1\",\r\n    \"custom tag 2\": \"value 2\"\r\n  },\r\n  \"properties\": {\r\n    \"description\": \"test Streaming Endpoint\",\r\n    \"scaleUnits\": 1,\r\n    \"availabilitySetName\": \"availableset\",\r\n    \"accessControl\": {\r\n      \"akamai\": {\r\n        \"akamaiSignatureHeaderAuthenticationKeyList\": [\r\n          {\r\n            \"identifier\": \"id1\",\r\n            \"expiration\": \"2029-12-31T16:00:00-08:00\",\r\n            \"base64Key\": \"dGVzdGlkMQ==\"\r\n          },\r\n          {\r\n            \"identifier\": \"id2\",\r\n            \"expiration\": \"2030-12-31T16:00:00-08:00\",\r\n            \"base64Key\": \"dGVzdGlkMQ==\"\r\n          }\r\n        ]\r\n      },\r\n      \"ip\": {\r\n        \"allow\": [\r\n          {\r\n            \"name\": \"AllowedIp\",\r\n            \"address\": \"0.0.0.0\"\r\n          }\r\n        ]\r\n      }\r\n    },\r\n    \"cdnEnabled\": true\r\n  }\r\n}"
+							"raw": "{\r\n  \"tags\": {\r\n    \"custom tag 1\": \"value 1\",\r\n    \"custom tag 2\": \"value 2\"\r\n  },\r\n  \"properties\": {\r\n    \"description\": \"test Streaming Endpoint\",\r\n    \"scaleUnits\": 1,\r\n    \"availabilitySetName\": \"availableset\",\r\n    \"accessControl\": {\r\n      \"akamai\": {\r\n        \"akamaiSignatureHeaderAuthenticationKeyList\": [\r\n          {\r\n            \"identifier\": \"id1\",\r\n            \"expiration\": \"2029-12-31T16:00:00-08:00\",\r\n            \"base64Key\": \"dGVzdGlkMQ==\"\r\n          },\r\n          {\r\n            \"identifier\": \"id2\",\r\n            \"expiration\": \"2030-12-31T16:00:00-08:00\",\r\n            \"base64Key\": \"dGVzdGlkMQ==\"\r\n          }\r\n        ]\r\n      },\r\n      \"ip\": {\r\n        \"allow\": [\r\n          {\r\n            \"name\": \"AllowedIp\",\r\n            \"address\": \"0.0.0.0\"\r\n          }\r\n        ]\r\n      }\r\n    },\r\n    \"cdnEnabled\": true\r\n  }\r\n}"
 						},
 						"url": {
 							"raw": "https://management.azure.com/subscriptions/:subscriptionId/resourceGroups/:resourceGroupName/providers/Microsoft.Media/mediaservices/:accountName/streamingEndpoints/:streamingEndpointName?api-version={{api-version}}&autoStart={{autoStart}}",
@@ -4993,7 +4993,7 @@
 	],
 	"variable": [
 		{
-			"id": "4ff1a148-b192-4c9b-8bcb-9e4fc72e0dd4",
+			"id": "f5f29589-e9e9-40bf-a718-93df7b37e41b",
 			"key": "ARM_API_ENDPOINT",
 			"value": "management.azure.com",
 			"type": "string",

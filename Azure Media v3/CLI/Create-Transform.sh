@@ -2,7 +2,7 @@
 
 # Update the following variables for your own settings:
 resourceGroup=build2018
-amsAccountName=build2018
+amsAccountName=build18
 
 # Create a simple Transform for Adaptive Bitrate Encoding
 az ams transform create \

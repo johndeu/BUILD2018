@@ -20,10 +20,10 @@
   "main": "./index.js",
   "license": "MIT",
   "dependencies": {
-    "azure-arm-mediaservices": "../MediaServices",
+    "azure-arm-mediaservices": "file:../MediaServices",
+    "azure-storage": "^2.8.0",
     "ms-rest": "^2.3.0",
-    "ms-rest-azure": "^2.5.0",
-    "azure-storage": "^2.8.0"
+    "ms-rest-azure": "^2.5.0"
   },
   "homepage": "https://github.com/Azure-Samples/bing-search-node",
   "repository": {
