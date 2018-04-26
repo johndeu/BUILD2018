@@ -4,7 +4,7 @@
 resourceGroup=build2018
 amsAccountName=build18
 outputAssetName=myOutputAsset
-transformName=myFirstTransform
+transformName=audioAnalyzerTransform
 
 # NOTE: First create the Transforms in the Create-Transform.sh for these jobs to work!
 
@@ -18,7 +18,7 @@ az ams asset create \
 az ams job start \
     --name myFirstJob_003 \
     --transform-name $transformName \
-    --base-url 'https://nimbuscdn-nimbuspm.streaming.mediaservices.windows.net/2b533311-b215-4409-80af-529c3e853622/' \
+    --base-uri 'https://nimbuscdn-nimbuspm.streaming.mediaservices.windows.net/2b533311-b215-4409-80af-529c3e853622/' \
     --files 'Ignite-short.mp4' \
     --output-asset-names $outputAssetName \
     -a $amsAccountName \
