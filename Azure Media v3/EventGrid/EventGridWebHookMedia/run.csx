@@ -52,7 +52,7 @@ public static async Task<object> Run(HttpRequestMessage req, TraceWriter log)
 
         }
     }
-    
+
     // Do some work with Media Events here...
     string subject;
     string transformName;
@@ -70,9 +70,16 @@ public static async Task<object> Run(HttpRequestMessage req, TraceWriter log)
             jobName = r.Match(subject).Result("${jobName}");
             log.Info($"Job Name : {jobName}"); 
             log.Info($"Transform Name : {jobName}"); 
+
+            var job = await client.Jobs.GetAsync(resourceGroupName, accountName, transformName, jobName);
+
+            // We are a bit screwed without this...AssetName
+            //log.Info($"Job {job.Outputs[0].AssetName}");
         }
             
     }
+
+
 
     // Return a response
     return req.CreateResponse(HttpStatusCode.OK, new
