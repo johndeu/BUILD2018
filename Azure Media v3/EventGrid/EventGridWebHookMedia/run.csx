@@ -20,7 +20,7 @@ public static async Task<object> Run(HttpRequestMessage req, TraceWriter log)
 
     log.Info($"Creating Media Services Client.");
     ConfigWrapper config = new ConfigWrapper();
-    IAzureMediaServicesClient client = CreateMediaServicesClient(config);
+    IAzureMediaServicesClient client = CreateMediaServicesClient(config, log);
 
     string jsonContent = await req.Content.ReadAsStringAsync();
     string eventGridValidation = req.Headers.FirstOrDefault( x => x.Key == "Aeg-Event-Type" ).Value?.FirstOrDefault();
@@ -55,12 +55,14 @@ public static async Task<object> Run(HttpRequestMessage req, TraceWriter log)
 
 }
 
-private static IAzureMediaServicesClient CreateMediaServicesClient(ConfigWrapper config)
+private static IAzureMediaServicesClient CreateMediaServicesClient(ConfigWrapper config, TraceWriter log)
 {
     ArmClientCredentials credentials = new ArmClientCredentials(config);
 
     resourceGroupName = config.ResourceGroup;
     accountName = config.AccountName;
+    log.Info($"Using Media Services Account: {accountName}");
+    log.Info($"Using Subscripton ID: {config.SubscriptionId}");
 
     return new AzureMediaServicesClient(config.ArmEndpoint, credentials)
     {
