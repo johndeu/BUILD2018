@@ -117,16 +117,13 @@ public static async Task<object> Run(HttpRequestMessage req, TraceWriter log)
                         if(blob.Name.IndexOf(".json")>-1){
                             UriBuilder sasToResults = new UriBuilder(containerSasUrl);
                             sasToResults.Path +="/"+ blob.Name;
-                            log.Info($"JSON Output SAS::{sasToResults.ToString()}");
+                            log.Info($"JSON Output SAS: {sasToResults.ToString()}");
                         }       
                     }
                 }
             }
         }
     }
-
-
-
 
     // Return a response
     return req.CreateResponse(HttpStatusCode.OK, new
