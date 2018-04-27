@@ -103,7 +103,7 @@ public static async Task<object> Run(HttpRequestMessage req, TraceWriter log)
                 // Here we use the Storage Library to get the Container of the Asset
                 CloudBlobContainer container = new CloudBlobContainer(containerSasUrl);
 
-                log.Info($"SAS Url:{containerSasUrl.AbsoluteUri}");
+                log.Info($"SAS Url to Container:{containerSasUrl.AbsoluteUri}");
                 
                 /// Lets now list all of the blobs in the Asset's storage Container
                 var blobs = container.ListBlobsSegmentedAsync(null,true, BlobListingDetails.None,200,null,null,null).Result;
