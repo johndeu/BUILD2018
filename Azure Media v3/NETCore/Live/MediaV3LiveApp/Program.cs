@@ -56,13 +56,13 @@ namespace LiveSample
 
                 // This can sometimes take awhile. Be patient.
                 LiveEvent liveEvent = new LiveEvent(location: mediaService.Location, input: new LiveEventInput(LiveEventInputProtocol.RTMP), preview: liveEventPreview);
-                liveEvent = client.LiveEvents.Create(config.ResourceGroup, config.AccountName, liveEventName, liveEvent);
+                liveEvent = client.LiveEvents.Create(config.ResourceGroup, config.AccountName, liveEventName, liveEvent, autoStart:true);
 
                 // Start the LiveEvent so  that we can begin sending encoding data to it. 
-                client.LiveEvents.Start(config.ResourceGroup,config.AccountName, liveEventName);
+                // client.LiveEvents.Start(config.ResourceGroup,config.AccountName, liveEventName);
 
                 // Get the LiveEvent again to refresh the ingest endpoints after starting. 
-                liveEvent = client.LiveEvents.Get(config.ResourceGroup, config.AccountName, liveEventName);
+                //liveEvent = client.LiveEvents.Get(config.ResourceGroup, config.AccountName, liveEventName);
 
                 // Get the input endpoint to configure the on premise encoder with
                 string ingestUrl = liveEvent.Input.Endpoints.First().Url;

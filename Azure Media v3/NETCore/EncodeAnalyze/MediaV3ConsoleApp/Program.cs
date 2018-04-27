@@ -106,6 +106,8 @@ namespace AnalyzeVideos
             Console.WriteLine("Creating Input Asset");
             Asset asset = client.Assets.CreateOrUpdate(resourceGroupName, accountName,assetName, new Asset());
 
+
+
             ListContainerSasInput input = new ListContainerSasInput()
             {
                 Permissions = AssetContainerPermission.ReadWrite,
@@ -168,7 +170,7 @@ namespace AnalyzeVideos
             do
             {
                 job = client.Jobs.Get(resourceGroupName, accountName, transformName, jobName);
-
+                
                 if (job.State == JobState.Finished || job.State == JobState.Error || job.State == JobState.Canceled)
                 {
                     exit = true;
