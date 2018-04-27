@@ -13,7 +13,6 @@ namespace LiveSample
     class Program
     {
 
-
         private static void Main(string[] args)
         {
             try
@@ -35,8 +34,10 @@ namespace LiveSample
                 string liveEventName = "liveEvent-" + uniqueness;
                 Console.WriteLine($"Creating a live event named {liveEventName}");
                 Console.WriteLine();
+
                 LiveEventPreview liveEventPreview = new LiveEventPreview
                 {
+                    StreamingPolicyName = PredefinedStreamingPolicy.ClearStreamingOnly,
                     AccessControl = new LiveEventPreviewAccessControl
                     {
                         Ip = new IPAccessControl
@@ -46,16 +47,24 @@ namespace LiveSample
                                 new IPRange
                                 {
                                     Name = "AllowAll",
-                                    Address = "0.0.0.0"
+                                    Address = "0.0.0.0",
+                                    SubnetPrefixLength = 0
                                 }
                             }
                         }
-                    },
-                    StreamingPolicyName = PredefinedStreamingPolicy.ClearStreamingOnly
+                    }
                 };
 
                 // This can sometimes take awhile. Be patient.
-                LiveEvent liveEvent = new LiveEvent(location: mediaService.Location, input: new LiveEventInput(LiveEventInputProtocol.RTMP), preview: liveEventPreview);
+                LiveEvent liveEvent = new LiveEvent(
+                    location: mediaService.Location, 
+                    description:"Sample non-encoding pass-through LiveEvent for testing",
+                    vanityUrl:false,
+                    encoding:new LiveEventEncoding(encodingType:LiveEventEncodingType.None, presetName:null),
+                    input: new LiveEventInput(LiveEventInputProtocol.RTMP), 
+                    preview: liveEventPreview
+                );
+
                 liveEvent = client.LiveEvents.Create(config.ResourceGroup, config.AccountName, liveEventName, liveEvent, autoStart:true);
 
                 // Start the LiveEvent so  that we can begin sending encoding data to it. 
@@ -108,13 +117,22 @@ namespace LiveSample
                 locator = client.StreamingLocators.Create(config.ResourceGroup, config.AccountName, streamingLocatorName, locator);
 
                 // Create the StreamingEndpoint
-                string endpointName = "endpoint" + uniqueness;
+                // string endpointName = "endpoint" + uniqueness;
 
-                Console.WriteLine($"Creating a streaming endpoint named {endpointName}");
-                Console.WriteLine();
+                // Console.WriteLine($"Creating a streaming endpoint named {endpointName}");
+                // Console.WriteLine();
 
-                StreamingEndpoint streamingEndpoint = new StreamingEndpoint(location: mediaService.Location);
-                streamingEndpoint = client.StreamingEndpoints.Create(config.ResourceGroup, config.AccountName, endpointName, streamingEndpoint, autoStart: true);
+                // StreamingEndpoint streamingEndpoint = new StreamingEndpoint(location: mediaService.Location);
+                // streamingEndpoint = client.StreamingEndpoints.Create(config.ResourceGroup, config.AccountName, endpointName, streamingEndpoint, autoStart: true);
+
+                // Get the default Streaming Endpoint on the account
+                StreamingEndpoint streamingEndpoint = client.StreamingEndpoints.Get(config.ResourceGroup, config.AccountName, "default");
+
+                // If it's not running, Start it. 
+                if (streamingEndpoint.ResourceState != StreamingEndpointResourceState.Running)
+                {
+                    client.StreamingEndpoints.Start(config.ResourceGroup, config.AccountName, "default");
+                }
 
                 // Get the url to stream the output
                 var paths = client.StreamingLocators.ListPaths(config.ResourceGroup, config.AccountName, streamingLocatorName);
@@ -147,7 +165,7 @@ namespace LiveSample
                     Console.WriteLine("Cleaning up and Exiting...");
 
                     CleanupLiveEventAndOutput(client, config.ResourceGroup, config.AccountName, liveEventName, liveOutputName);
-                    CleanupLocatorAssetAndStreamingEndpoint(client, config.ResourceGroup, config.AccountName, streamingLocatorName, assetName, endpointName);
+                    CleanupLocatorAssetAndStreamingEndpoint(client, config.ResourceGroup, config.AccountName, streamingLocatorName, assetName);
 
                     return;
                 }
@@ -164,7 +182,7 @@ namespace LiveSample
                 Console.Out.Flush();
                 ignoredInput = Console.ReadLine();
 
-                CleanupLocatorAssetAndStreamingEndpoint(client, config.ResourceGroup, config.AccountName, streamingLocatorName, assetName, endpointName);
+                CleanupLocatorAssetAndStreamingEndpoint(client, config.ResourceGroup, config.AccountName, streamingLocatorName, assetName);
             }
             catch (ApiErrorException e)
             {
@@ -186,7 +204,7 @@ namespace LiveSample
             client.LiveEvents.Delete(resourceGroup, accountName, liveEventName);
         }
 
-        private static void CleanupLocatorAssetAndStreamingEndpoint(IAzureMediaServicesClient client, string resourceGroup, string accountName, string streamingLocatorName, string assetName, string endpointName)
+        private static void CleanupLocatorAssetAndStreamingEndpoint(IAzureMediaServicesClient client, string resourceGroup, string accountName, string streamingLocatorName, string assetName)
         {
             // Delete the Streaming Locator
             client.StreamingLocators.Delete(resourceGroup, accountName, streamingLocatorName);
@@ -195,8 +213,8 @@ namespace LiveSample
             client.Assets.Delete(resourceGroup, accountName, assetName);
 
             // Stop and delete the StreamingEndpoint
-            client.StreamingEndpoints.Stop(resourceGroup, accountName, endpointName);
-            client.StreamingEndpoints.Delete(resourceGroup, accountName, endpointName);
+            // client.StreamingEndpoints.Stop(resourceGroup, accountName, endpointName);
+            // client.StreamingEndpoints.Delete(resourceGroup, accountName, endpointName);
 
         }
 

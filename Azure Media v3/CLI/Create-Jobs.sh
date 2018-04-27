@@ -16,7 +16,7 @@ az ams asset create \
 
 # Submit a Job to a simple encoding Transform using HTTPs URL
 az ams job start \
-    --name myFirstJob_005 \
+    --name myFirstJob_007 \
     --transform-name $transformName \
     --base-uri 'https://nimbuscdn-nimbuspm.streaming.mediaservices.windows.net/2b533311-b215-4409-80af-529c3e853622/' \
     --files 'Ignite-short.mp4' \
