@@ -53,7 +53,7 @@ public static async Task<object> Run(HttpRequestMessage req, TraceWriter log)
         }
     }
 
-    // Do some work with Media Events here...
+     // Do some work with Media Events here...
     string subject;
     string transformName;
     string jobName;
@@ -78,13 +78,42 @@ public static async Task<object> Run(HttpRequestMessage req, TraceWriter log)
             {
                 var assetName = jobOutputAsset.AssetName;
                 log.Info($"AssetName: {assetName}");
-            }
 
-            // We are a bit screwed without this...AssetName
-            //log.Info($"Job {job.Outputs[0].AssetName}");
+                var outputAsset = await client.Assets.GetAsync(resourceGroupName,accountName,assetName);
+                log.Info($"OutputAsset storage:{outputAsset.StorageAccountName}");
+
+                AssetContainerSas assetContainerSas = client.Assets.ListContainerSas(
+                            resourceGroupName, 
+                            accountName, 
+                            assetName,
+                            permissions: AssetContainerPermission.Read, 
+                            expiryTime: DateTime.UtcNow.AddHours(1).ToUniversalTime()
+                            );
+
+                Uri containerSasUrl = new Uri(assetContainerSas.AssetContainerSasUrls.FirstOrDefault());
+                CloudBlobContainer container = new CloudBlobContainer(containerSasUrl);
+
+                log.Info($"SAS Url:{containerSasUrl.AbsoluteUri}");
+                
+                var blobs = container.ListBlobsSegmentedAsync(null,true, BlobListingDetails.None,200,null,null,null).Result;
+                
+                foreach (var blobItem in blobs.Results)
+                {
+                    if (blobItem is CloudBlockBlob)
+                    {
+                        CloudBlockBlob blob = blobItem as CloudBlockBlob;
+                        if(blob.Name.IndexOf(".json")>-1){
+                            UriBuilder sasToResults = new UriBuilder(containerSasUrl);
+                            sasToResults.Path +="/"+ blob.Name;
+                            log.Info($"JSON Output SAS::{sasToResults.ToString()}");
+                        
+                        }       
+                    }
+                }
+            }
         }
-            
     }
+
 
 
 
