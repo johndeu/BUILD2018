@@ -53,6 +53,17 @@ public static async Task<object> Run(HttpRequestMessage req, TraceWriter log)
         }
     }
 
+    // If the Job is not Finished, just return the state
+    if (eventData[0].data.state != "Finished")
+    {
+        // Return a response
+        return req.CreateResponse(HttpStatusCode.OK, new
+        {
+            message = $"Job still in progress.}",
+            state = $"{eventData[0].data.state}"
+        });
+    }
+
      // Do some work with Media Events here...
     string subject;
     string transformName;
