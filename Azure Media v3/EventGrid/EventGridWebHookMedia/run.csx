@@ -73,6 +73,13 @@ public static async Task<object> Run(HttpRequestMessage req, TraceWriter log)
 
             var job = await client.Jobs.GetAsync(resourceGroupName, accountName, transformName, jobName);
 
+            var jobOutputAsset = job.Outputs[0] as JobOutputAsset;
+            if(jobOutputAsset != null)
+            {
+                var assetName = jobOutputAsset.AssetName;
+                log.Info($"AssetName: {assetName}");
+            }
+
             // We are a bit screwed without this...AssetName
             //log.Info($"Job {job.Outputs[0].AssetName}");
         }
