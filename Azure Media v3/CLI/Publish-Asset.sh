@@ -1,5 +1,7 @@
 #!/bin/bash
 
+# WARNING:  This shell script requires Python 3 to be installed to parse JSON. 
+
 # Update the following variables for your own settings:
 resourceGroup=build2018
 amsAccountName=build18
@@ -26,13 +28,33 @@ az ams streaming locator create \
     #--start-time 2018-04-28T00:00:00Z \
     #--content-policy-name $contentPolicyName \
 
+# List the Streaming Endpoints on the account. If this is a new account it only has a 'default' endpoint, which may be stopped.
+# To stream, you must first Start a Streaming Endpoint on your account. 
+# This next commmand lists the Streaming Endpoints, and gets the value of the "hostname" property for the 'default' endpoint to be used when building
+# the complete Streaming or download URL from the locator get-paths method following this.
+# NOTE: This command requires Python 3.5 to be installed. 
+hostName=$(az ams streaming endpoint list \
+    -a $amsAccountName \
+    -g $resourceGroup  | \
+    python -c "import sys, json; print(json.load(sys.stdin)[0]['hostName'])")
+
+echo "Hostname:" $hostName
+    
 # List the Streming URLs relative paths for the new locator.  You must append your Streaming Endpoint "hostname" path to these to resolve the full URL. 
 # Note that the asset must have an .ismc and be encoded for Adaptive streaming in order to get Streaming URLs back. You can get download paths for any content type.
-az ams streaming locator get-paths \
+paths=$(az ams streaming locator get-paths \
     -a $amsAccountName \
     -g $resourceGroup \
-    -n $locatorName \
+    -n $locatorName )
 
+downloadPaths=$(echo $paths | \
+                python -c "import sys, json; print(json.load(sys.stdin)['downloadPaths'])" )
+
+streamingPaths=$(echo $paths |\
+                python -c "import sys, json; print(json.load(sys.stdin)['streamingPaths'])" )
+
+echo "DownloadPaths:" $downloadPaths
+echo "StreamingPaths:" $streamingPaths
 
 echo "press  [ENTER]  to continue."
 read continue
