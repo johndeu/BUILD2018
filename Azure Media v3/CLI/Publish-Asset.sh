@@ -22,7 +22,7 @@ az ams streaming locator create \
     --asset-name $assetName \
     -n $locatorName \
     --streaming-policy-name $streamingPolicyName \
-    --end-time 2100-10-10T00:00:00Z \
+    #--end-time 2100-10-10T00:00:00Z \
     #--start-time 2018-04-28T00:00:00Z \
     #--content-policy-name $contentPolicyName \
 
