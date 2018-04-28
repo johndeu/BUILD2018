@@ -39,7 +39,7 @@ hostName=$(az ams streaming endpoint list \
     python -c "import sys, json; print(json.load(sys.stdin)[0]['hostName'])")
 
 echo -e "\n"
-echo -e "Hostname: https://"$hostName
+echo -e "Default hostname: https://"$hostName
    
 # List the Streming URLs relative paths for the new locator.  You must append your Streaming Endpoint "hostname" path to these to resolve the full URL. 
 # Note that the asset must have an .ismc and be encoded for Adaptive streaming in order to get Streaming URLs back. You can get download paths for any content type.
