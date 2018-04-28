@@ -31,13 +31,12 @@ namespace LiveSample
                 // multiple times without cleaning up.
                 string uniqueness = Guid.NewGuid().ToString().Substring(0, 8);
             
-                string liveEventName = "liveEvent-" + uniqueness;
+                string liveEventName = "liveevent-" + uniqueness;
                 Console.WriteLine($"Creating a live event named {liveEventName}");
                 Console.WriteLine();
 
                 LiveEventPreview liveEventPreview = new LiveEventPreview
                 {
-                    StreamingPolicyName = PredefinedStreamingPolicy.ClearStreamingOnly,
                     AccessControl = new LiveEventPreviewAccessControl
                     {
                         Ip = new IPAccessControl
