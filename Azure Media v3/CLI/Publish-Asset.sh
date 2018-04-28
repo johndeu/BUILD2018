@@ -52,12 +52,14 @@ downloadPaths=$(echo $paths | \
                 python -c "import sys, json; print(json.load(sys.stdin)['downloadPaths'])" )
 
 streamingPaths=$(echo $paths |\
-                python -c "import sys, json; print(json.load(sys.stdin)['streamingPaths'])") 
+                python -c "import sys, json; print(json.load(sys.stdin)['streamingPaths'])" )
 
 echo -e "\n"
-echo "DownloadPaths:" $downloadPaths
+echo "DownloadPaths:" 
+echo $downloadPaths
 echo -e "\n"
-echo "StreamingPaths:" $streamingPaths
+echo "StreamingPaths:"
+echo $streamingPaths
 
 echo "press  [ENTER]  to continue."
 read continue
