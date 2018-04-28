@@ -1,5 +1,11 @@
 # Setting up the CLI
 
+## Install the official Azure CLI 2.0 to use the AMS module
+
+[https://docs.microsoft.com/en-us/cli/azure/install-azure-cli?view=azure-cli-latest](https://docs.microsoft.com/en-us/cli/azure/install-azure-cli?view=azure-cli-latest )
+
+
+## Pre-release builds are available for testing here:
 git clone https://github.com/southworkscom/azure-cli
 
 cd azure-cli
