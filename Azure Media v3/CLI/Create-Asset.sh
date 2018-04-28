@@ -4,7 +4,7 @@
 resourceGroup=build2018
 amsAccountName=build18
 assetName="myAsset-uniqueID"
-expiry="2018-04-25T05:00:00Z"
+expiry=$(date -u +"%Y-%m-%dT%TZ" -d "+23 hours")
 
 # Create a Media Services Asset to upload content to.
 # In the v3 API, Asset names are unique ARM resource identifiers and must be unique to the account.
@@ -32,7 +32,7 @@ az ams asset get-sas-urls \
 # Use the --account-name option to point to the storage account name to use 
 # Use the --sas-token option to place the SAS token after the query string from previous step. 
 # NOTE that the SAS Token is only good for up to 24 hours max. 
-#
+
 #   az storage blob upload \
 #       -c asset-84045780-a71c-4511-801b-711b1a2e76b2 \
 #       -f C:\Videos\ignite-short.mp4 \

@@ -1,8 +1,8 @@
 #!/bin/bash
 
 # Update the following variables for your own settings:
-resourceGroup=Weibing
-storageName=weibgingstorage
+resourceGroup=build2018
+storageName=build2018storage
 amsAccountName=build18
 amsSPName=build2018demo
 amsSPPassword=build2018demo
