@@ -31,10 +31,12 @@ namespace AnalyzeVideos
                 // Ensure that you have customized transforms for the VideoAnalyzer.  This is really a one time setup operation.
                 Transform videoAnalyzerTransform = EnsureTransformExists(client, config.Region, VideoAnalyzerTransformName, new VideoAnalyzerPreset());
 
-                String jobName = Guid.NewGuid().ToString() + "-job";
-
-                string inputAssetName = Guid.NewGuid().ToString() + "-input";
-                string outputAssetName = Guid.NewGuid().ToString() + "-output";
+                // Creating a unique suffix so that we don't have name collisions if you run the sample
+                // multiple times without cleaning up.
+                string uniqueness = Guid.NewGuid().ToString().Substring(0, 13);
+                string jobName = "job-" + uniqueness;
+                string inputAssetName = "input-" + uniqueness;
+                string outputAssetName = "output-" + uniqueness;
 
                 CreateInputAsset(client, inputAssetName, inputMP4FileName).Wait();
 
