@@ -29,7 +29,7 @@ namespace LiveSample
 
                 // Creating a unique suffix so that we don't have name collisions if you run the sample
                 // multiple times without cleaning up.
-                string uniqueness = Guid.NewGuid().ToString().Substring(0, 8);
+                string uniqueness = Guid.NewGuid().ToString().Substring(0, 13);
             
                 string liveEventName = "liveevent-" + uniqueness;
                 Console.WriteLine($"Creating a live event named {liveEventName}");

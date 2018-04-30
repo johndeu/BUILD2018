@@ -31,13 +31,10 @@ namespace AnalyzeVideos
                 // Ensure that you have customized encoding Transform.  This is really a one time setup operation.
                 Transform adaptiveEncodeTransform = EnsureTransformExists(client, config.Region, transformName, preset: new BuiltInStandardEncoderPreset(EncoderNamedPreset.AdaptiveStreaming));
 
-                // Creating a unique suffix so that we don't have name collisions if you run the sample
-                // multiple times without cleaning up.
-                string uniqueness = Guid.NewGuid().ToString().Substring(0, 13);
+                String jobName = Guid.NewGuid().ToString() + "-job";
 
-                string jobName = "job-" + uniqueness;
-                string inputAssetName = "input-" + uniqueness;
-                string outputAssetName = "output-" + uniqueness;
+                string inputAssetName = Guid.NewGuid().ToString() + "-input";
+                string outputAssetName = Guid.NewGuid().ToString() + "-output";
 
 
                 Asset asset = client.Assets.CreateOrUpdate(resourceGroupName, accountName,  inputAssetName, new Asset());
