@@ -64,6 +64,11 @@ namespace AnalyzeVideos
                         Directory.CreateDirectory(outputFolder);
                     DownloadResults(client, outputAssetName, outputFolder).Wait();
                 }
+                else if (job.State == JobState.Error)
+                {
+                    Console.WriteLine($"ERROR: Job finished with error message: {job.Outputs[0].Error.Message}");
+                    Console.WriteLine($"ERROR:                   error details: {job.Outputs[0].Error.Details[0].Message}");
+                }
             }
             catch(ApiErrorException ex)
             {
@@ -146,12 +151,12 @@ namespace AnalyzeVideos
                             // Write the Video file to MP4 file format using the basename and extension macros
                             new Mp4Format()
                                 {
-                                    FilenamePattern="{Basename}{Extension}"
+                                    FilenamePattern="Video-{Basename}.{Extension}"
                                 },
                             // Write the Thumbnails out using the basename, index and extension macros
                             new PngFormat
                                 {
-                                    FilenamePattern ="{Basename}{Index}{Extension}"
+                                    FilenamePattern ="Thumbnail-{Basename}-{Index}.{Extension}"
                                 }
                             }
                         }
