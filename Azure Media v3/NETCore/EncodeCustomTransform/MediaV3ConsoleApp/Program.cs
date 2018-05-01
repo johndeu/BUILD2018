@@ -42,8 +42,7 @@ namespace AnalyzeVideos
 
                 var input = new JobInputHttp(
                                     baseUri: "https://nimbuscdn-nimbuspm.streaming.mediaservices.windows.net/2b533311-b215-4409-80af-529c3e853622/",
-                                    files: new List<String> {"Ignite-short.mp4"},
-                                    label:"input1"
+                                    files: new List<String> {"Ignite-short.mp4"}
                                     );
                 
 
