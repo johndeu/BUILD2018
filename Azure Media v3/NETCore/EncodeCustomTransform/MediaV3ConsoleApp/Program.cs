@@ -149,15 +149,16 @@ namespace AnalyzeVideos
                             },
                             Formats =new List<Format>
                             {
-                                // Write the Video file to MP4 file format using the basename and extension macros
+                                // Write the Video file to MP4 file format using the {Basename}, {Label}, {Bitrate} and file {Extension} macros
+                                // Note that if you have multiple layers defined above, you have to use a macro that produces unique names. 
                                 new Mp4Format()
                                     {
-                                        FilenamePattern="Video-{Basename}-{Label}-{Bitrate}.{Extension}"
+                                        FilenamePattern="Video-{Basename}-{Label}-{Bitrate}{Extension}"
                                     },
                                 // Write the Thumbnails out using the basename, index and extension macros
                                 new PngFormat
                                     {   
-                                        FilenamePattern ="Thumbnail-{Basename}-{Index}.{Extension}"
+                                        FilenamePattern ="Thumbnail-{Basename}-{Index}{Extension}"
                                     }
                             }
                         }
