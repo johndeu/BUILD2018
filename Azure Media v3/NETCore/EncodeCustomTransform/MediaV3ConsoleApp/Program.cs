@@ -15,7 +15,7 @@ namespace AnalyzeVideos
     class Program
     {
         const String outputFolder = @"Output";
-        const String transformName = "Custom_TwoLayerMp4_AAC";
+        const String transformName = "Custom_TwoLayerMp4AAC";
         static String resourceGroupName;
         static String accountName;
 
@@ -28,7 +28,7 @@ namespace AnalyzeVideos
             {
         
                 // Ensure that you have customized encoding Transform.  This is really a one time setup operation.
-                Transform adaptiveEncodeTransform = EnsureTransformExists(client, config.Region, transformName, preset: new BuiltInStandardEncoderPreset(EncoderNamedPreset.AdaptiveStreaming));
+                Transform adaptiveEncodeTransform = EnsureTransformExists(client, config.Region, transformName);
 
                 // Creating a unique suffix so that we don't have name collisions if you run the sample
                 // multiple times without cleaning up.
@@ -93,7 +93,7 @@ namespace AnalyzeVideos
             };
         }
 
-          private static Transform EnsureTransformExists(IAzureMediaServicesClient client, string location, string transformName, Preset preset)
+        private static Transform EnsureTransformExists(IAzureMediaServicesClient client, string location, string transformName)
         {
             Transform transform = client.Transforms.Get(resourceGroupName, accountName, transformName);
 
@@ -117,15 +117,17 @@ namespace AnalyzeVideos
                                     {
                                         new H264Layer
                                             {
-                                                Width ="800",
-                                                Height ="600",
-                                                Bitrate = 1000000
+                                                Width ="1280",
+                                                Height ="720",
+                                                Bitrate = 1000000,
+                                                Label ="HD"
                                             },
                                         new H264Layer
                                             {
                                                 Width ="640",
                                                 Height ="480",
-                                                Bitrate = 600000
+                                                Bitrate = 600000,
+                                                Label = "SD"
                                             }
                                         }
                                 },
@@ -150,14 +152,14 @@ namespace AnalyzeVideos
                                 // Write the Video file to MP4 file format using the basename and extension macros
                                 new Mp4Format()
                                     {
-                                        FilenamePattern="Video-{Basename}.{Extension}"
+                                        FilenamePattern="Video-{Basename}-{Label}-{Bitrate}.{Extension}"
                                     },
                                 // Write the Thumbnails out using the basename, index and extension macros
                                 new PngFormat
-                                    {
+                                    {   
                                         FilenamePattern ="Thumbnail-{Basename}-{Index}.{Extension}"
                                     }
-                                }
+                            }
                         }
                     )
                 };
