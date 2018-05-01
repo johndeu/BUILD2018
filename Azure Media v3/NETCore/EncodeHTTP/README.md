@@ -1,5 +1,5 @@
-# BUILD2018
-BUILD 2018 samples for Azure Media Services Demos
+# Encode HTTP
+This sample demonstrates how to create an encoding Transform that uses a built-in preset for adaptive bitrate encoding and ingests a file directly from an HTTPs source URL.  This is simpler than having to create an Asset and upload content to it directly for some scenarios.
 
 ## .NET Core Sample
 
