@@ -59,6 +59,11 @@ namespace AnalyzeVideos
                         Directory.CreateDirectory(outputFolder);
                     DownloadResults(client, outputAssetName, outputFolder).Wait();
                 }
+                else if (job.State == JobState.Error)
+                {
+                    Console.WriteLine($"ERROR: Job finished with error message: {job.Outputs[0].Error.Message}");
+                    Console.WriteLine($"ERROR:                   error details: {job.Outputs[0].Error.Details[0].Message}");
+                }
             }
             catch(ApiErrorException ex)
             {
