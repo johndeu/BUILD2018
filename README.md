@@ -1,7 +1,7 @@
 # BUILD2018
-BUILD 2018 samples for AMS v3 and Video Indexer
+BUILD 2018 samples for Azure Media Services v3 API
 
-All of the examples in this repo where created by John Deutscher for the //BUILD 2018 conference.
+All of the examples in this repo created by John Deutscher for the //BUILD 2018 conference.
 These demos are built using the Preview release of the Media Services v3 API and are provided as examples to get you started quickly with the new API. 
 
 For feedback, ping me directly on Github, or submit your questions and feature asks on the new v3 API to our [Media Services MSDN Forum](https://social.msdn.microsoft.com/forums/azure/en-US/home?forum=MediaServices)
