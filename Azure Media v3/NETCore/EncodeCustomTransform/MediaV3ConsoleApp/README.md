@@ -4,8 +4,12 @@ BUILD 2018 samples for Azure Media Services Demos
 ## .NET Core Sample
 
 This is a Quickstart sample showing how to use Azure Media Services API and .NET SDK in .NET Core. 
-
 Open this folder directly (seperately) in Visual Studio Code. 
+
+This sample shows how to create a custom encoding Transform using the StandardEncoderPreset settings. 
+It also demonstrates how to submit a job that uses an HTTPs ingest URL (JobInputHttp) instead of having to first create and upload an Asset. 
+
+
 
 ## Update the App.config
 

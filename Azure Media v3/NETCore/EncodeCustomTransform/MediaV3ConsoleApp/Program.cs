@@ -15,8 +15,7 @@ namespace AnalyzeVideos
     class Program
     {
         const String outputFolder = @"Output";
-        const String transformName = "AdaptiveBitrate";
-
+        const String transformName = "Custom_TwoLayerMp4_AAC";
         static String resourceGroupName;
         static String accountName;
 
@@ -31,10 +30,12 @@ namespace AnalyzeVideos
                 // Ensure that you have customized encoding Transform.  This is really a one time setup operation.
                 Transform adaptiveEncodeTransform = EnsureTransformExists(client, config.Region, transformName, preset: new BuiltInStandardEncoderPreset(EncoderNamedPreset.AdaptiveStreaming));
 
-                String jobName = Guid.NewGuid().ToString() + "-job";
-
-                string inputAssetName = Guid.NewGuid().ToString() + "-input";
-                string outputAssetName = Guid.NewGuid().ToString() + "-output";
+                // Creating a unique suffix so that we don't have name collisions if you run the sample
+                // multiple times without cleaning up.
+                string uniqueness = Guid.NewGuid().ToString().Substring(0, 13);
+                string jobName = "job-" + uniqueness;
+                string inputAssetName = "input-" + uniqueness;
+                string outputAssetName = "output-" + uniqueness;
 
 
                 Asset asset = client.Assets.CreateOrUpdate(resourceGroupName, accountName,  inputAssetName, new Asset());
@@ -94,11 +95,70 @@ namespace AnalyzeVideos
 
             if (transform == null)
             {
+                // Create a new Transform Outputs array - this defines the set of outputs for the Transform
                 TransformOutput[] outputs = new TransformOutput[]
                 {
-                    new TransformOutput(preset),
+                    // Create a new TransformOutput with a custom Standard Encoder Preset
+                    // This demonstrates how to create custom codec and layer output settings
+                    new TransformOutput(new StandardEncoderPreset()
+                        {
+                            Codecs =new List<Codec>
+                            {
+                            // Add an AAC Audio layer
+                            new AacAudio(),
+                            // Add two H264 video encoding layers
+                            new H264Video
+                                {
+                                    Layers =new List<H264Layer>
+                                    {
+                                    new H264Layer
+                                        {
+                                            Width ="800",
+                                            Height ="600",
+                                            Bitrate = 1000000
+                                        },
+                                    new H264Layer
+                                        {
+                                            Width ="640",
+                                            Height ="480",
+                                            Bitrate = 600000
+                                        }
+                                    }
+                                },
+                            // Add a thumbnail image layer that outputs a range of thumbnails
+                            new PngImage
+                                {
+                                    Start ="25%",
+                                    Step ="25%",
+                                    Range ="80%",
+                                    Layers =new List<PngLayer>
+                                    {
+                                    new PngLayer
+                                        {
+                                            Width ="50%",
+                                            Height ="50%"
+                                        }
+                                    }
+                                }
+                            },
+                            Formats =new List<Format>
+                            {
+                            // Write the Video file to MP4 file format using the basename and extension macros
+                            new Mp4Format()
+                                {
+                                    FilenamePattern="{Basename}{Extension}"
+                                },
+                            // Write the Thumbnails out using the basename, index and extension macros
+                            new PngFormat
+                                {
+                                    FilenamePattern ="{Basename}{Index}{Extension}"
+                                }
+                            }
+                        }
+                    ),
                 };
 
+                // Create the custom transform templat with the outputs defined above
                 transform = client.Transforms.CreateOrUpdate(resourceGroupName, accountName, transformName, outputs);
             }
 
