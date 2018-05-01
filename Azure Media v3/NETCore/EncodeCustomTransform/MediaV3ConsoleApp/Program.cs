@@ -116,19 +116,19 @@ namespace AnalyzeVideos
                                 {
                                     Layers =new List<H264Layer>
                                     {
-                                    new H264Layer
-                                        {
-                                            Width ="800",
-                                            Height ="600",
-                                            Bitrate = 1000000
-                                        },
-                                    new H264Layer
-                                        {
-                                            Width ="640",
-                                            Height ="480",
-                                            Bitrate = 600000
+                                        new H264Layer
+                                            {
+                                                Width ="800",
+                                                Height ="600",
+                                                Bitrate = 1000000
+                                            },
+                                        new H264Layer
+                                            {
+                                                Width ="640",
+                                                Height ="480",
+                                                Bitrate = 600000
+                                            }
                                         }
-                                    }
                                 },
                             // Add a thumbnail image layer that outputs a range of thumbnails
                             new PngImage
@@ -138,29 +138,29 @@ namespace AnalyzeVideos
                                     Range ="80%",
                                     Layers =new List<PngLayer>
                                     {
-                                    new PngLayer
-                                        {
-                                            Width ="50%",
-                                            Height ="50%"
-                                        }
+                                        new PngLayer
+                                            {
+                                                Width ="50%",
+                                                Height ="50%"
+                                            }
                                     }
                                 }
                             },
                             Formats =new List<Format>
                             {
-                            // Write the Video file to MP4 file format using the basename and extension macros
-                            new Mp4Format()
-                                {
-                                    FilenamePattern="Video-{Basename}.{Extension}"
-                                },
-                            // Write the Thumbnails out using the basename, index and extension macros
-                            new PngFormat
-                                {
-                                    FilenamePattern ="Thumbnail-{Basename}-{Index}.{Extension}"
+                                // Write the Video file to MP4 file format using the basename and extension macros
+                                new Mp4Format()
+                                    {
+                                        FilenamePattern="Video-{Basename}.{Extension}"
+                                    },
+                                // Write the Thumbnails out using the basename, index and extension macros
+                                new PngFormat
+                                    {
+                                        FilenamePattern ="Thumbnail-{Basename}-{Index}.{Extension}"
+                                    }
                                 }
-                            }
                         }
-                    ),
+                    )
                 };
 
                 // Create the custom transform templat with the outputs defined above
