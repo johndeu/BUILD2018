@@ -28,7 +28,7 @@ namespace AnalyzeVideos
         private static string Issuer = "myIssuer";
         private static string Audience = "myAudience";
         private static byte[] TokenSigningKey = new byte[40];
-        private static string ContentKeyPolicyName = "SharedContentKeyPolicyUsedByAllAssets1";
+        private static string ContentKeyPolicyName = "SharedContentKeyPolicyUsedByAllAssets2";
 
         static void Main(string[] args)
         {
@@ -115,6 +115,9 @@ namespace AnalyzeVideos
 
                     Console.WriteLine("The urls to stream the output from a client:");
                     Console.WriteLine();
+
+                    var token = GetToken(Issuer, Audience, keyIdentifier, TokenSigningKey);
+
                     for (int i = 0; i < paths.StreamingPaths.Count; i++)
                     {
                         UriBuilder uriBuilder = new UriBuilder();
@@ -123,14 +126,27 @@ namespace AnalyzeVideos
 
                         if (paths.StreamingPaths[i].Paths.Count > 0)
                         {
-                            uriBuilder.Path = paths.StreamingPaths[i].Paths[0];
-                            Console.WriteLine($"\t{paths.StreamingPaths[i].StreamingProtocol}-{paths.StreamingPaths[i].EncryptionScheme}");
-                            Console.WriteLine($"\t\t{uriBuilder.ToString()}");
-                            Console.WriteLine();
+                            //uriBuilder.Path = paths.StreamingPaths[i].Paths[0];
+                            //Console.WriteLine($"\t{paths.StreamingPaths[i].StreamingProtocol}-{paths.StreamingPaths[i].EncryptionScheme}");
+                            //Console.WriteLine($"\t\t{uriBuilder.ToString()}");
+                            //Console.WriteLine();
+
+                            // Look for just the DASH path and generate a URL for the Azure Media Player to playback the content with the AES token to decrypt.
+                            // Note that the JWT token is set to expire in 1 hour. 
+                            if (paths.StreamingPaths[i].StreamingProtocol== "Dash"){
+                                uriBuilder.Path = paths.StreamingPaths[i].Paths[0];
+                                var dashPath = uriBuilder.ToString();
+
+                                Console.WriteLine("Open the following URL in your browser to play back the file in the Azure Media Player");
+                                Console.WriteLine($"https://ampdemo.azureedge.net/?url={dashPath}&aes=true&aestoken=Bearer%3D{token}");
+                                Console.WriteLine();
+                            }
                         }
                     }
 
-                    PrintToken(Issuer, Audience, keyIdentifier, TokenSigningKey);
+                   
+
+                  
 
                 }
                 else if (job.State == JobState.Error)
@@ -293,13 +309,14 @@ namespace AnalyzeVideos
             client.StreamingLocators.Create(resourceGroup, accountName, streamingLocatorName, locator);
         }
 
-        private static void PrintToken(string issuer, string audience, string keyIdentifier, byte[] tokenVerificationKey)
+        private static string GetToken(string issuer, string audience, string keyIdentifier, byte[] tokenVerificationKey)
         {
             var tokenSigningKey = new SymmetricSecurityKey(tokenVerificationKey);
 
             SigningCredentials cred = new SigningCredentials(
                 tokenSigningKey,
-                SecurityAlgorithms.HmacSha256Signature,
+                // Use the  HmacSha256 and not the HmacSha256Signature option, or the token will not work!
+                SecurityAlgorithms.HmacSha256,
                 SecurityAlgorithms.Sha256Digest);
 
             Claim[] claims = new Claim[]
@@ -316,10 +333,8 @@ namespace AnalyzeVideos
                 signingCredentials: cred);
 
             JwtSecurityTokenHandler handler = new JwtSecurityTokenHandler();
-
-            string jwtTokenString = handler.WriteToken(token);
-
-            Console.WriteLine($"Token => {jwtTokenString}");
+            
+            return handler.WriteToken(token);
         }
 
         private static ContentKeyPolicy EnsureContentKeyPolicyExists(IAzureMediaServicesClient client,

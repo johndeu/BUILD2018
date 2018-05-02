@@ -155,7 +155,7 @@ namespace AnalyzeVideos
                                     filenamePattern:"Thumbnail-{Basename}-{Index}{Extension}"
                                 )
                             }
-                        )
+                    )
                     )
                 };
 
