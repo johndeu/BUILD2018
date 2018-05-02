@@ -104,64 +104,58 @@ namespace AnalyzeVideos
                 {
                     // Create a new TransformOutput with a custom Standard Encoder Preset
                     // This demonstrates how to create custom codec and layer output settings
-                    new TransformOutput(new StandardEncoderPreset()
-                        {
-                            Codecs =new List<Codec>
+                    new TransformOutput(
+                        new StandardEncoderPreset(
+                            codecs: new Codec[]
                             {
-                            // Add an AAC Audio layer
-                            new AacAudio(),
-                            // Add two H264 video encoding layers
-                            new H264Video
-                                {
-                                    Layers =new List<H264Layer>
+                                // Add an AAC Audio layer
+                                new AacAudio(
+                                    channels: 2,
+                                    samplingRate:48000,
+                                    bitrate: 128000,
+                                    profile:AacAudioProfile.AacLc
+                                ),
+                                new H264Video (
+                                    keyFrameInterval:TimeSpan.FromSeconds(2),
+                                    layers:  new H264Layer[]
                                     {
-                                        new H264Layer
-                                            {
-                                                Width ="1280",
-                                                Height ="720",
-                                                Bitrate = 1000000,
-                                                Label ="HD"
-                                            },
-                                        new H264Layer
-                                            {
-                                                Width ="640",
-                                                Height ="480",
-                                                Bitrate = 600000,
-                                                Label = "SD"
-                                            }
-                                        }
-                                },
-                            // Add a thumbnail image layer that outputs a range of thumbnails
-                            new PngImage
-                                {
-                                    Start ="25%",
-                                    Step ="25%",
-                                    Range ="80%",
-                                    Layers =new List<PngLayer>
-                                    {
-                                        new PngLayer
-                                            {
-                                                Width ="50%",
-                                                Height ="50%"
-                                            }
+                                        new H264Layer (
+                                            bitrate:1000000,
+                                            width:"1280",
+                                            height:"720",
+                                            label: "HD"
+                                        ),
+                                        new H264Layer (
+                                            bitrate:600000,
+                                            width:"640",
+                                            height:"480",
+                                            label: "SD"
+                                        )
                                     }
-                                }
+                                ),
+                                new PngImage(
+                                    start: "25%",
+                                    step: "25%",
+                                    range: "80%",
+                                    layers: new PngLayer[]{
+                                        new PngLayer(
+                                            width:"50%",
+                                            height:"50%"
+                                        )
+                                    }
+                                )
                             },
-                            Formats =new List<Format>
+                            formats: new Format[]
                             {
-                                // Write the Video file to MP4 file format using the {Basename}, {Label}, {Bitrate} and file {Extension} macros
-                                // Note that if you have multiple layers defined above, you have to use a macro that produces unique names. 
-                                new Mp4Format()
-                                    {
-                                        FilenamePattern="Video-{Basename}-{Label}-{Bitrate}{Extension}"
-                                    },
+                                new Mp4Format(
+                                    filenamePattern:"Video-{Basename}-{Label}-{Bitrate}{Extension}"
+                                ),
                                 // Write the Thumbnails out using the basename, index and extension macros
-                                new PngFormat
-                                    {   
-                                        FilenamePattern ="Thumbnail-{Basename}-{Index}{Extension}"
-                                    }
+                                new PngFormat(
+                                    filenamePattern:"Thumbnail-{Basename}-{Index}{Extension}"
+                                )
                             }
-                        }
+                        )
                     )
                 };
 
