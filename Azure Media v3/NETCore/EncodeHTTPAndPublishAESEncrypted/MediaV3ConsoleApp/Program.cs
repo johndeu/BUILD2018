@@ -28,7 +28,7 @@ namespace AnalyzeVideos
         private static string Issuer = "myIssuer";
         private static string Audience = "myAudience";
         private static byte[] TokenSigningKey = new byte[40];
-        private static string ContentKeyPolicyName = "SharedContentKeyPolicyUsedByAllAssets";
+        private static string ContentKeyPolicyName = "SharedContentKeyPolicyUsedByAllAssets1";
 
         static void Main(string[] args)
         {
@@ -138,6 +138,15 @@ namespace AnalyzeVideos
                     Console.WriteLine($"ERROR: Job finished with error message: {job.Outputs[0].Error.Message}");
                     Console.WriteLine($"ERROR:                   error details: {job.Outputs[0].Error.Details[0].Message}");
                 }
+
+                Console.WriteLine("Try Streaming the content using Azure Media Player - https://ampdemo.azureedge.net.");
+                Console.WriteLine("Use the Advanced options to set the AES token in the AMP demo page. When finished press enter to cleanup.");
+                Console.Out.Flush();
+                Console.ReadLine();
+
+                Console.WriteLine("Cleaning up...");
+                Cleanup(client, config.ResourceGroup, config.AccountName, transformName, jobName, outputAssetName, input, streamingLocatorName, ContentKeyPolicyName);
+       
             }
             catch(ApiErrorException ex)
             {
@@ -147,6 +156,27 @@ namespace AnalyzeVideos
                 Console.WriteLine("ERROR:API call failed with error code: {0} and message: {1}", code, message);
 
             }          
+        }
+
+        private static void Cleanup(IAzureMediaServicesClient client, string resourceGroupName, string accountName, string transformName, string jobName, string outputAssetName, JobInput input, string streamingLocatorName, string contentKeyPolicyName)
+        {
+            client.Jobs.Delete(resourceGroupName, accountName, transformName, jobName);
+            client.Assets.Delete(resourceGroupName, accountName, outputAssetName);
+
+            JobInputAsset jobInputAsset = input as JobInputAsset;
+            if (jobInputAsset != null)
+            {
+                client.Assets.Delete(resourceGroupName, accountName, jobInputAsset.AssetName);
+            }
+
+            // Delete the Streaming Locator
+            client.StreamingLocators.Delete(resourceGroupName, accountName, streamingLocatorName);
+
+            // Stop and delete the StreamingEndpoint - use this if you are creating a custom (non default) endpoint
+            //client.StreamingEndpoints.Stop(resourceGroupName, accountName, endpointName);
+            //client.StreamingEndpoints.Delete(resourceGroupName, accountName, endpointName);
+
+            client.ContentKeyPolicies.Delete(resourceGroupName, accountName, contentKeyPolicyName);
         }
 
         private static IAzureMediaServicesClient CreateMediaServicesClient(ConfigWrapper config)
@@ -282,7 +312,7 @@ namespace AnalyzeVideos
                 audience: audience,
                 claims: claims,
                 notBefore: DateTime.Now.AddMinutes(-5),
-                expires: DateTime.Now.AddMinutes(5), 
+                expires: DateTime.Now.AddMinutes(60), 
                 signingCredentials: cred);
 
             JwtSecurityTokenHandler handler = new JwtSecurityTokenHandler();
