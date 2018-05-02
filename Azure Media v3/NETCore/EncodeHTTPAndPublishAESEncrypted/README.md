@@ -1,10 +1,12 @@
-# Encode HTTP
+# Encode HTTP and Publis stream as Envelope(AES) Encrypted
 This sample demonstrates how to create an encoding Transform that uses a built-in preset for adaptive bitrate encoding and ingests a file directly from an HTTPs source URL.  This is simpler than having to create an Asset and upload content to it directly for some scenarios.
+
+The output asset is then Published using Envelope (AES), or sometimes referred to as ClearKey, encryption. 
+The sample publishes the asset on the "default" StreamingEndpoint, so please make sure that you have already started the default endpoint, or modify the code to start the default or create a new Streaming Endpoint and autostart it. 
 
 ## .NET Core Sample
 
 This is a Quickstart sample showing how to use Azure Media Services API and .NET SDK in .NET Core. 
-
 Open this folder directly (seperately) in Visual Studio Code. 
 
 ## Update the App.config
