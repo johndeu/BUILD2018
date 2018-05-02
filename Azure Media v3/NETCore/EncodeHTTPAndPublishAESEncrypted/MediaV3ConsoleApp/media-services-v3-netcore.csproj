@@ -2,6 +2,7 @@
 
   <ItemGroup>
     <PackageReference Include="System.IdentityModel.Tokens.Jwt " Version="5.2.2" />
+    <PackageReference Include="Microsoft.IdentityModel.Tokens" Version="5.2.2"/>
     <PackageReference Include="Microsoft.Azure.Management.Media" Version="1.0.0" />
     <PackageReference Include="Microsoft.IdentityModel.Clients.ActiveDirectory " Version="3.19.3" />
     <PackageReference Include="Microsoft.Rest.ClientRuntime.Azure.Authentication" Version="2.3.2" />

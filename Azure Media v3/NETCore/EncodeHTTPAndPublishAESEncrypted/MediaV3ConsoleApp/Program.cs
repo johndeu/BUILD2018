@@ -131,6 +131,8 @@ namespace AnalyzeVideos
                         }
                     }
 
+                    PrintToken(Issuer, Audience, keyIdentifier, TokenSigningKey);
+
                 }
                 else if (job.State == JobState.Error)
                 {
@@ -260,6 +262,35 @@ namespace AnalyzeVideos
                 defaultContentKeyPolicyName: contentKeyPolicyName);
 
             client.StreamingLocators.Create(resourceGroup, accountName, streamingLocatorName, locator);
+        }
+
+        private static void PrintToken(string issuer, string audience, string keyIdentifier, byte[] tokenVerificationKey)
+        {
+            var tokenSigningKey = new SymmetricSecurityKey(tokenVerificationKey);
+
+            SigningCredentials cred = new SigningCredentials(
+                tokenSigningKey,
+                SecurityAlgorithms.HmacSha256Signature,
+                SecurityAlgorithms.Sha256Digest);
+
+            Claim[] claims = new Claim[]
+            {
+                new Claim(ContentKeyPolicyTokenClaim.ContentKeyIdentifierClaim.ClaimType, keyIdentifier)
+            };
+
+            JwtSecurityToken token = new JwtSecurityToken(
+                issuer: issuer,
+                audience: audience,
+                claims: claims,
+                notBefore: DateTime.Now.AddMinutes(-5),
+                expires: DateTime.Now.AddMinutes(5), 
+                signingCredentials: cred);
+
+            JwtSecurityTokenHandler handler = new JwtSecurityTokenHandler();
+
+            string jwtTokenString = handler.WriteToken(token);
+
+            Console.WriteLine($"Token => {jwtTokenString}");
         }
 
         private static ContentKeyPolicy EnsureContentKeyPolicyExists(IAzureMediaServicesClient client,
