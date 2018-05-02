@@ -37,29 +37,30 @@ namespace LiveSample
 
                 LiveEventPreview liveEventPreview = new LiveEventPreview
                 {
-                    AccessControl = new LiveEventPreviewAccessControl
-                    {
-                        Ip = new IPAccessControl
-                        {
-                            Allow = new List<IPRange>
+                    AccessControl = new LiveEventPreviewAccessControl(
+                        ip: new IPAccessControl(
+                            allow: new IPRange[]
                             {
-                                new IPRange
-                                {
-                                    Name = "AllowAll",
-                                    Address = "0.0.0.0",
-                                    SubnetPrefixLength = 0
-                                }
+                                new IPRange (
+                                    name: "AllowAll",
+                                    address: "0.0.0.0",
+                                    subnetPrefixLength: 0
+                                )
                             }
-                        }
-                    }
+                        )
+                    )
                 };
 
                 // This can sometimes take awhile. Be patient.
                 LiveEvent liveEvent = new LiveEvent(
                     location: mediaService.Location, 
                     description:"Sample non-encoding pass-through LiveEvent for testing",
-                    vanityUrl:false,
-                    encoding:new LiveEventEncoding(encodingType:LiveEventEncodingType.None, presetName:null),
+                    vanityUrl:true,
+                    encoding: new LiveEventEncoding(
+                                // Set this to Basic to enable a transcoding LiveEvent, and None to enable a pass-through LiveEvent
+                                encodingType:LiveEventEncodingType.Basic, 
+                                presetName:null
+                            ),
                     input: new LiveEventInput(LiveEventInputProtocol.RTMP), 
                     preview: liveEventPreview
                 );
