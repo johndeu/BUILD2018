@@ -54,8 +54,8 @@ namespace LiveSample
                 // This can sometimes take awhile. Be patient.
                 LiveEvent liveEvent = new LiveEvent(
                     location: mediaService.Location, 
-                    description:"Sample non-encoding pass-through LiveEvent for testing",
-                    vanityUrl:true,
+                    description:"Sample LiveEvent for testing",
+                    vanityUrl:false,
                     encoding: new LiveEventEncoding(
                                 // Set this to Basic to enable a transcoding LiveEvent, and None to enable a pass-through LiveEvent
                                 encodingType:LiveEventEncodingType.Basic, 
@@ -103,8 +103,7 @@ namespace LiveSample
                 Console.WriteLine($"Creating a lived output named {liveOutputName}");
                 Console.WriteLine();
 
-                // TODO: Update this to Asset.Name once the fix is deployed
-                LiveOutput liveOutput = new LiveOutput(assetName: asset.AssetId.ToString(), manifestName: manifestName, archiveWindowLength: TimeSpan.FromMinutes(10));
+                LiveOutput liveOutput = new LiveOutput(assetName: asset.Name, manifestName: manifestName, archiveWindowLength: TimeSpan.FromMinutes(10));
                 liveOutput = client.LiveOutputs.Create(config.ResourceGroup, config.AccountName, liveEventName, liveOutputName, liveOutput);
 
                 // Create the StreamingLocator
@@ -191,6 +190,7 @@ namespace LiveSample
                 Console.WriteLine($"\tCode: {e.Body.Error.Message}");
                 Console.WriteLine();
                 Console.WriteLine("Exiting, cleanup may be necessary...");
+                Console.ReadLine();
             }
         }
 
@@ -231,44 +231,55 @@ namespace LiveSample
         
         private static void CleanupAccount(IAzureMediaServicesClient client, string resourceGroup, string accountName)
         {
-            var endpoints = client.StreamingEndpoints.List(resourceGroup, accountName);
-            foreach (StreamingEndpoint p in endpoints)
-            {
-                if (p.Name == "default")
+            try{
+                var endpoints = client.StreamingEndpoints.List(resourceGroup, accountName);
+                foreach (StreamingEndpoint p in endpoints)
                 {
-                    continue;
-                }
-                else
-                {
-                    client.StreamingEndpoints.Stop(resourceGroup, accountName, p.Name);
-                    client.StreamingEndpoints.Delete(resourceGroup, accountName, p.Name);
-                }
-            }
-
-            var events = client.LiveEvents.List(resourceGroup, accountName);
-            foreach (LiveEvent l in events)
-            {
-                var outputs = client.LiveOutputs.List(resourceGroup, accountName, l.Name);
-
-                foreach (LiveOutput o in outputs)
-                {
-                    client.LiveOutputs.Delete(resourceGroup, accountName, l.Name, o.Name);
+                    if (p.Name == "default")
+                    {
+                        continue;
+                    }
+                    else
+                    {
+                        client.StreamingEndpoints.Stop(resourceGroup, accountName, p.Name);
+                        client.StreamingEndpoints.Delete(resourceGroup, accountName, p.Name);
+                    }
                 }
 
-                client.LiveEvents.Stop(resourceGroup, accountName, l.Name);
-                client.LiveEvents.Delete(resourceGroup, accountName, l.Name);
-            }
+                var events = client.LiveEvents.List(resourceGroup, accountName);
+                
+                foreach (LiveEvent l in events)
+                {
+                    var outputs = client.LiveOutputs.List(resourceGroup, accountName, l.Name);
 
-            var locators = client.StreamingLocators.List(resourceGroup, accountName);
-            foreach (StreamingLocator sl in locators)
-            {
-                client.StreamingLocators.Delete(resourceGroup, accountName, sl.Name);
-            }
+                    foreach (LiveOutput o in outputs)
+                    {
+                        client.LiveOutputs.Delete(resourceGroup, accountName, l.Name, o.Name);
+                    }
 
-            var assets = client.Assets.List(resourceGroup, accountName);
-            foreach (Asset a in assets)
+                    client.LiveEvents.Stop(resourceGroup, accountName, l.Name);
+                    client.LiveEvents.Delete(resourceGroup, accountName, l.Name);
+                }
+
+                var locators = client.StreamingLocators.List(resourceGroup, accountName);
+                foreach (StreamingLocator sl in locators)
+                {
+                    client.StreamingLocators.Delete(resourceGroup, accountName, sl.Name);
+                }
+
+                var assets = client.Assets.List(resourceGroup, accountName);
+                foreach (Asset a in assets)
+                {
+                    client.Assets.Delete(resourceGroup, accountName, a.Name);
+                }
+            } 
+            catch(ApiErrorException e)
             {
-                client.Assets.Delete(resourceGroup, accountName, a.Name);
+                Console.WriteLine("Hit ApiErrorException");
+                Console.WriteLine($"\tCode: {e.Body.Error.Code}");
+                Console.WriteLine($"\tCode: {e.Body.Error.Message}");
+                Console.WriteLine();
+
             }
         }
     }
