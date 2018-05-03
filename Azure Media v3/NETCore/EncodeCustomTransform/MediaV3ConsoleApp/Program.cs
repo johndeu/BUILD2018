@@ -24,6 +24,7 @@ namespace EncodeVideosCustomTransform
             ConfigWrapper config = new ConfigWrapper();
             IAzureMediaServicesClient client = CreateMediaServicesClient(config);
             // Set the polling interval for long running operations to 2 seconds.
+            // The default value is 30 seconds for the .NET client SDK
             client.LongRunningOperationRetryTimeout = 2;
 
             try
@@ -131,10 +132,10 @@ namespace EncodeVideosCustomTransform
                                             bitrate: 1000000, // Note that the units is in bits per second
                                             width: "1280",
                                             height: "720",
-                                            label: "HD"
+                                            label: "HD" // This label is used to modify the file name in the output formats
                                         ),
                                         new H264Layer (
-                                            bitrate: 600000, // Note that the units is in bits per second
+                                            bitrate: 600000, 
                                             width: "640",
                                             height: "480",
                                             label: "SD"

@@ -34,6 +34,9 @@ namespace AnalyzeVideos
         {
             ConfigWrapper config = new ConfigWrapper();
             IAzureMediaServicesClient client = CreateMediaServicesClient(config);
+            // Set the polling interval for long running operations to 2 seconds.
+            // The default value is 30 seconds for the .NET client SDK
+            client.LongRunningOperationRetryTimeout = 2;
 
             try
             {
