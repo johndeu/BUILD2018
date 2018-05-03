@@ -15,6 +15,11 @@ The URL output to the console takes the following format.  You can open a browse
 This is a Quickstart sample showing how to use Azure Media Services API and .NET SDK in .NET Core. 
 Open this folder directly (seperately) in Visual Studio Code. 
 
+## Required Assemblies in the project
+•	Microsoft.Azure.Management.Media -Version 1.0.0
+•	Microsoft.IdentityModel.Clients.ActiveDirectory -Version 3.19.4
+•	WindowsAzure.Storage  -Version 9.1.1
+
 ## Update the App.config
 
 To use this project, you must first update the App.config with your account settings. The settings for your account can be retrieved using the following Azure CLI command in the Media Services module.

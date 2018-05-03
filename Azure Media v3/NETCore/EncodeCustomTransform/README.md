@@ -8,6 +8,10 @@ It also demonstrates how to submit a job that uses an HTTPs ingest URL (JobInput
 This is a Quickstart sample showing how to use Azure Media Services API and .NET SDK in .NET Core. 
 Open this folder directly (seperately) in Visual Studio Code. 
 
+## Required Assemblies in the project
+•	Microsoft.Azure.Management.Media -Version 1.0.0
+•	Microsoft.IdentityModel.Clients.ActiveDirectory -Version 3.19.4
+•	WindowsAzure.Storage  -Version 9.1.1
 
 ## Update the App.config
 
