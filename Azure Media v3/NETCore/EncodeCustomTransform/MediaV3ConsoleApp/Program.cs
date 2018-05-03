@@ -134,7 +134,7 @@ namespace EncodeVideosCustomTransform
                                             label: "HD"
                                         ),
                                         new H264Layer (
-                                            bitrate: 600000,
+                                            bitrate: 600000, // Note that the units is in bits per second
                                             width: "640",
                                             height: "480",
                                             label: "SD"
@@ -160,6 +160,15 @@ namespace EncodeVideosCustomTransform
                                 // Mux the H.264 video and AAC audio into MP4 files, using basename, label, bitrate and extension macros
                                 // Note that since you have multiple H264Layers defined above, you have to use a macro that produces unique names per H264Layer
                                 // Either {Label} or {Bitrate} should suffice
+                                 
+                                new Mp4Format(
+                                    filenamePattern:"Video-{Basename}-{Label}-{Bitrate}{Extension}"
+                                ),
+                                new PngFormat(
+                                    filenamePattern:"Thumbnail-{Basename}-{Index}{Extension}"
+                                )
+                            }
+                        )
                     )
                 };
 

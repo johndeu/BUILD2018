@@ -6,7 +6,7 @@ using System.Threading;
 using System.Threading.Tasks;
 using Microsoft.Rest;
 
-namespace AnalyzeVideos
+namespace EncodeVideosCustomTransform
 {
     /// <summary>
     /// Provides token credentials.
