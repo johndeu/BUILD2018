@@ -58,7 +58,7 @@ namespace LiveSample
                     vanityUrl:false,
                     encoding: new LiveEventEncoding(
                                 // Set this to Basic to enable a transcoding LiveEvent, and None to enable a pass-through LiveEvent
-                                encodingType:LiveEventEncodingType.Basic, 
+                                encodingType:LiveEventEncodingType.None, 
                                 presetName:null
                             ),
                     input: new LiveEventInput(LiveEventInputProtocol.RTMP), 
