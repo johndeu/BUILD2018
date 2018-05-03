@@ -23,6 +23,8 @@ namespace EncodeVideosCustomTransform
         {
             ConfigWrapper config = new ConfigWrapper();
             IAzureMediaServicesClient client = CreateMediaServicesClient(config);
+            // Set the polling interval for long running operations to 2 seconds.
+            client.LongRunningOperationRetryTimeout = 2;
 
             try
             {
@@ -106,7 +108,8 @@ namespace EncodeVideosCustomTransform
                 {
                     // Create a new TransformOutput with a custom Standard Encoder Preset
                     // This demonstrates how to create custom codec and layer output settings
- 	                new TransformOutput(
+
+                  new TransformOutput(
                         new StandardEncoderPreset(
                             codecs: new Codec[]
                             {
@@ -157,15 +160,6 @@ namespace EncodeVideosCustomTransform
                                 // Mux the H.264 video and AAC audio into MP4 files, using basename, label, bitrate and extension macros
                                 // Note that since you have multiple H264Layers defined above, you have to use a macro that produces unique names per H264Layer
                                 // Either {Label} or {Bitrate} should suffice
-                                new Mp4Format(
-                                    filenamePattern:"Video-{Basename}-{Label}-{Bitrate}{Extension}"
-                                ),
-                                // Write the Thumbnails out using the basename, index and extension macros
-                                new PngFormat(
-                                    filenamePattern:"Thumbnail-{Basename}-{Index}{Extension}"
-                                )
-                            }
-                        )
                     )
                 };
 

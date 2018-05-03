@@ -13,7 +13,7 @@
             "program": "${workspaceFolder}/MediaV3LiveApp/bin/Debug/netcoreapp2.0/media-services-v3-netcore.dll",
             "args": [],
             "cwd": "${workspaceFolder}/MediaV3LiveApp",
-            "console": "internalConsole",
+            "console": "externalTerminal",
             "stopAtEntry": false,
             "internalConsoleOptions": "openOnSessionStart"
         }

@@ -1,6 +1,21 @@
 # Live Events and Live Outputs
 This example shows how to create and use LiveEvents and LiveOutpus in the v3 Media Services API.
 
+Run the sample to create a new LiveEvent, configure your live encoder with the ingest RTMP feed, and preview the playback using Azure Media Player at http://ampdemo.azureedge.net
+
+
+To create a "pass-through" LiveEvent - set the encoding type on create of the LiveEvent to None
+
+    encodingType:LiveEventEncodingType.None,
+
+
+To create an encoding LiveEvent - set the encoding type on create of the LiveEvent to Basic
+
+    encodingType:LiveEventEncodingType.Basic,   
+
+
+
+
 ## .NET Core Sample
 This is a Quickstart sample showing how to use Azure Media Services API and .NET SDK in .NET Core. 
 Open this folder directly (seperately) in Visual Studio Code. 

@@ -28,7 +28,7 @@ namespace AnalyzeVideos
         private static string Issuer = "myIssuer";
         private static string Audience = "myAudience";
         private static byte[] TokenSigningKey = new byte[40];
-        private static string ContentKeyPolicyName = "SharedContentKeyPolicyUsedByAllAssets";
+        private static string ContentKeyPolicyName = "SharedContentKeyPolicyUsedByAllAssets2";
 
         static void Main(string[] args)
         {
@@ -115,6 +115,9 @@ namespace AnalyzeVideos
 
                     Console.WriteLine("The urls to stream the output from a client:");
                     Console.WriteLine();
+
+                    var token = GetToken(Issuer, Audience, keyIdentifier, TokenSigningKey);
+
                     for (int i = 0; i < paths.StreamingPaths.Count; i++)
                     {
                         UriBuilder uriBuilder = new UriBuilder();
@@ -123,14 +126,27 @@ namespace AnalyzeVideos
 
                         if (paths.StreamingPaths[i].Paths.Count > 0)
                         {
-                            uriBuilder.Path = paths.StreamingPaths[i].Paths[0];
-                            Console.WriteLine($"\t{paths.StreamingPaths[i].StreamingProtocol}-{paths.StreamingPaths[i].EncryptionScheme}");
-                            Console.WriteLine($"\t\t{uriBuilder.ToString()}");
-                            Console.WriteLine();
+                            //uriBuilder.Path = paths.StreamingPaths[i].Paths[0];
+                            //Console.WriteLine($"\t{paths.StreamingPaths[i].StreamingProtocol}-{paths.StreamingPaths[i].EncryptionScheme}");
+                            //Console.WriteLine($"\t\t{uriBuilder.ToString()}");
+                            //Console.WriteLine();
+
+                            // Look for just the DASH path and generate a URL for the Azure Media Player to playback the content with the AES token to decrypt.
+                            // Note that the JWT token is set to expire in 1 hour. 
+                            if (paths.StreamingPaths[i].StreamingProtocol== "Dash"){
+                                uriBuilder.Path = paths.StreamingPaths[i].Paths[0];
+                                var dashPath = uriBuilder.ToString();
+
+                                Console.WriteLine("Open the following URL in your browser to play back the file in the Azure Media Player");
+                                Console.WriteLine($"https://ampdemo.azureedge.net/?url={dashPath}&aes=true&aestoken=Bearer%3D{token}");
+                                Console.WriteLine();
+                            }
                         }
                     }
 
-                    PrintToken(Issuer, Audience, keyIdentifier, TokenSigningKey);
+                   
+
+                  
 
                 }
                 else if (job.State == JobState.Error)
@@ -138,6 +154,15 @@ namespace AnalyzeVideos
                     Console.WriteLine($"ERROR: Job finished with error message: {job.Outputs[0].Error.Message}");
                     Console.WriteLine($"ERROR:                   error details: {job.Outputs[0].Error.Details[0].Message}");
                 }
+
+                Console.WriteLine("Try Streaming the content using Azure Media Player - https://ampdemo.azureedge.net.");
+                Console.WriteLine("Use the Advanced options to set the AES token in the AMP demo page. When finished press enter to cleanup.");
+                Console.Out.Flush();
+                Console.ReadLine();
+
+                Console.WriteLine("Cleaning up...");
+                Cleanup(client, config.ResourceGroup, config.AccountName, transformName, jobName, outputAssetName, input, streamingLocatorName, ContentKeyPolicyName);
+       
             }
             catch(ApiErrorException ex)
             {
@@ -147,6 +172,27 @@ namespace AnalyzeVideos
                 Console.WriteLine("ERROR:API call failed with error code: {0} and message: {1}", code, message);
 
             }          
+        }
+
+        private static void Cleanup(IAzureMediaServicesClient client, string resourceGroupName, string accountName, string transformName, string jobName, string outputAssetName, JobInput input, string streamingLocatorName, string contentKeyPolicyName)
+        {
+            client.Jobs.Delete(resourceGroupName, accountName, transformName, jobName);
+            client.Assets.Delete(resourceGroupName, accountName, outputAssetName);
+
+            JobInputAsset jobInputAsset = input as JobInputAsset;
+            if (jobInputAsset != null)
+            {
+                client.Assets.Delete(resourceGroupName, accountName, jobInputAsset.AssetName);
+            }
+
+            // Delete the Streaming Locator
+            client.StreamingLocators.Delete(resourceGroupName, accountName, streamingLocatorName);
+
+            // Stop and delete the StreamingEndpoint - use this if you are creating a custom (non default) endpoint
+            //client.StreamingEndpoints.Stop(resourceGroupName, accountName, endpointName);
+            //client.StreamingEndpoints.Delete(resourceGroupName, accountName, endpointName);
+
+            client.ContentKeyPolicies.Delete(resourceGroupName, accountName, contentKeyPolicyName);
         }
 
         private static IAzureMediaServicesClient CreateMediaServicesClient(ConfigWrapper config)
@@ -263,13 +309,14 @@ namespace AnalyzeVideos
             client.StreamingLocators.Create(resourceGroup, accountName, streamingLocatorName, locator);
         }
 
-        private static void PrintToken(string issuer, string audience, string keyIdentifier, byte[] tokenVerificationKey)
+        private static string GetToken(string issuer, string audience, string keyIdentifier, byte[] tokenVerificationKey)
         {
             var tokenSigningKey = new SymmetricSecurityKey(tokenVerificationKey);
 
             SigningCredentials cred = new SigningCredentials(
                 tokenSigningKey,
-                SecurityAlgorithms.HmacSha256Signature,
+                // Use the  HmacSha256 and not the HmacSha256Signature option, or the token will not work!
+                SecurityAlgorithms.HmacSha256,
                 SecurityAlgorithms.Sha256Digest);
 
             Claim[] claims = new Claim[]
@@ -282,14 +329,12 @@ namespace AnalyzeVideos
                 audience: audience,
                 claims: claims,
                 notBefore: DateTime.Now.AddMinutes(-5),
-                expires: DateTime.Now.AddMinutes(5), 
+                expires: DateTime.Now.AddMinutes(60), 
                 signingCredentials: cred);
 
             JwtSecurityTokenHandler handler = new JwtSecurityTokenHandler();
-
-            string jwtTokenString = handler.WriteToken(token);
-
-            Console.WriteLine($"Token => {jwtTokenString}");
+            
+            return handler.WriteToken(token);
         }
 
         private static ContentKeyPolicy EnsureContentKeyPolicyExists(IAzureMediaServicesClient client,
