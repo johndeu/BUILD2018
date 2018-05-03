@@ -11,7 +11,7 @@ To create a "pass-through" LiveEvent - set the encoding type on create of the Li
 
 To create an encoding LiveEvent - set the encoding type on create of the LiveEvent to Basic
 
-    encodingType:LiveEventEncodingType.Basic,
+    encodingType:LiveEventEncodingType.Basic,   
 
 
 
