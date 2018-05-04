@@ -9,7 +9,7 @@ webhookEndpoint="https://johndeueventgrid.azurewebsites.net/api/GenericWebhookCS
 # ResourceId variable should be set to the full ARM resource URL for the media account.
 # Endpoint must point to a valid webhook that is enabled to respond to the EventGrid validation event.
 az eventgrid event-subscription create \
-	--name johndeuEvent \
+	--name myEvent \
 	--resource-id //subscriptions/35c2594a-23da-4fce-b59c-f6fb9513eeeb/resourceGroups/build2018/providers/Microsoft.Media/mediaservices/build18 \
 	--included-event-types "Microsoft.Media.JobStateChange" \
 	--endpoint $webhookEndpoint \

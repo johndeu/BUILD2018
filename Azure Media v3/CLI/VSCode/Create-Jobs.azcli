@@ -1,0 +1,8 @@
+
+# NOTE: First create the Transforms in the Create-Transform.sh for these jobs to work!
+
+# Create a Media Services Asset to output the job results to.
+az ams asset create -n "outputAsset1" -a build18 -g build2018
+
+# Submit a Job to a simple encoding Transform using HTTPs URL
+az ams job start --name myFirstJob_001 --transform-name "myFirstTransform" --base-uri "https://nimbuscdn-nimbuspm.streaming.mediaservices.windows.net/2b533311-b215-4409-80af-529c3e853622/" --files "Ignite-short.mp4" --output-asset-names outputAsset1 -a build18 -g build2018 

@@ -1,0 +1,14 @@
+# This sample uses the Visual Studio Code extension "Azure CLI Tools" to enable simple execution of CLI commands in VS Code.
+
+# Create a Media Services Asset to upload content to.
+# In the v3 API, Asset names are unique ARM resource identifiers and must be unique to the account.
+# It's recommended to use short unique IDs or GUIDs to keep the names unique to the account.
+az ams asset create -n "myAsset-uniqueID"  -a build18 -g build2018 
+
+# Get the SAS URLs to upload content to the container for the Asset
+# Default is 23 hour expiration, but you can adjust with the --expiry flag. 
+# Max supported is 24 hours. 
+az ams asset get-sas-urls -n "myAsset-uniqueID" -a build18 -g build2018 --expiry 2018-05-04T12:00:00Z --permissions ReadWrite 
+
+# Use the az storage modules to upload a local file to the container using the SAS URL from previous step.
+az storage blob upload -c asset-bc1e49da-9003-4442-a9b4-849d3c18e860 -f "C:\Videos\ignite-short.mp4" -n ignite-short.mp4 --account-name build2018storage 

@@ -1,0 +1,15 @@
+# Create a simple Transform for Adaptive Bitrate Encoding
+az ams transform create --name myFirstTransform --preset-names AdaptiveStreaming -a build18 -g build2018 
+
+ # Create a Transform for Video Analyer Preset
+az ams transform create --name videoAnalyzerTransform --preset-names  VideoAnalyzer -a build18 -g build2018
+
+ # Create a Transform for Audio Analzyer Preset
+az ams transform create --name audioAnalyzerTransform --preset-names  AudioAnalyzer -a build18 -g build2018
+
+# Create a Transform with two built-in Presets executed in sequence
+az ams transform create --name twoPresetTransform --preset-names AdaptiveStreaming VideoAnalyzer -a build18 -g build2018
+
+# List all the Transforms in an account
+az ams transform list -a build18 -g build2018
+
