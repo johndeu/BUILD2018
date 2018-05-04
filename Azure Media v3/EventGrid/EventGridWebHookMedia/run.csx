@@ -1,4 +1,5 @@
 #r "Newtonsoft.Json"
+#r "Microsoft.WindowsAzure.Storage"
 
 #load "configwrapper.csx"
 #load "armclientcredentials.csx"
@@ -8,7 +9,7 @@ using System.Net;
 using Newtonsoft.Json;
 using Microsoft.Azure.Management.Media;
 using Microsoft.Azure.Management.Media.Models;
-
+using Microsoft.WindowsAzure.Storage.Blob;
 
 static String resourceGroupName;
 static String accountName;
@@ -59,7 +60,7 @@ public static async Task<object> Run(HttpRequestMessage req, TraceWriter log)
         // Return a response
         return req.CreateResponse(HttpStatusCode.OK, new
         {
-            message = $"Job still in progress.}",
+            message = $"Job still in progress.",
             state = $"{eventData[0].data.state}"
         });
     }
@@ -74,63 +75,60 @@ public static async Task<object> Run(HttpRequestMessage req, TraceWriter log)
         subject = eventData[0].subject;
         log.Info($"Subject : {subject}");
 
-        // Regular Expresssion to extract the Transform and Job Names from the Subject of the Event 
-        Regex r = new Regex(@"transforms\/(?<transformName>.*)\/jobs\/(?<jobName>.*)", RegexOptions.None, TimeSpan.FromMilliseconds(150));
-        Match m = r.Match(subject);
+        // Split the subject to get the Transform and Job Names
+        var subjectSplit = subject.Split('/');
+        transformName = subjectSplit[1];
+        jobName = subjectSplit[3];
 
-        if (m.Success){
-            transformName = r.Match(subject).Result("${transformName}");
-            jobName = r.Match(subject).Result("${jobName}");
-            log.Info($"Job Name : {jobName}"); 
-            log.Info($"Transform Name : {jobName}"); 
+        log.Info($"Job Name : {jobName}"); 
+        log.Info($"Transform Name : {jobName}"); 
 
-            // Go get the Job from Media Services
-            var job = await client.Jobs.GetAsync(resourceGroupName, accountName, transformName, jobName);
+        // Go get the Job from Media Services
+        var job = await client.Jobs.GetAsync(resourceGroupName, accountName, transformName, jobName);
 
-            // Get the first Job Output. For simple Transforms, there is only one output, for complex Transforms, there could be multiple Outputs.
-            // Note here that you have to cast to a JobOutputAsset to get the assetName property.
-            var jobOutputAsset = job.Outputs[0] as JobOutputAsset;
-            if(jobOutputAsset != null)
+        // Get the first Job Output. For simple Transforms, there is only one output, for complex Transforms, there could be multiple Outputs.
+        // Note here that you have to cast to a JobOutputAsset to get the assetName property.
+        var jobOutputAsset = job.Outputs[0] as JobOutputAsset;
+        if(jobOutputAsset != null)
+        {
+            var assetName = jobOutputAsset.AssetName;
+            log.Info($"AssetName: {assetName}");
+
+            // Get the output asset from Media Services
+            var outputAsset = await client.Assets.GetAsync(resourceGroupName,accountName,assetName);
+            log.Info($"OutputAsset storage:{outputAsset.StorageAccountName}");
+
+            // Get the SAS URL to the Container so that we can read the file content of the JSON result from the job
+            AssetContainerSas assetContainerSas = client.Assets.ListContainerSas(
+                        resourceGroupName, 
+                        accountName, 
+                        assetName,
+                        permissions: AssetContainerPermission.Read, 
+                        expiryTime: DateTime.UtcNow.AddHours(1).ToUniversalTime()
+                        );
+            
+            // Let's use the first SAS URL returned and use that to open the storage Container and list the files in it
+            Uri containerSasUrl = new Uri(assetContainerSas.AssetContainerSasUrls.FirstOrDefault());
+
+            // Here we use the Storage Library to get the Container of the Asset
+            CloudBlobContainer container = new CloudBlobContainer(containerSasUrl);
+
+            log.Info($"SAS Url to Container:{containerSasUrl.AbsoluteUri}");
+            
+            /// Lets now list all of the blobs in the Asset's storage Container
+            var blobs = container.ListBlobsSegmentedAsync(null,true, BlobListingDetails.None,200,null,null,null).Result;
+            
+            // Let's loop through the blobs to find the .json result file and build a modified SAS URL to download it. 
+            foreach (var blobItem in blobs.Results)
             {
-                var assetName = jobOutputAsset.AssetName;
-                log.Info($"AssetName: {assetName}");
-
-                // Get the output asset from Media Services
-                var outputAsset = await client.Assets.GetAsync(resourceGroupName,accountName,assetName);
-                log.Info($"OutputAsset storage:{outputAsset.StorageAccountName}");
-
-                // Get the SAS URL to the Container so that we can read the file content of the JSON result from the job
-                AssetContainerSas assetContainerSas = client.Assets.ListContainerSas(
-                            resourceGroupName, 
-                            accountName, 
-                            assetName,
-                            permissions: AssetContainerPermission.Read, 
-                            expiryTime: DateTime.UtcNow.AddHours(1).ToUniversalTime()
-                            );
-                
-                // Let's use the first SAS URL returned and use that to open the storage Container and list the files in it
-                Uri containerSasUrl = new Uri(assetContainerSas.AssetContainerSasUrls.FirstOrDefault());
-
-                // Here we use the Storage Library to get the Container of the Asset
-                CloudBlobContainer container = new CloudBlobContainer(containerSasUrl);
-
-                log.Info($"SAS Url to Container:{containerSasUrl.AbsoluteUri}");
-                
-                /// Lets now list all of the blobs in the Asset's storage Container
-                var blobs = container.ListBlobsSegmentedAsync(null,true, BlobListingDetails.None,200,null,null,null).Result;
-                
-                // Let's loop through the blobs to find the .json result file and build a modified SAS URL to download it. 
-                foreach (var blobItem in blobs.Results)
+                if (blobItem is CloudBlockBlob)
                 {
-                    if (blobItem is CloudBlockBlob)
-                    {
-                        CloudBlockBlob blob = blobItem as CloudBlockBlob;
-                        if(blob.Name.IndexOf(".json")>-1){
-                            UriBuilder sasToResults = new UriBuilder(containerSasUrl);
-                            sasToResults.Path +="/"+ blob.Name;
-                            log.Info($"JSON Output SAS: {sasToResults.ToString()}");
-                        }       
-                    }
+                    CloudBlockBlob blob = blobItem as CloudBlockBlob;
+                    if(blob.Name.IndexOf(".json")>-1){
+                        UriBuilder sasToResults = new UriBuilder(containerSasUrl);
+                        sasToResults.Path +="/"+ blob.Name;
+                        log.Info($"JSON Output SAS: {sasToResults.ToString()}");
+                    }       
                 }
             }
         }
