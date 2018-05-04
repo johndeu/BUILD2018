@@ -66,7 +66,12 @@ namespace LiveSample
                                 presetName:null
                             ),
                     input: new LiveEventInput(LiveEventInputProtocol.RTMP), 
-                    preview: liveEventPreview
+                    preview: liveEventPreview,
+                    streamOptions: new List<StreamOptionsFlag?>()
+                    {
+                        // Set this to Default or Low Latency
+                        StreamOptionsFlag.LowLatency
+                    }
                 );
 
                 Console.WriteLine($"Creating the LiveEvent, be patient this can take time...");

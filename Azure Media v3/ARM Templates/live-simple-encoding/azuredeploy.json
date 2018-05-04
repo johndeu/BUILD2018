@@ -1,0 +1,60 @@
+{
+  "$schema": "https://schema.management.azure.com/schemas/2015-01-01/deploymentTemplate.json#",
+  "contentVersion": "1.0.0.0",
+  "parameters": {
+    "mediaServicesAccountName": {
+      "type": "string",
+      "metadata": {
+        "description": "The Media Services account in which the LiveEvent should be created."
+      }
+    },
+    "location": {
+      "type": "string",
+      "defaultValue": "West US 2",
+      "metadata": {
+        "description": "The location of the Media Services account."
+      }
+    },
+    "liveEventName": {
+      "type": "string",
+      "defaultValue": "",
+      "metadata": {
+        "description": "The name of the new LiveEvent."
+      }
+    }
+  },
+  "variables": {},
+  "resources": [
+    {
+      "name": "[concat(parameters('mediaServicesAccountName'), '/', parameters('liveEventName'))]",
+      "type": "Microsoft.Media/mediaservices/liveevents",
+      "apiVersion": "2018-03-30-preview",
+      "location": "[parameters('location')]",
+      "properties": {
+        "description": "Simple Live Event with Encoding using RTMP with 2-second keyframe interval and no ip restriction",
+        "input": {
+          "streamingProtocol": "RTMP",
+          "keyFrameIntervalDuration": "PT2S"
+        },
+        "preview": {
+          "accessControl": {
+            "ip": {
+              "allow": [
+                {
+                  "name": "AllowAll",
+                  "address": "0.0.0.0",
+                  "subnetPrefixLength": 0
+                }
+              ]
+            }
+          }
+        },
+        "encoding": {
+          "encodingType": "Basic"
+        },
+        "streamOptions": ["Default"]
+      }
+    }
+  ],
+  "outputs": {}
+}
