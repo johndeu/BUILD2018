@@ -6,6 +6,21 @@
 [https://docs.microsoft.com/en-us/cli/azure/install-azure-cli?view=azure-cli-latest](https://docs.microsoft.com/en-us/cli/azure/install-azure-cli?view=azure-cli-latest )
 
 
+## Bash Scripts
+The Bash folder contains sample bash shell scripts for basic scenarios used with Azure Media Services. 
+Samples demonstrate the following tasks:
+- How to create an Account and get back credentials
+- How to create Transforms using the built in presets for Encoding and Video/Audio analysis
+- How to submit Jobs to Transforms
+- How to publish an Asset for Streaming
+- How to subscribe to EventGrid events using a Webhook URL
+- How to reset your account credentials and get back the App.config settings XML for your code. 
+
+## VS Code Scripts
+The VSCode folder contains a similar set of scrips that can be executed directly inside Visual Studio code using the Azure CLI Extension for VS Code. You will need to install the extension first, and the simply right click on the line to execute the command in the built-in Terminal or view results in the Editor. 
+
+This tool is very helpful as a scratchpad for testing out and learning the various commands available in the Media Services module. 
+
 ## Pre-release builds are available for testing here:
 git clone https://github.com/southworkscom/azure-cli
 

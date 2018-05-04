@@ -7,5 +7,8 @@ az ams asset create -n "outputAsset1" -a build18 -g build2018
 # Submit a Job to a simple encoding Transform using HTTPs URL
 az ams job start --name myFirstJob_002 --transform-name videoAnalyzerTransform --base-uri "https://nimbuscdn-nimbuspm.streaming.mediaservices.windows.net/2b533311-b215-4409-80af-529c3e853622/" --files "Ignite-short.mp4" --output-asset-names outputAsset1 -a build18 -g build2018 
 
+# Show the Job
+az ams job show --name myFirstJob_002 --transform-name videoAnalyzerTransform -a build18 -g build2018
+
 # Clean up the job 
 az ams job delete --name myFirstJob_002  --transform-name videoAnalyzerTransform -a build18 -g build2018
