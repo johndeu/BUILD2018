@@ -7,7 +7,7 @@ az group create --name build2018 --location westcentralus
 az storage account create --name build2018storage  --kind StorageV2  --sku Standard_RAGRS  --location westcentralus  --resource-group build2018
 
 # Create an azure media service account
-az ams account create --name build18  --resource-group build2018  --storage-account build2018storag  --location westcentralus
+az ams account create --name build18  --resource-group build2018  --storage-account build2018storage  --location westcentralus
 
 # Create a service principal with password and configure its access to an Azure Media Services account.
 az ams account sp create --account-name build18  --name build2018demo  --resource-group build2018  --role Owner  --xml  --years 2 
