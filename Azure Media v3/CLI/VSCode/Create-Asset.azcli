@@ -1,0 +1,21 @@
+# This sample uses the Visual Studio Code extension "Azure CLI Tools" to enable simple execution of CLI commands in VS Code.
+# Select a line and press CTRL+SHIFT+' to launch in Editor, or CTRL+' to launch in Terminal
+
+# Create a Media Services Asset to upload content to.
+# In the v3 API, Asset names are unique ARM resource identifiers and must be unique to the account.
+# It's recommended to use short unique IDs or GUIDs to keep the names unique to the account.
+az ams asset create -n "myAsset-uniqueID"  -a build18 -g build2018 
+
+az ams asset delete -n "myAsset-uniqueID"  -a build18 -g build2018 
+
+# Get the SAS URLs to upload content to the container for the Asset
+# Default is 23 hour expiration, but you can adjust with the --expiry flag. 
+# Max supported is 24 hours. 
+az ams asset get-sas-urls -n "myAsset-uniqueID" -a build18 -g build2018 --expiry 2018-05-06T20:00:00Z --permissions ReadWrite 
+
+# Use the az storage modules to upload a local file to the container using the logged in user. 
+# Since you are logged into Azure CLI, you already have access to upload so don't need to use the SAS token yourself. 
+az storage blob upload -c asset-5880dbad-9c9e-4833-b9c5-a040da6ac689 -f "C:\Videos\ignite-short.mp4" -n ignite-short.mp4 --account-name build2018storage 
+
+# If you share the SAS token with another user who has no access, they can use the --sas-token parameter 
+az storage blob upload -c asset-5880dbad-9c9e-4833-b9c5-a040da6ac689 --sas-token "?sv=2015-07-08&sr=c&sig=cb1na8zB4%2Bm0mzfdqK%2Bego1S7ZGlX%2Bw0%2BBoNVMkXuvg%3D&se=2018-05-06T20:00:00Z&sp=rwl" -f "C:\Videos\ignite-short.mp4" -n ignite-short.mp4 --account-name build2018storage 

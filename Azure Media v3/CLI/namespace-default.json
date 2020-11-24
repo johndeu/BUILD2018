@@ -1,0 +1,57 @@
+{
+    "apiVersion": "v1",
+    "kind": "Namespace",
+    "metadata": {
+        "creationTimestamp": "2018-05-23T18:54:54Z",
+        "name": "default",
+        "resourceVersion": "106",
+        "selfLink": "/api/v1/namespaces/default",
+        "uid": "c817d15b-5eba-11e8-91e2-00155d1be705"
+    },
+    "spec": {
+        "finalizers": [
+            "kubernetes"
+        ]
+    },
+    "status": {
+        "phase": "Active"
+    }
+}
+{
+    "apiVersion": "v1",
+    "kind": "Namespace",
+    "metadata": {
+        "creationTimestamp": "2018-05-23T18:54:54Z",
+        "name": "default",
+        "resourceVersion": "106",
+        "selfLink": "/api/v1/namespaces/default",
+        "uid": "c817d15b-5eba-11e8-91e2-00155d1be705"
+    },
+    "spec": {
+        "finalizers": [
+            "kubernetes"
+        ]
+    },
+    "status": {
+        "phase": "Active"
+    }
+}
+{
+    "apiVersion": "v1",
+    "kind": "Namespace",
+    "metadata": {
+        "creationTimestamp": "2018-05-23T18:54:54Z",
+        "name": "default",
+        "resourceVersion": "106",
+        "selfLink": "/api/v1/namespaces/default",
+        "uid": "c817d15b-5eba-11e8-91e2-00155d1be705"
+    },
+    "spec": {
+        "finalizers": [
+            "kubernetes"
+        ]
+    },
+    "status": {
+        "phase": "Active"
+    }
+}

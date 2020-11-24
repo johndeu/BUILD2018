@@ -1,0 +1,46 @@
+{
+  "$schema": "https://schema.management.azure.com/schemas/2015-01-01/deploymentTemplate.json#",
+  "contentVersion": "1.0.0.0",
+  "parameters": {
+    "mediaServicesAccountName": {
+      "type": "string",
+      "metadata": {
+        "description": "The Media Services account in which the Transform should be created."
+      }
+    },
+    "transformName": {
+      "type": "string",
+      "defaultValue": "AdaptiveBitrate",
+      "metadata": {
+        "description": "The name of the new Transform."
+      }
+    }
+  },
+  "variables": {},
+  "resources": [
+    {
+      "name": "[concat(parameters('mediaServicesAccountName'), '/', parameters('transformName'))]",
+      "type": "Microsoft.Media/mediaservices/transforms",
+      "apiVersion": "2018-10-06",
+      "properties": {
+        "description": "Example transform to illustrate create and update.",
+        "outputs": [
+          {
+            "relativePriority": null,
+            "onError": null,
+            "preset": {
+              "@odata.type": "#Microsoft.Media.BuiltInStandardEncoderPreset",
+              "presetName": "AdaptiveStreaming"
+            }
+          }
+        ]
+      }
+    }
+  ],
+  "outputs": {
+    "mediaServiceAccountLocation": {
+      "type": "string",
+      "value": "[reference(concat('Microsoft.Media/mediaservices/', parameters('mediaServicesAccountName')), '2018-02-01-privatepreview', 'Full').location]"
+    }
+  }
+}

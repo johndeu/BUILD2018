@@ -1,0 +1,25 @@
+# This sample uses the Visual Studio Code extension "Azure CLI Tools" to enable simple execution of CLI commands in VS Code.
+# Select a line and press CTRL+SHIFT+' to launch in Editor, or CTRL+' to launch in Terminal
+
+# NOTE: First create the Transforms in the Create-Transform.sh for these jobs to work!
+
+# Create a Media Services Asset to output the job results into.
+az ams asset create -n "outputAsset1" -a build18 -g build2018
+
+# Submit a Job to a Tansform that uses the new Audio Analyzer. The job uses the new ingest from HTTPs URL feature
+az ams job start --name myFirstAudioAnalyzerJob --transform-name audioAnalyzerTransform --files "https://nimbuscdn-nimbuspm.streaming.mediaservices.windows.net/2b533311-b215-4409-80af-529c3e853622/Ignite-short.mp4" --output-asset-names outputAsset1 -a build18 -g build2018 
+
+# Submit a Job to a Tansform that uses the Standard Encoder. The job uses the new ingest from HTTPs URL feature
+az ams job start --name myFirstJob --transform-name encodeForStreaming --base-uri "https://nimbuscdn-nimbuspm.streaming.mediaservices.windows.net/2b533311-b215-4409-80af-529c3e853622/" --files "Ignite-short.mp4" --output-asset-names outputAsset1 -a build18 -g build2018 
+
+# Submit a Job to a Tansform that uses the new Video Analyzer. The job uses the new ingest from HTTPs URL feature
+az ams job start --name myFirstVideoAnalyzerJob --transform-name videoAnalyzerTransform --files "https://nimbuscdn-nimbuspm.streaming.mediaservices.windows.net/2b533311-b215-4409-80af-529c3e853622/Ignite-short.mp4" --output-asset-names outputAsset1 -a build18 -g build2018 
+
+# Show the status of the Job
+az ams job show --name myFirstAudioAnalyzerJob --transform-name audioAnalyzerTransform -a build18 -g build2018
+
+# Clean up first, to make sure this job name does not already exist. Change the job and transform name as needed.
+az ams job delete --name myFirstAudioAnalyzerJob --transform-name audioAnalyzerTransform  -a build18 -g build2018 
+az ams asset delete -n "outputAsset1" -a build18 -g build2018
+
+az ams job delete --name myFirstJob --transform-name encodeForStreaming  -a build18 -g build2018 

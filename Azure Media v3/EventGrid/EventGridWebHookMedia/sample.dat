@@ -1,0 +1,31 @@
+
+// Example Event Grid Subscription Validation event for testing
+[{
+  "id": "2d1781af-3a4c-4d7c-bd0c-e34b19da4e66",
+  "topic": "/subscriptions/xxxxxxxx-xxxx-xxxx-xxxx-xxxxxxxxxxxx",
+  "subject": "",
+  "data": {
+    "validationCode": "512d38b6-c7b8-40c8-89fe-f46f9e9622b6"
+  },
+  "eventType": "Microsoft.EventGrid.SubscriptionValidationEvent",
+  "eventTime": "2017-08-06T22:09:30.740323Z"
+}
+]
+
+
+// Example Media Job State Change Event
+[
+  {
+    "topic": "/subscriptions/35c2594a-23da-4fce-b59c-f6fb9513eeeb/resourceGroups/build2018/providers/Microsoft.Media/mediaservices/build18",
+    "subject": "transforms/audioAnalyzerTransform/jobs/myFirstJob_004",
+    "eventType": "Microsoft.Media.JobStateChange",
+    "eventTime": "2018-04-26T21:51:53.7142524",
+    "id": "7abf5be8-670c-49c1-9b14-6b35a0c9ce4a",
+    "data": {
+      "previousState": "Processing",
+      "state": "Finished"
+    },
+    "dataVersion": "1.0",
+    "metadataVersion": "1"
+  }
+]
